@@ -1,0 +1,148 @@
+# Project information
+site_name: AsBuiltReport
+site_author: Tim Carman
+site_description: Document Your Datacenter With PowerShell
+site_url: https://www.asbuiltreport.com
+repo_name: AsBuiltReport
+repo_url: https://github.com/AsBuiltReport/AsBuiltReport.Project.Website
+
+# Copyright
+copyright: Copyright &copy; 2016 - 2023 Tim Carman
+
+# Configuration
+theme:
+    name: material
+    language: en
+    logo: assets/images/logos/AsBuiltReport.png
+    favicon: assets/images/logos/AsBuiltReport.png
+    features:
+      - content.action.edit
+      - content.action.view
+      - content.code.annotate
+      - navigation.tabs
+      - navigation.tabs.sticky
+      - navigation.sections
+      - navigation.indexes
+      - navigation.footer
+      - search.highlight
+    palette:
+      primary: amber
+      accent: blue
+    locale: en
+    highlightjs: true
+
+# Customization
+extra:
+  analytics:
+    provider: google
+    property: !ENV GOOGLE_ANALYTICS_KEY
+  social:
+    - icon: fontawesome/brands/x-twitter
+      link: https://x.com/AsBuiltReport
+    - icon: fontawesome/brands/github
+      link: https://github.com/AsBuiltReport
+    - icon: fontawesome/brands/youtube
+      link: https://www.youtube.com/channel/UCi8vPY40jRpr0tZZPgBqpbA/
+
+extra_css:
+  - assets/stylesheets/extra.css
+
+# Plugins
+plugins:
+  - search
+  - blog:
+      blog_toc: false
+      post_date_format: medium
+      draft: false
+      draft_on_serve: true
+      draft_if_future_date: true
+  - rss:
+      match_path: blog/posts/.*
+      date_from_meta:
+        as_creation: date
+      categories:
+        - categories
+        - tags
+  - social:
+      cards_layout_options:
+        font_family: Montserrat Alternates
+        color: "#063561"
+
+# Extensions
+markdown_extensions:
+  - attr_list
+  - admonition
+  - meta
+  - tables
+  - pymdownx.superfences
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.highlight:
+      anchor_linenums: true
+      auto_title: true
+      use_pygments: true
+  - md_in_html
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.critic
+  - pymdownx.caret
+  - pymdownx.mark
+  - pymdownx.tilde
+  - pymdownx.details
+
+# Page Navigation
+nav:
+  - Home: index.md
+  - User Guide:
+    - Getting Started:
+      - Installation: user-guide/installation.md
+    - Commands:
+      - New-AsBuiltConfig: user-guide/new-asbuiltconfig.md
+      - New-AsBuiltReport: user-guide/new-asbuiltreport.md
+      - New-AsBuiltReportConfig: user-guide/new-asbuiltreportconfig.md
+    - Report Modules:
+      - user-guide/report-modules/overview.md
+      - Cisco:
+        - Cisco UCS Manager: https://github.com/AsBuiltReport/AsBuiltReport.Cisco.UcsManager#readme
+      - Dell EMC:
+        - Dell EMC VxRail: https://github.com/AsBuiltReport/AsBuiltReport.DellEMC.VxRail#readme
+      - Fortinet:
+        - Fortinet FortiGate: https://github.com/AsBuiltReport/AsBuiltReport.Fortinet.FortiGate#readme
+      - Microsoft:
+        - Microsoft Active Directory: https://github.com/AsBuiltReport/AsBuiltReport.Microsoft.AD#readme
+        - Microsoft Azure: https://github.com/AsBuiltReport/AsBuiltReport.Microsoft.Azure#readme
+        - Microsoft DHCP: https://github.com/AsBuiltReport/AsBuiltReport.Microsoft.DHCP#readme
+        #- Microsoft Teams: - Microsoft Windows: https://github.com/AsBuiltReport/AsBuiltReport.Microsoft.Teams#readme
+        - Microsoft Windows: https://github.com/AsBuiltReport/AsBuiltReport.Microsoft.Windows#readme
+      - NetApp:
+        - NetApp ONTAP: https://github.com/AsBuiltReport/AsBuiltReport.NetApp.ONTAP#readme
+      - Nutanix:
+        - Nutanix Prism Element: https://github.com/AsBuiltReport/AsBuiltReport.Nutanix.PrismElement#readme
+      - Pure Storage:
+        - Pure Storage FlashArray: https://github.com/AsBuiltReport/AsBuiltReport.PureStorage.FlashArray#readme
+      - Rubrik:
+        - Rubrik CDM: https://github.com/AsBuiltReport/AsBuiltReport.Rubrik.CDM#readme
+      - Veeam:
+        - Veeam VB365: https://github.com/AsBuiltReport/AsBuiltReport.Veeam.VB365#readme
+        - Veeam VBR: https://github.com/AsBuiltReport/AsBuiltReport.Veeam.VBR#readme
+      - VMware:
+        - VMware App Volumes: https://github.com/AsBuiltReport/AsBuiltReport.VMware.AppVolumes#readme
+        - VMware ESXi: https://github.com/AsBuiltReport/AsBuiltReport.VMware.ESXi#readme
+        - VMware Horizon: https://github.com/AsBuiltReport/AsBuiltReport.VMware.Horizon#readme
+        - VMware Site Recovery Manager: https://github.com/AsBuiltReport/AsBuiltReport.VMware.SRM#readme
+        - VMware vSphere: https://github.com/AsBuiltReport/AsBuiltReport.VMware.vSphere#readme
+  - Developer Guide:
+    - Creating a report module: dev-guide/creating-a-report-module.md
+    - Creating a report style: dev-guide/creating-a-report-style.md
+  - Blog:
+    - blog/index.md
+  - Support:
+    - FAQ: support/faq.md
+    - Known Issues: support/known-issues.md
+    - Donate: support/donate.md
+  - About:
+    - Acknowledgements: about/acknowledgements.md
+    - Contact: about/contact.md
+    - Contributing: about/contributing.md
+    - License: about/license.md
