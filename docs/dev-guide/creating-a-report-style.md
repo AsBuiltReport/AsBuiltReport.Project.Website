@@ -1,8 +1,6 @@
 When generating an As Built Report, its formatting and style is defined using a PowerShell (.ps1) script which utilises a set of [PScribo](../support/faq.md#what-is-pscribo) cmdlets.
 
-When creating a report style for a new report module, the default colours and logos (if permitted) should align to a vendor's branding guidelines. Most vendors will publish their branding guidelines on their website. A simple Google search should reveal all the information you need to create a report style for a particular vendor. Where a report module already exists for a particular vendor, please ensure you include the existing vendor report style in the new report module.
-
-This guide may also be used to create custom style scripts which match your individual and/or corporate identities.
+This guide can be used to create custom style scripts which match your individual and/or corporate identities.
 
 !!! info
 
@@ -12,9 +10,7 @@ This guide may also be used to create custom style scripts which match your indi
 
 !!! tip
 
-    Use any report's default style script as a reference for creating a new style script, or download some sample styles from our [GitHub repository](https://github.com/AsBuiltReport/AsBuiltReport.Core/tree/dev/Samples){:target="_blank"}.
-
-    A report's default style script is located in the report module root folder and is named `AsBuiltReport.<Vendor>.<Product>.Style.ps1`
+    Use the [default style script](https://github.com/AsBuiltReport/AsBuiltReport.Core/blob/master/AsBuiltReport.Core.Style.ps1){:target="_blank"} as a reference for creating a new style script, or download some sample styles from our [GitHub repository](https://github.com/AsBuiltReport/AsBuiltReport.Core/tree/master/Samples){:target="_blank"}.
 
 ### Global Document Options
 
@@ -58,23 +54,36 @@ get-help about_PScriboStyles
 A style script uses a standard set of styles for a report. These styles are defined below and must be included in every style script.
 
 ```text title=""
+## Title & Heading Styles
 Normal              - Default text style
 Title               - Cover Page Title text style
 Title 2             - Cover Page Subtitle 1 text style
 Title 3             - Cover Page Subtitle 2 text style
 TOC                 - Section heading Table of Contents text style
-Heading1            - Section heading level 1 text style
-Heading2            - Section heading level 2 text style
-Heading3            - Section heading level 3 text style
-Heading4            - Section heading level 4 text style
-Heading5            - Section heading level 5 text style
-Heading6            - Section heading level 6 text style
+Heading 1           - Section heading level 1 text style
+Heading 2           - Section heading level 2 text style
+Heading 3           - Section heading level 3 text style
+Heading 4           - Section heading level 4 text style
+NO TOC Heading 4    - Section heading level 4 text style - Exclude From TOC
+Heading 5           - Section heading level 5 text style
+NO TOC Heading 5    - Section heading level 5 text style - Exclude From TOC
+Heading 6           - Section heading level 6 text style
+NO TOC Heading 6    - Section heading level 6 text style - Exclude From TOC
+NO TOC Heading 7    - Section heading level 7 text style - Exclude From TOC
+
+## Header & Footer Styles
+Header              - Document header style
+Footer              - Document footer style
+
+## Table Heading & Row Styles
 TableDefaultHeading - Table heading row style
 TableDefaultRow     - Table row style
 TableDefaultAltRow  - Table alternating row style
+
+# Table Caption Style
 Caption             - Table caption style
-Header              - Document header style
-Footer              - Document footer style
+
+## Table Row/Cell Highlight Styles
 Critical            - Table row/cell highlight style for critical alerts
 Warning             - Table row/cell highlight style for warning alerts
 Info                - Table row/cell highlight style for informational alerts
@@ -91,36 +100,41 @@ Additional styles can also be defined for use in custom defined sections, paragr
 
 ```powershell title="Custom Style Definitions Example"
 # Heading & Font Styles Formatting
-Style -Name 'Title' -Size 24 -Color '00785F' -Align Left
-Style -Name 'Title 2' -Size 18 -Color '00A956' -Align Left
-Style -Name 'Title 3' -Size 12 -Color '006A91' -Align Left
-Style -Name 'Heading 1' -Size 16 -Color '00785F'
-Style -Name 'Heading 2' -Size 14 -Color '004B6B'
-Style -Name 'Heading 3' -Size 12 -Color '00567A'
-Style -Name 'Heading 4' -Size 11 -Color '00648F'
-Style -Name 'Heading 5' -Size 10 -Color '0072A3'
-Style -Name 'Normal' -Size 10 -Color '000000' -Default
+Style -Name 'Title' -Size 24 -Color '072E58' -Align Center
+Style -Name 'Title 2' -Size 18 -Color '204369' -Align Center
+Style -Name 'Title 3' -Size 12 -Color '395879' -Align Left
+Style -Name 'Heading 1' -Size 16 -Color '072E58'
+Style -Name 'Heading 2' -Size 14 -Color '204369'
+Style -Name 'Heading 3' -Size 13 -Color '395879'
+Style -Name 'Heading 4' -Size 12 -Color '958026'
+Style -Name 'NO TOC Heading 4' -Size 12 -Color '958026'
+Style -Name 'Heading 5' -Size 11 -Color '009684'
+Style -Name 'NO TOC Heading 5' -Size 11 -Color '009684'
+Style -Name 'Heading 6' -Size 10 -Color '009683'
+Style -Name 'NO TOC Heading 6' -Size 10 -Color '009683'
+Style -Name 'NO TOC Heading 7' -Size 10 -Color '00EBCD' -Italic
+Style -Name 'Normal' -Size 10 -Color '565656' -Default
 
 # Header & Footer Formatting
-Style -Name 'Header' -Size 10 -Color '000000' -Align Left
-Style -Name 'Footer' -Size 10 -Color '000000' -Align Right
+Style -Name 'Header' -Size 10 -Color '565656' -Align Center
+Style -Name 'Footer' -Size 10 -Color '565656' -Align Center
 
 # Table of Contents Formatting
-Style -Name 'TOC' -Size 16 -Color '00785F'
+Style -Name 'TOC' -Size 16 -Color '072E58'
 
 # Table Heading & Row Formatting
-Style -Name 'TableDefaultHeading' -Size 10 -Color 'FAFAFA' -BackgroundColor '00785F'
-Style -Name 'TableDefaultRow' -Size 10 -Color '000000'
+Style -Name 'TableDefaultHeading' -Size 10 -Color 'FAFAFA' -BackgroundColor '072E58'
+Style -Name 'TableDefaultRow' -Size 10 -Color '565656'
 Style -Name 'TableDefaultAltRow' -Size 10 -Color '000000' -BackgroundColor 'EAEAE6'
 
 # Table Row/Cell Highlight Formatting
-Style -Name 'Critical' -Size 10 -Color '000000' -BackgroundColor 'FEDDD7'
-Style -Name 'Warning' -Size 10 -Color '000000' -BackgroundColor 'FFF4C7'
-Style -Name 'Info' -Size 10 -Color '000000' -BackgroundColor 'E3F5FC'
-Style -Name 'OK' -Size 10 -Color '000000' -BackgroundColor 'DFF0D0'
+Style -Name 'Critical' -Size 10 -Color '565656' -BackgroundColor 'FEDDD7'
+Style -Name 'Warning' -Size 10 -Color '565656' -BackgroundColor 'FFF4C7'
+Style -Name 'Info' -Size 10 -Color '565656' -BackgroundColor 'E3F5FC'
+Style -Name 'OK' -Size 10 -Color '565656' -BackgroundColor 'DFF0D0'
 
 # Table Caption Formatting
-Style -Name 'Caption' -Size 10 -Color '000000' -Align Left
+Style -Name 'Caption' -Size 10 -Color '072E58' -Italic -Align Left
 ```
 
 ### Table Styles
@@ -136,8 +150,7 @@ $TableDefaultProperties = @{
     Id = 'TableDefault'
     HeaderStyle = 'TableDefaultHeading'
     RowStyle = 'TableDefaultRow'
-    AlternateRowStyle = 'TableDefaultAltRow'
-    BorderColor = '00785F'
+    BorderColor = '072E58'
     Align = 'Left'
     CaptionStyle = 'Caption'
     CaptionLocation = 'Below'
@@ -210,7 +223,7 @@ $TableDefaultProperties = @{
     Id = 'TableDefault'
     HeaderStyle = 'TableDefaultHeading'
     RowStyle = 'TableDefaultRow'
-    BorderColor = '00785F'
+    BorderColor = '072E58'
     Align = 'Left'
     CaptionStyle = 'Caption'
     CaptionLocation = 'Below'

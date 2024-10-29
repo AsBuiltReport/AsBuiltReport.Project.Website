@@ -3,11 +3,9 @@ site_name: AsBuiltReport
 site_author: Tim Carman
 site_description: Document Your Datacenter With PowerShell
 site_url: https://www.asbuiltreport.com
-repo_name: AsBuiltReport
-repo_url: https://github.com/AsBuiltReport/AsBuiltReport.Project.Website
 
 # Copyright
-copyright: Copyright &copy; 2016 - 2023 Tim Carman
+copyright: Copyright &copy; 2016 - 2024 Tim Carman
 
 # Configuration
 theme:
@@ -21,6 +19,7 @@ theme:
       - content.code.annotate
       - navigation.tabs
       - navigation.tabs.sticky
+      - navigation.top
       - navigation.sections
       - navigation.indexes
       - navigation.footer
@@ -41,8 +40,8 @@ extra:
       link: https://x.com/AsBuiltReport
     - icon: fontawesome/brands/github
       link: https://github.com/AsBuiltReport
-    - icon: fontawesome/brands/youtube
-      link: https://www.youtube.com/channel/UCi8vPY40jRpr0tZZPgBqpbA/
+    #- icon: fontawesome/brands/youtube
+    #  link: https://www.youtube.com/channel/UCi8vPY40jRpr0tZZPgBqpbA/
 
 extra_css:
   - assets/stylesheets/extra.css
@@ -103,6 +102,8 @@ nav:
       - New-AsBuiltReportConfig: user-guide/new-asbuiltreportconfig.md
     - Report Modules:
       - user-guide/report-modules/overview.md
+      - Aruba:
+        - Aruba ClearPass: https://github.com/AsBuiltReport/AsBuiltReport.Aruba.ClearPass#readme
       - Cisco:
         - Cisco UCS Manager: https://github.com/AsBuiltReport/AsBuiltReport.Cisco.UcsManager#readme
       - Dell EMC:
@@ -113,7 +114,7 @@ nav:
         - Microsoft Active Directory: https://github.com/AsBuiltReport/AsBuiltReport.Microsoft.AD#readme
         - Microsoft Azure: https://github.com/AsBuiltReport/AsBuiltReport.Microsoft.Azure#readme
         - Microsoft DHCP: https://github.com/AsBuiltReport/AsBuiltReport.Microsoft.DHCP#readme
-        #- Microsoft Teams: - Microsoft Windows: https://github.com/AsBuiltReport/AsBuiltReport.Microsoft.Teams#readme
+        #- Microsoft Teams: https://github.com/AsBuiltReport/AsBuiltReport.Microsoft.Teams#readme
         - Microsoft Windows: https://github.com/AsBuiltReport/AsBuiltReport.Microsoft.Windows#readme
       - NetApp:
         - NetApp ONTAP: https://github.com/AsBuiltReport/AsBuiltReport.NetApp.ONTAP#readme
