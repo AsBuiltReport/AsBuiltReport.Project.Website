@@ -12,7 +12,7 @@
 
 :fontawesome-brands-github: GitHub - [@rebelinux](https://github.com/rebelinux){:target="_blank"}
 
-:fontawesome-solid-blog: Blog - [TechMyth.info](https://techmyth.info/){:target="_blank"}
+:fontawesome-solid-blog: Blog - [TechMyth.blog](https://techmyth.blog/){:target="_blank"}
 
 ## Matt Allford <img align=left src="../../assets/images/contributors/matt-allford.jpg" width="25%" height="25%" style="vertical-align:middle" />
 <h3>Project Advocate & Contributor</h3>
