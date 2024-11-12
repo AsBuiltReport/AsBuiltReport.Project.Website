@@ -38,8 +38,8 @@ extra:
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/AsBuiltReport
-    #- icon: fontawesome/brands/Bluesky
-    #  link: https://bsky.app/profile/asbuiltreport.bsky.social
+    - icon: fontawesome/brands/Bluesky
+      link: https://bsky.app/profile/asbuiltreport.com
     - icon: fontawesome/brands/x-twitter
       link: https://x.com/AsBuiltReport
 
