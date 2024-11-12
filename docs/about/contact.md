@@ -4,9 +4,9 @@ We have setup [GitHub Discussions](https://github.com/orgs/AsBuiltReport/discuss
 
 ### Follow Us
 
-<!---:fontawesome-brands-bluesky: Bluesky - [@AsBuiltReport](https://bsky.app/profile/asbuiltreport.bsky.social){:target="_blank"}-->
-
 :fontawesome-brands-square-x-twitter:{ .X } X - [@AsBuiltReport](https://x.com/asbuiltreport){:target="_blank"}
+
+:fontawesome-brands-bluesky: Bluesky - [@AsBuiltReport](https://bsky.app/profile/asbuiltreport.com){:target="_blank"}
 
 :fontawesome-brands-github: GitHub - [@AsBuiltReport](https://github.com/AsBuiltReport){:target="_blank"}
 
