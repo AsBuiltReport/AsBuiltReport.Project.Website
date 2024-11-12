@@ -36,12 +36,12 @@ extra:
     provider: google
     property: !ENV GOOGLE_ANALYTICS_KEY
   social:
-    - icon: fontawesome/brands/x-twitter
-      link: https://x.com/AsBuiltReport
     - icon: fontawesome/brands/github
       link: https://github.com/AsBuiltReport
-    #- icon: fontawesome/brands/youtube
-    #  link: https://www.youtube.com/channel/UCi8vPY40jRpr0tZZPgBqpbA/
+    #- icon: fontawesome/brands/Bluesky
+    #  link: https://bsky.app/profile/asbuiltreport.bsky.social
+    - icon: fontawesome/brands/x-twitter
+      link: https://x.com/AsBuiltReport
 
 extra_css:
   - assets/stylesheets/extra.css

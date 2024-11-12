@@ -3,12 +3,16 @@
 
 :fontawesome-brands-square-x-twitter:{ .X } X - [@tpcarman](https://x.com/tpcarman){:target="_blank"}
 
+:fontawesome-brands-bluesky: Bluesky - [@tpcarman](https://bsky.app/profile/tpcarman.bsky.social){:target="_blank"}
+
 :fontawesome-brands-github: GitHub - [@tpcarman](https://github.com/tpcarman){:target="_blank"}
 
 ## Jonathan Colon <img align=left src="../../assets/images/contributors/jonathan-colon.jpg" width="25%" height="25%" style="vertical-align:middle" />
 <h3>Project Advocate & Lead Contributor</h3>
 
 :fontawesome-brands-square-x-twitter:{ .X } X - [@jcolonfzenpr](https://x.com/jcolonfzenpr){:target="_blank"}
+
+:fontawesome-brands-bluesky: Bluesky - [@jcolonfpr](https://bsky.app/profile/jcolonfpr.bsky.social){:target="_blank"}
 
 :fontawesome-brands-github: GitHub - [@rebelinux](https://github.com/rebelinux){:target="_blank"}
 
@@ -18,6 +22,8 @@
 <h3>Project Advocate & Contributor</h3>
 
 :fontawesome-brands-square-x-twitter:{ .X } X - [@mattallford](https://x.com/mattallford){:target="_blank"}
+
+:fontawesome-brands-bluesky: Bluesky - [@mattalfford](https://bsky.app/profile/mattallford.com){:target="_blank"}
 
 :fontawesome-brands-github: GitHub - [@mattallford](https://github.com/mattallford){:target="_blank"}
 
