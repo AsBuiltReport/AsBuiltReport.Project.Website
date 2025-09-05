@@ -1,5 +1,3 @@
-# Creating an AsBuiltReport Report Module
-
 This guide provides comprehensive standards and guidelines for developing AsBuiltReport report modules. Following these practices ensures consistency, maintainability, and quality across the AsBuiltReport ecosystem.
 
 ## Getting Started
@@ -32,15 +30,15 @@ Organise your module repository with the following standard structure:
 
 ```
 AsBuiltReport.Vendor.Technology/
-├── .github/                                        # GitHub workflows and templates
+├── .github/                                       # GitHub workflows and templates
 ├── .vscode/                                       # VS Code configuration
 ├── Samples/                                       # Sample report outputs
 ├── Src/
-│   ├── Private/                                   # Internal functions functions
+│   ├── Private/                                   # Private helper functions
 │   └── Public/                                    # Exported functions
-├── AsBuiltReport.Vendor.Technology.json          # Report configuration file
-├── AsBuiltReport.Vendor.Technology.psd1          # PowerShell manifest
-├── AsBuiltReport.Vendor.Technology.psm1          # PowerShell module script
+├── AsBuiltReport.Vendor.Technology.json           # Report configuration file
+├── AsBuiltReport.Vendor.Technology.psd1           # PowerShell manifest
+├── AsBuiltReport.Vendor.Technology.psm1           # PowerShell module script
 ├── README.md                                      # Module documentation
 ├── CHANGELOG.md                                   # Version history
 └── LICENSE                                        # MIT License
@@ -53,7 +51,7 @@ Your module manifest must include these standardised properties:
 
 ```powershell
 @{
-    ModuleVersion = '1.0.0'                        # Semantic versioning
+    ModuleVersion = '0.1.0'                        # Semantic versioning
     Author = 'Your Name'
     Description = 'A PowerShell module to generate an as built report on the configuration of [Technology]'
     PowerShellVersion = '5.1'
@@ -130,8 +128,14 @@ PScribo organises reports using a hierarchical structure:
 - **Paragraph**: Text content and headings
 - **Table**: Structured data presentation
 - **BlankLine**: Spacing and formatting
+- **Write-PScriboMessage**: Writes a formatted verbose output message with the time and PScribo plugin name
 
 ### Essential PScribo Commandlets
+
+```powershell
+# List all PScribo Commandlets
+Get-Command -Module PScribo
+```
 
 #### Document Structure
 ```powershell
@@ -377,7 +381,7 @@ function Invoke-AsBuiltReport.Vendor.Technology {
     .PARAMETER Credential
         PowerShell credential to use for authentication.
     .NOTES
-        Version:        1.0.0
+        Version:        0.1.0
         Author:         Your Name
         Creation Date:  YYYY-MM-DD
         Purpose/Change: Initial script development
@@ -726,7 +730,7 @@ $ServerInfo = [PSCustomObject]@{
 # Define table parameters with consistent formatting
 $TableParams = @{
     Name = 'Server Information'
-    List = $true                    # Use List = $true for key-value pairs
+    List = $true                   # Use List = $true for key-value pairs
     ColumnWidths = 40, 60          # Always specify column widths
                                    # Set list table column widths to 40, 60 whenever possible
                                    # Set column widths to avoid excessive text wrapping

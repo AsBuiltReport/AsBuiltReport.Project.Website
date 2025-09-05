@@ -48,6 +48,8 @@ Today I can announce that one of the most requested features for AsBuiltReport i
 
 - Progressive enhancement allowing modules to adopt localization incrementally
 
+<!-- more -->
+
 ## Technical Implementation
 Multilingual support is being implemented using PowerShell's native localization features, including:
 
