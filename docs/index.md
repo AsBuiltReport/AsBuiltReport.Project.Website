@@ -5,13 +5,13 @@ title: Document Your Datacenter With PowerShell
 <h1 align="center" style="background-image: url('../../assets/images/background.jpg');color:white;">
     <br>
     <img src='../../assets/images/logos/AsBuiltReport.png' width="15%" height="15%" />
-    <br>As Built Report
+    <br>AsBuiltReport
     <br><br>Document Your Datacenter
     <br>With PowerShell
     <br><br>
 </h1>
 
-As Built Report is an open source configuration document framework which utilises Microsoft PowerShell to produce as-built documentation in multiple document formats for multiple vendors and technologies. The framework allows users to easily generate clear and consistent documentation, for any environment which supports Microsoft PowerShell and/or a RESTful API.
+AsBuiltReport is an open source configuration document framework which utilises Microsoft PowerShell to produce as-built documentation in multiple document formats for multiple vendors and technologies. The framework allows users to easily generate clear and consistent documentation, for any environment which supports Microsoft PowerShell and/or a RESTful API.
 
 ## **Features**
 <div class="grid cards" markdown>
@@ -58,7 +58,7 @@ As Built Report is an open source configuration document framework which utilise
 <!--
 <p align="center" style="background-image: url('../../assets/images/laptop.png');background-size: 100% 100%;color:white;">
     <br><br>
-    <br>As Built Report is an open source configuration document framework which utilises
+    <br>AsBuiltReport is an open source configuration document framework which utilises
     <br>Microsoft PowerShell to produce as-built documentation in multiple document formats
     <br>for multiple vendors and technologies.
     <br><br>The framework allows users to easily generate clear and consistent documentation,
