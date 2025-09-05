@@ -8,9 +8,9 @@ categories:
 slug: The-future-of-As-Built-Report
 ---
 
-# The future of As Built Report
+# The future of AsBuiltReport
 
-In my [previous post](../posts/The-history-of-As-Built-Report.md) I shared how I came to start As Built Report and my reasons for doing so. It's been a few years since its inception and some of you may be asking what does the future hold for the project?
+In my [previous post](../posts/The-history-of-As-Built-Report.md) I shared how I came to start AsBuiltReport and my reasons for doing so. It's been a few years since its inception and some of you may be asking what does the future hold for the project?
 
 Before I delve into what may lie ahead, let me take a moment to reflect on the project's progression so far, by extending a sincere thank you to all the [contributors](../../about/contributors.md) who have given their time and effort to this project. Whether you have contributed code, reported bugs, provided feedback, written a blog post, or simply participated in discussions, your efforts have not gone unnoticed.
 
@@ -22,13 +22,13 @@ I'd also like to give a special thanks to [Jonathan Colon](../../about/contribut
 
 ## My challenges
 
-While I am extremely grateful for the contributions to As Built Report, I must also be open and honest about some of the current challenges I am facing with the project and how these may impact its future.
+While I am extremely grateful for the contributions to AsBuiltReport, I must also be open and honest about some of the current challenges I am facing with the project and how these may impact its future.
 
 As we all know, life can be hectic, and we all have our own set of priorities. As I sit here in isolation, suffering from the effects for COVID, it's clear that this project is no longer high on my priority list. After experiencing two years of the world's most severe lockdowns here in Melbourne, I realised that spending long periods of time in front of a computer screen, constantly thinking about work, was negatively impacting my mental health. I had no discipline in switching off from any of this. I became exhausted and burnt out!
 
 Since the end of lockdown, most of us have changed our working habits and work-life balance in some way, whether it's working from home, limiting our screen time, or getting out and about more frequently. I continue to work on incorporating all of these into my daily routine, but the one I'm most strict about is spending less time in front of my computer. While I have always put my family first, I cannot say the same for my health. Changes need to be made.
 
-When I first started As Built Report, I was working with a wide range of IT infrastructure on a daily basis and would often have the time and access to develop many of the reports you use today. However this is no longer the case, as I have taken on a new job role earlier this year and am now solely focused on Azure-related projects. As a result, I no longer have the time or access to this infrastructure to keep many of these reports up to date.
+When I first started AsBuiltReport, I was working with a wide range of IT infrastructure on a daily basis and would often have the time and access to develop many of the reports you use today. However this is no longer the case, as I have taken on a new job role earlier this year and am now solely focused on Azure-related projects. As a result, I no longer have the time or access to this infrastructure to keep many of these reports up to date.
 
 So herein lies the challenge! Without access to the IT infrastructure and with less time in my daily schedule, **I can no longer maintain this project and will need more help from you**, the users, to keep this project alive and relevant!
 
@@ -62,4 +62,4 @@ If there is something you'd like to see in the project, please share your ideas 
 Help expand our community by sharing your positive experiences with this project. Whether through social media, blog posts, or word of mouth, your advocacy contributes to the project's growth.
 
 ## A final thanks!
-In closing, I'd like to again thank all of the awesome [people who have contributed](../../about/contributors.md#other-contributors) to this project. Your help and contributions are invaluable, and I look forward to welcoming more contributors in the future who are willing to donate their time and energy to developing and expanding the As Built Report project.
+In closing, I'd like to again thank all of the awesome [people who have contributed](../../about/contributors.md#other-contributors) to this project. Your help and contributions are invaluable, and I look forward to welcoming more contributors in the future who are willing to donate their time and energy to developing and expanding the AsBuiltReport project.

@@ -1,12 +1,12 @@
-1.  #### What is As Built Report?
+1.  #### What is AsBuiltReport?
 
-    As Built Report is an open source configuration document framework which utilises Microsoft PowerShell to produce as-built documentation in multiple document formats for multiple vendors and technologies.
+    AsBuiltReport is an open source configuration document framework which utilises Microsoft PowerShell to produce as-built documentation in multiple document formats for multiple vendors and technologies.
 
     The framework allows users to easily generate clear and consistent documentation, for any environment which supports Microsoft PowerShell and/or a RESTful API.
 
 2.  #### What versions of PowerShell are supported?
 
-    As Built Report will generally support both Windows PowerShell 5.1 and PowerShell 7, however each individual report will have its own system requirements.
+    AsBuiltReport will generally support both Windows PowerShell 5.1 and PowerShell 7, however each individual report will have its own system requirements.
 
     Please refer to the [report module user guides](../user-guide/report-modules/overview.md) for PowerShell compatibility and system requirements.
 
@@ -24,9 +24,9 @@
 
     No. Microsoft Word is not required to generate the report, however a document viewer which supports the DOCX format would be required to view the report.
 
-6.  #### How do I install As Built Report if I do not have access to PowerShell Gallery?
+6.  #### How do I install AsBuiltReport if I do not have access to PowerShell Gallery?
 
-    Please refer to the [installation](../user-guide/installation.md) page for instructions on how to perform an offline installation of As Built Report.
+    Please refer to the [installation](../user-guide/installation.md) page for instructions on how to perform an offline installation of AsBuiltReport.
 
 7.  #### How can I contribute to the project?
 

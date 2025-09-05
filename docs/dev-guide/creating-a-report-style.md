@@ -1,4 +1,4 @@
-When generating an As Built Report, its formatting and style is defined using a PowerShell (.ps1) script which utilises a set of [PScribo](../support/faq.md#what-is-pscribo) cmdlets.
+When generating an AsBuiltReport, its formatting and style is defined using a PowerShell (.ps1) script which utilises a set of [PScribo](../support/faq.md#what-is-pscribo) cmdlets.
 
 This guide can be used to create custom style scripts which match your individual and/or corporate identities.
 

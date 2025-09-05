@@ -1,8 +1,8 @@
-Please follow these quick and simple instructions to install As Built Report.
+Please follow these quick and simple instructions to install AsBuiltReport.
 
 ## System Requirements
 
-As Built Report will generally support both Windows PowerShell 5.1 and PowerShell 7, however each individual report will have its own system requirements.
+AsBuiltReport will generally support both Windows PowerShell 5.1 and PowerShell 7, however each individual report will have its own system requirements.
 
 Please refer to the [report module user guides](../user-guide/report-modules/overview.md) for PowerShell compatibility and system requirements.
 
@@ -39,9 +39,9 @@ Install-Module -Name 'PureStoragePowerShellSDK' -Scope 'CurrentUser'
 
 ## Online Installation
 
-For an online installation, install As Built Report modules using the [PowerShell Gallery](https://www.powershellgallery.com/packages?q=Asbuiltreport*){:target="_blank"};
+For an online installation, install AsBuiltReport modules using the [PowerShell Gallery](https://www.powershellgallery.com/packages?q=Asbuiltreport*){:target="_blank"};
 
-```powershell title="Find and install As Built Report modules"
+```powershell title="Find and install AsBuiltReport modules"
 # Find AsBuiltReport modules published in the PowerShell Gallery
 Find-Module -Name 'AsBuiltReport.*' -Repository 'PSGallery'
 
@@ -55,7 +55,7 @@ For an offline installation, perform the following steps from a machine with int
 
 Save the required modules to a specified folder.
 
-```powershell title="Find and save As Built Report modules"
+```powershell title="Find and save AsBuiltReport modules"
 # Find AsBuiltReport modules published in the PowerShell Gallery
 Find-Module -Name 'AsBuiltReport.*' -Repository 'PSGallery'
 

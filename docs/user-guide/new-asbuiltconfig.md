@@ -2,7 +2,7 @@
 
 `New-AsBuiltConfig` starts a menu-driven procedure in the PowerShell console asking the user a series of questions to create a JSON configuration file. The JSON configuration file may be saved and referenced by the `AsBuiltConfigPath` parameter in `New-AsBuiltReport`.
 
-`New-AsBuiltConfig` is automatically called by `New-AsBuiltReport` if the `AsBuiltConfigPath` parameter is not specified. If a user wishes to generate a new As Built Report configuration without generating a new report, this command can be called as a standalone cmdlet.
+`New-AsBuiltConfig` is automatically called by `New-AsBuiltReport` if the `AsBuiltConfigPath` parameter is not specified. If a user wishes to generate a new AsBuiltReport configuration without generating a new report, this command can be called as a standalone cmdlet.
 
 ## Parameters
 
@@ -10,20 +10,20 @@ There are no additional parameters for this command.
 
 ## Examples
 
-1. Starts a menu-driven procedure to create an As Built Report configuration file.
+1. Starts a menu-driven procedure to create an AsBuiltReport configuration file.
 
     ```powershell title="Example 1"
     New-AsBuiltConfig
     ```
 
     !!! example " New-AsBuiltConfig Sample Output"
-        **As Built Report Information**
+        **AsBuiltReport Information**
 
-        Enter the name of the Author for this As Built Report [Tim]: `Tim Carman`
+        Enter the name of the Author for this AsBuiltReport [Tim]: `Tim Carman`
 
         **Company Information**
 
-        Would you like to enter Company information for the As Built Report? (y/n): `y`
+        Would you like to enter Company information for the AsBuiltReport? (y/n): `y`
 
         Enter the Full Company Name: `ACME Inc`
 
@@ -55,15 +55,15 @@ There are no additional parameters for this command.
 
         Do you want to enter another recipient? (y/n): `n`
 
-        Enter the email message body content: `As Built Report attached`
+        Enter the email message body content: `AsBuiltReport attached`
 
-        **As Built Report Configuration**
+        **AsBuiltReport Configuration**
 
-        Would you like to save the As Built Report configuration file? (y/n): `y`
+        Would you like to save the AsBuiltReport configuration file? (y/n): `y`
 
-        Enter a name for the As Built Report configuration file [AsBuiltReport]: `ACME`
+        Enter a name for the AsBuiltReport configuration file [AsBuiltReport]: `ACME`
 
-        Enter the path to save the As Built Report configuration file [C:\Users\Tim\AsBuiltReport]: `C:\Documents\Clients\ACME\AsBuiltReport`
+        Enter the path to save the AsBuiltReport configuration file [C:\Users\Tim\AsBuiltReport]: `C:\Documents\Clients\ACME\AsBuiltReport`
 
         | Name       | Value                               |
         |------------|-------------------------------------|
@@ -77,7 +77,7 @@ There are no additional parameters for this command.
             "Email": {
                 "Port": "25",
                 "Server": "172.16.10.30",
-                "Body": "As Built Report attached",
+                "Body": "AsBuiltReport attached",
                 "UseSSL": true,
                 "To": [
                 "wile.e.coyote@acme.inc"

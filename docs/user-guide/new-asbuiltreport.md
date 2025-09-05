@@ -89,7 +89,7 @@ This is a mandatory parameter.
 
 ### AsBuiltConfigFilePath
 
-Specifies the file path to the As Built Report configuration JSON file.
+Specifies the file path to the AsBuiltReport configuration JSON file.
 
 This is an optional parameter.
 
