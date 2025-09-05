@@ -1,3 +1,11 @@
 # MkDocs documentation
 site/
+scripts/
 .cache/
+__pycache__/
+*.pyc
+.token
+
+# Claude AI
+.claude/
+claude.md

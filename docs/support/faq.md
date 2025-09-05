@@ -12,7 +12,7 @@
 
 3. #### What is PScribo?
 
-    [PScribo](https://github.com/iainbrighton/PScribo){:target="_blank"} (pronounced 'skree-bo') is an open-source project created by [Iain Brighton](../about/acknowledgements.md#iain-brighton).
+    [PScribo](https://github.com/iainbrighton/PScribo){:target="_blank"} (pronounced 'skree-bo') is an open-source project created by [Iain Brighton](../about/contributors.md#iain-brighton).
 
     PScribo provides a set of functions that make it easy to create a document-like structure within Powershell, without having to handle multiple output formats. A document's layout and contents only need to defined once regardless of target output format(s).
 
@@ -30,7 +30,7 @@
 
 7.  #### How can I contribute to the project?
 
-    Please refer to the [contributing](../about/contributing.md) page for information on how to contribute to this project.
+    Please refer to the [contributing](../dev-guide/contributing.md) page for information on how to contribute to this project.
 
 8.  #### How can I donate to the project?
 

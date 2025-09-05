@@ -139,7 +139,7 @@ Use [PSScriptAnalyzer](https://github.com/PowerShell/PSScriptAnalyzer){:target="
             $TableParams = @{
                 Name = 'User Info'
                 List = $true
-                ColumnWidths = 50, 50
+                ColumnWidths = 40, 60
             }
             # This code snippet must be included for options to show table captions
             if ($Report.ShowTableCaptions) {
@@ -149,7 +149,7 @@ Use [PSScriptAnalyzer](https://github.com/PowerShell/PSScriptAnalyzer){:target="
             $myObject | Table @TableParams
         ```
 
-- Set `ColumnWidths` for all tables to improve formatting and readability. Try to maintain a consistent style throughout the report. Cell text will word wrap. List tables should generally use column widths of `50, 50`.
+- Set `ColumnWidths` for all tables to improve formatting and readability. Try to maintain a consistent style throughout the report. Cell text will word wrap. List tables should generally use column widths of `40, 60`.
 - Sort primary object properties in alphanumeric order.
 - Try to perform all safe commands (Get-*, Get API call, etc) at the start of a report script so it can easily be seen what data is being collected.
 - Use comments written in English, but don't overdo it. Comments should serve to your reasoning and decision-making, not attempt to explain what a command does.

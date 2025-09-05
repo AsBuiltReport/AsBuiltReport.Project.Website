@@ -37,7 +37,7 @@ As Built Report had taken months of my personal effort to produce by this point.
 
 ## VMworld US 2018
 
-In August 2018, [Matt Allford](../../about/acknowledgements.md#matt-allford) and I presented ['Documenting Your Virtual Infrastructure with PowerShell and PowerCLI'](https://www.youtube.com/watch?v=aQqHSEIUHl8){:target="_blank"} to a worldwide audience of 500+ people at VMworld in Las Vegas. Our session would go on to be the highest viewed session for the entire VMworld US conference. The word was out and the excitement began to grow.
+In August 2018, [Matt Allford](../../about/contributors.md#matt-allford) and I presented ['Documenting Your Virtual Infrastructure with PowerShell and PowerCLI'](https://www.youtube.com/watch?v=aQqHSEIUHl8){:target="_blank"} to a worldwide audience of 500+ people at VMworld in Las Vegas. Our session would go on to be the highest viewed session for the entire VMworld US conference. The word was out and the excitement began to grow.
 
 ![VMworld 2018](../../assets/images/blog/VMworld-2018.jpg){ loading=lazy }
 
@@ -49,4 +49,4 @@ Soon after VMworld, we began work on redesigning the core architecture of As Bui
 
 Since then, the project has been open-sourced and has continued to grow, with code published to our [GitHub repository](https://github.com/AsBuiltReport){:target="_blank"} and modules released to the [PowerShell Gallery](https://www.powershellgallery.com/packages?q=AsBuiltReport*){:target="_blank"}.
 
-And thanks to contributions from [Jonathan Colon](../../about/acknowledgements.md#jonathan-colon), [Mike Preston](https://github.com/mwpreston){:target="_blank"}, [Alexis La Goutte](https://github.com/alagoutte){:target="_blank"}, [Chris Hildebrandt](https://github.com/childebrandt42){:target="_blank"} and others we have now expanded our [range of report modules](../../user-guide/report-modules/overview.md), with many more in development!
+And thanks to contributions from [Jonathan Colon](../../about/contributors.md#jonathan-colon), [Mike Preston](https://github.com/mwpreston){:target="_blank"}, [Alexis La Goutte](https://github.com/alagoutte){:target="_blank"}, [Chris Hildebrandt](https://github.com/childebrandt42){:target="_blank"} and [others](../../about/contributors.md#other-contributors) we have now expanded our [range of report modules](../../user-guide/report-modules/overview.md), with many more in development!

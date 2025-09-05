@@ -5,7 +5,7 @@ site_description: Document Your Datacenter With PowerShell
 site_url: https://www.asbuiltreport.com
 
 # Copyright
-copyright: Copyright &copy; 2016 - 2024 Tim Carman
+copyright: Copyright &copy; 2016 - 2025 Tim Carman
 
 # Configuration
 theme:
@@ -23,6 +23,8 @@ theme:
       - navigation.sections
       - navigation.indexes
       - navigation.footer
+      - navigation.tracking
+      - content.code.copy
       - search.highlight
     palette:
       primary: amber
@@ -49,7 +51,13 @@ extra_css:
 # Plugins
 plugins:
   - search
+  - git-revision-date-localized:
+      enable_creation_date: false
+      fallback_to_build_date: true
   - blog:
+      blog_dir: blog
+      post_dir: blog/posts
+      archive: false
       blog_toc: false
       post_date_format: medium
       draft: false
@@ -59,6 +67,7 @@ plugins:
       match_path: blog/posts/.*
       date_from_meta:
         as_creation: date
+        default_time: "09:00"
       categories:
         - categories
         - tags
@@ -66,6 +75,10 @@ plugins:
       cards_layout_options:
         font_family: Montserrat Alternates
         color: "#063561"
+  - redirects:
+      redirect_maps:
+        'about/contributing.md': 'dev-guide/contributing.md'
+        'about/acknowledgements.md': 'about/contributors.md'
 
 # Extensions
 markdown_extensions:
@@ -104,8 +117,6 @@ nav:
       - user-guide/report-modules/overview.md
       - Aruba:
         - Aruba ClearPass: https://github.com/AsBuiltReport/AsBuiltReport.Aruba.ClearPass#readme
-      - Cisco:
-        - Cisco UCS Manager: https://github.com/AsBuiltReport/AsBuiltReport.Cisco.UcsManager#readme
       - Dell EMC:
         - Dell EMC VxRail: https://github.com/AsBuiltReport/AsBuiltReport.DellEMC.VxRail#readme
       - Fortinet:
@@ -114,7 +125,6 @@ nav:
         - Microsoft Active Directory: https://github.com/AsBuiltReport/AsBuiltReport.Microsoft.AD#readme
         - Microsoft Azure: https://github.com/AsBuiltReport/AsBuiltReport.Microsoft.Azure#readme
         - Microsoft DHCP: https://github.com/AsBuiltReport/AsBuiltReport.Microsoft.DHCP#readme
-        #- Microsoft Teams: https://github.com/AsBuiltReport/AsBuiltReport.Microsoft.Teams#readme
         - Microsoft Windows: https://github.com/AsBuiltReport/AsBuiltReport.Microsoft.Windows#readme
       - NetApp:
         - NetApp ONTAP: https://github.com/AsBuiltReport/AsBuiltReport.NetApp.ONTAP#readme
@@ -134,16 +144,16 @@ nav:
         - VMware Site Recovery Manager: https://github.com/AsBuiltReport/AsBuiltReport.VMware.SRM#readme
         - VMware vSphere: https://github.com/AsBuiltReport/AsBuiltReport.VMware.vSphere#readme
   - Developer Guide:
+    - dev-guide/contributing.md
     - Creating a report module: dev-guide/creating-a-report-module.md
     - Creating a report style: dev-guide/creating-a-report-style.md
-  - Blog:
-    - blog/index.md
   - Support:
     - FAQ: support/faq.md
     - Known Issues: support/known-issues.md
     - Donate: support/donate.md
+  - Blog:
+    - blog/index.md
   - About:
-    - Acknowledgements: about/acknowledgements.md
+    - Contributors: about/contributors.md
     - Contact: about/contact.md
-    - Contributing: about/contributing.md
     - License: about/license.md

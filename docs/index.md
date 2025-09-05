@@ -94,7 +94,7 @@ As Built Report is an open source configuration document framework which utilise
 
     The reports module configuration is a JSON file which stores information specific to the related report. It holds information such as the report name, version, and release status.<br><br>The report configuration can also provide functionality such as configurable report options, health checks and granular information levels.<br><br>Individual report module configuration files can be saved and specified when generating reports.
 
--   :simple-powershell: **Styles Script**
+-   :material-powershell: **Styles Script**
 
     ---
 

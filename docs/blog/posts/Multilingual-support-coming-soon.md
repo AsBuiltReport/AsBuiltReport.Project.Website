@@ -1,0 +1,118 @@
+---
+draft: false
+date: 2025-09-05
+authors:
+  - Tim
+categories:
+  - Features
+  - Announcements
+slug: Multilingual-support
+---
+
+# Multilingual support is coming soon to AsBuiltReport
+
+Today I can announce that one of the most requested features for AsBuiltReport is currently in development, with work underway to bring **multilingual support** to the AsBuiltReport framework.
+
+![multilingual](../../assets/images/blog/multilingual.jpg){ loading=lazy }
+
+## Key Features in Development
+
+
+**🌐 Comprehensive Localization Framework**
+
+- Implementation of PowerShell's built-in localization capabilities
+
+- Option for differing UI localization and report localization
+
+**📝 Standardised Translation Structure**
+
+- Standardised folder structures for simple multilingual support adoption
+
+- Support for resource files containing translated strings for AsBuiltReport core and report modules
+
+- Automated string extraction and translation
+
+**🔧 New Commandline Parameters**
+
+- Dynamic language selection - language selection is determined by what each AsBuiltReport module supports
+
+- Support for standard locale codes (en-US, es-ES, fr-FR, de-DE, etc.)
+
+- Fallback mechanism to ensure reports generate even with incomplete translations
+
+**📊 Report Module Integration**
+
+- Documentation and templates for new and existing report modules to add multilingual support
+
+- Backward compatibility ensuring existing English-only workflows continue to work
+
+- Progressive enhancement allowing modules to adopt localization incrementally
+
+## Technical Implementation
+Multilingual support is being implemented using PowerShell's native localization features, including:
+
+- **Resource Files**: Utilising `.psd1` resource files for each supported language
+
+- **String Localization**: Converting hard-coded English strings to localizable resource keys
+
+- **Cultural Formatting**: Ensuring dates, numbers, and other culture-specific elements display correctly
+
+- **Encoding Support**: Proper handling of character encodings for various languages
+
+## Timeline and Current Status
+**Development Status**: Active development in progress
+
+1. 🔄 Localization framework design (in progress)
+2. 🔄 Resource file and folder structures (in progress)
+3. 🔄 Documentation and templates (in progress)
+4. 🔄 AsBuiltReport Core module implementation and testing (in progress)
+5. 📋 AsBuiltReport report module implementation and testing (planned)
+6. 📋 Community translation coordination (planned)
+
+**Target Completion**: While I don't have a specific release date yet, I can share that the foundational work is well underway.
+
+## How You Can Help
+
+As an open-source project, AsBuiltReport thrives on community contributions. Here's how you can get involved with the multilingual initiative:
+
+### For Developers
+- Review the [`multilingual-support`](https://github.com/AsBuiltReport/AsBuiltReport.Core/tree/multilingual-support){:target="_blank"} branch and provide feedback
+- Help test the new localization features
+- Contribute code improvements or bug fixes
+- Update existing report modules to support the new framework
+
+### For Translators and Linguists
+- Express interest in translating AsBuiltReport modules to your language
+- Join our [GitHub discussion](https://github.com/orgs/AsBuiltReport/discussions/1){:target="_blank"} to share your ideas and feedback
+
+### For Users
+- Share your language requirements and use cases
+- Test preview releases when available
+- Provide feedback on the user experience
+- Spread the word at your work and in your local IT communities
+
+## Looking Ahead
+
+The introduction of multilingual support represents a significant milestone for AsBuiltReport as it will:
+
+- **Expand Global Reach**: Enable organisations worldwide to generate localized documentation
+- **Enhance Professionalism**: Allow organisations to present documentation in their preferred language
+- **Foster Community Growth**: Encourage contributions from more of the global user base
+
+## Stay Connected
+
+We're committed to keeping the community informed about our progress. To stay updated on the multilingual support development:
+
+- **Watch the Repository**: Star and watch the [AsBuiltReport.Core repository](https://github.com/AsBuiltReport/AsBuiltReport.Core){:target="_blank"} for updates
+- **Join Discussions**: Participate in the [GitHub discussion](https://github.com/orgs/AsBuiltReport/discussions/1){:target="_blank"} to share your ideas and feedback
+- **Follow the Project**: Check the project [website](https://www.asbuiltreport.com) and [social channels](../../about/contact.md) for regular updates
+
+## Acknowledgments
+
+Thanks to all the users and contributors who requested this feature, those who provide feedback, and to everyone who has made AsBuiltReport what it is today. As always, AsBuiltReport remains committed to being a community-driven, open-sourced project, that serves the needs of IT professionals worldwide.
+
+---
+
+**The AsBuiltReport multilingual support feature is currently in active development and is not yet ready for production use. Future announcements will be made when this feature is available for testing and general release.**
+
+---

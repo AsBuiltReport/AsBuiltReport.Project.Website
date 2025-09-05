@@ -12,13 +12,13 @@ slug: The-future-of-As-Built-Report
 
 In my [previous post](../posts/The-history-of-As-Built-Report.md) I shared how I came to start As Built Report and my reasons for doing so. It's been a few years since its inception and some of you may be asking what does the future hold for the project?
 
-Before I delve into what may lie ahead, let me take a moment to reflect on the project's progression so far, by extending a sincere thank you to all the contributors who have given their time and effort to this project. Whether you have contributed code, reported bugs, provided feedback, written a blog post, or simply participated in discussions, your efforts have not gone unnoticed.
+Before I delve into what may lie ahead, let me take a moment to reflect on the project's progression so far, by extending a sincere thank you to all the [contributors](../../about/contributors.md) who have given their time and effort to this project. Whether you have contributed code, reported bugs, provided feedback, written a blog post, or simply participated in discussions, your efforts have not gone unnoticed.
 
 <!-- more -->
 
 ## A special thanks to Jon!
 
-I'd also like to give a special thanks to [Jonathan Colon](../../about/acknowledgements.md#jonathan-colon) for his ongoing contributions to this project. His code contributions have not only significantly expanded and improved the report library, but his ongoing dedication has undoubtedly kept this project alive! I am grateful for his dedication to the project; from bug fixes to feature enhancements, his contributions have been critical in the project's development and has kept it moving forward.
+I'd also like to give a special thanks to [Jonathan Colon](../../about/contributors.md#jonathan-colon) for his ongoing contributions to this project. His code contributions have not only significantly expanded and improved the report library, but his ongoing dedication has undoubtedly kept this project alive! I am grateful for his dedication to the project; from bug fixes to feature enhancements, his contributions have been critical in the project's development and has kept it moving forward.
 
 ## My challenges
 
@@ -62,4 +62,4 @@ If there is something you'd like to see in the project, please share your ideas 
 Help expand our community by sharing your positive experiences with this project. Whether through social media, blog posts, or word of mouth, your advocacy contributes to the project's growth.
 
 ## A final thanks!
-In closing, I'd like to again thank all of the awesome people who have contributed to this project. Your help and contributions are invaluable, and I look forward to welcoming more contributors in the future who are willing to donate their time and energy to developing and expanding the As Built Report project.
+In closing, I'd like to again thank all of the awesome [people who have contributed](../../about/contributors.md#other-contributors) to this project. Your help and contributions are invaluable, and I look forward to welcoming more contributors in the future who are willing to donate their time and energy to developing and expanding the As Built Report project.
