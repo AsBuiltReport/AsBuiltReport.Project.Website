@@ -84,7 +84,7 @@ Create a configuration file using the JSON template provided in the report modul
 
 ```json
 {
-  "Report": {
+"Report": {                                         // Do not modify the Report parameters, use Options if needed
     "Name": "[Technology] As Built Report",
     "Version": "1.0",
     "Status": "Released",
@@ -93,7 +93,7 @@ Create a configuration file using the JSON template provided in the report modul
     "ShowHeaderFooter": true,
     "ShowTableCaptions": true
   },
-  "Options": {
+  "Options": {                                     // Used for configurable report options
   },
   "InfoLevel": {
     "_comment_": "0 = Disabled, 1 = Enabled / Summary, 2 = Adv Summary, 3 = Detailed, 4 = Adv Detailed, 5 = Comprehensive"
