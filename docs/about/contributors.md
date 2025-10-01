@@ -14,8 +14,6 @@
 
 <h4>Project Advocate & Lead Contributor</h4>
 
-:fontawesome-brands-square-x-twitter:{ .X } X - [@jcolonfzenpr](https://x.com/jcolonfzenpr){:target='_blank'}
-
 :fontawesome-brands-bluesky: Bluesky - [@jcolonfpr](https://bsky.app/profile/jcolonfpr.bsky.social){:target='_blank'}
 
 :fontawesome-brands-github: GitHub - [@rebelinux](https://github.com/rebelinux){:target='_blank'}

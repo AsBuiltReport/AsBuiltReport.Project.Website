@@ -125,6 +125,7 @@ nav:
         - Microsoft Active Directory: https://github.com/AsBuiltReport/AsBuiltReport.Microsoft.AD#readme
         - Microsoft Azure: https://github.com/AsBuiltReport/AsBuiltReport.Microsoft.Azure#readme
         - Microsoft DHCP: https://github.com/AsBuiltReport/AsBuiltReport.Microsoft.DHCP#readme
+        - Microsoft SCVMM: https://github.com/AsBuiltReport/AsBuiltReport.Microsoft.SCVMM#readme
         - Microsoft Windows: https://github.com/AsBuiltReport/AsBuiltReport.Microsoft.Windows#readme
       - NetApp:
         - NetApp ONTAP: https://github.com/AsBuiltReport/AsBuiltReport.NetApp.ONTAP#readme
