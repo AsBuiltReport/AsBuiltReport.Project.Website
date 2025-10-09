@@ -34,6 +34,13 @@ AsBuiltReport is an open source configuration document framework which utilises 
 
     Use the default style or [create your own](dev-guide/creating-a-report-style.md) to match your corporate identity. Set page orientation, text and table formatting with fonts, colours, borders and highlighted cells and rows.
 
+-   :octicons-comment-discussion-16: **Multilingual Support**
+
+    ---
+
+    Comprehensive multilingual support allows reports to be generated in multiple languages, where available.
+
+
 -   :octicons-apps-16: **Modular Architecture**
 
     ---

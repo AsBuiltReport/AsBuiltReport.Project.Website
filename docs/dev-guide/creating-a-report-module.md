@@ -32,6 +32,13 @@ Organise your module repository with the following standard structure:
 AsBuiltReport.Vendor.Technology/
 ├── .github/                                       # GitHub workflows and templates
 ├── .vscode/                                       # VS Code configuration
+├── Language/                                      # Language support folders
+│   ├── en-US/
+│   │   └── VendorTechnology.psd1                  # en-US language translation file
+│   ├── <xx>-<YY>/                                 # Additional language support folders
+│   ├── es-ES/
+│   ├── fr-FR/
+│   └── de-DE/
 ├── Samples/                                       # Sample report outputs
 ├── Src/
 │   ├── Private/                                   # Private helper functions
@@ -41,6 +48,9 @@ AsBuiltReport.Vendor.Technology/
 ├── AsBuiltReport.Vendor.Technology.psm1           # PowerShell module script
 ├── README.md                                      # Module documentation
 ├── CHANGELOG.md                                   # Version history
+├── CODE_OF_CONDUCT.md                             # Code of Conduct policy
+├── CONTRIBUTING.md                                # Contributing guidelines
+├── SECURITY.md                                    # Security policy
 └── LICENSE                                        # MIT License
 ```
 
@@ -84,10 +94,11 @@ Create a configuration file using the JSON template provided in the report modul
 
 ```json
 {
-"Report": {                                         // Do not modify the Report parameters, use Options if needed
-    "Name": "[Technology] As Built Report",
+"Report": {                                         // Avoid modifying the Report parameters, use Options if needed
+    "Name": "<Vendor> <Technology> As Built Report",
     "Version": "1.0",
     "Status": "Released",
+    "Language": "en-US",
     "ShowCoverPageImage": true,
     "ShowTableOfContents": true,
     "ShowHeaderFooter": true,
@@ -102,6 +113,19 @@ Create a configuration file using the JSON template provided in the report modul
   }
 }
 ```
+
+### Language Configuration
+The `Language` property in the `Report` section specifies the default language for report content. This setting can be overridden at runtime using the [New-AsBuiltReport](../user-guide/new-asbuiltreport.md) `-ReportLanguage` parameter when generating reports.
+
+**Language Support Requirements:**
+
+- **Minimum requirement:** All report modules must provide `en-US` (English - United States) language support
+- **Recommended:** Report modules should aim to support as many languages as possible from the available languages list
+- **Optional:** Additional languages can be provided based on contributor availability and community needs
+
+**Available languages supported by AsBuiltReport.Core:** en-US (default), en-GB, es-ES, fr-FR, de-DE, it-IT, pt-PT, ja-JP, zh-CN, zh-Hans, zh-Hant, ar-SA, ru-RU, ko-KR, nl-NL, sv-SE, nb-NO, da-DK, fi-FI, pl-PL, cs-CZ, hu-HU, tr-TR, el-GR, he-IL, hi-IN, th-TH, vi-VN
+
+For comprehensive language mapping and fallback chains, see the [Language Support Implementation](#language-support-implementation) section below.
 
 ### InfoLevel Standards
 Implement consistent information levels across all sections. Use the appropriate number of InfoLevel values based on the granular detail levels your report module requires:
@@ -402,26 +426,8 @@ function Invoke-AsBuiltReport.Vendor.Technology {
         [PSCredential] $Credential
     )
 
-    Write-PScriboMessage -Plugin "Module" -Message "Please refer to https://www.asbuiltreport.com for more detailed information about this project."
-    Write-PScriboMessage -Plugin "Module" -Message "Do not forget to update your report configuration file after each new version release: https://www.asbuiltreport.com/user-guide/new-asbuiltreportconfig/"
-    Write-PScriboMessage -Plugin "Module" -Message "Documentation: https://github.com/AsBuiltReport/AsBuiltReport.Vendor.Technology"
-    Write-PScriboMessage -Plugin "Module" -Message "Issues or bug reporting: https://github.com/AsBuiltReport/AsBuiltReport.Vendor.Technology/issues"
-
-    # Check the current AsBuiltReport.Vendor.Technology module
-    Try {
-        $InstalledVersion = Get-Module -ListAvailable -Name AsBuiltReport.Vendor.Technology -ErrorAction SilentlyContinue | Sort-Object -Property Version -Descending | Select-Object -First 1 -ExpandProperty Version
-
-        if ($InstalledVersion) {
-            Write-PScriboMessage -Plugin "Module" -Message "AsBuiltReport.Vendor.Technology $($InstalledVersion.ToString()) is currently installed."
-            $LatestVersion = Find-Module -Name AsBuiltReport.Vendor.Technology -Repository PSGallery -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Version
-            if ($LatestVersion -gt $InstalledVersion) {
-                Write-PScriboMessage -Plugin "Module" -Message "AsBuiltReport.Vendor.Technology $($LatestVersion.ToString()) is available."
-                Write-PScriboMessage -Plugin "Module" -Message "Run 'Update-Module -Name AsBuiltReport.Vendor.Technology -Force' to install the latest version."
-            }
-        }
-    } Catch {
-        Write-PscriboMessage -Plugin "Module" -IsWarning $_.Exception.Message
-    }
+    # Display report module information using Core function
+    Write-ReportModuleInfo -ModuleName 'Vendor.Technology'
 
     # Import Report Configuration
     $Report = $ReportConfig.Report
@@ -450,6 +456,411 @@ Create focused helper functions in the `Src/Private` directory:
 - Keep functions focused on single responsibilities
 - Include comprehensive comment-based help
 - Implement proper error handling
+
+## Language Support Implementation
+
+AsBuiltReport v1.5.0+ introduces comprehensive multilingual support, allowing report modules to generate documentation in multiple languages. This section explains how to implement language support in your report module.
+
+### Overview
+
+The language support system consists of two components:
+
+1. **UI Language** (Core Module): Translates on-screen prompts and messages based on the user's PowerShell session culture
+2. **Document Language** (Report Module): Translates report content (headings, text, tables) based on the specified report language
+
+### Language Selection Priority
+
+Report modules use the following priority for determining the document language:
+
+1. [New-AsBuiltReport](../user-guide/new-asbuiltreport.md) `-ReportLanguage` parameter (if explicitly specified by user)
+2. `Report.Language` setting from [report JSON configuration file](creating-a-report-module.md#json-configuration-structure)
+3. Default fallback to 'en-US'
+
+### Creating Language Files
+
+#### Directory Structure
+Create a `Language` folder in your module root with subfolders for each supported language:
+
+```
+AsBuiltReport.Vendor.Technology/
+├── Language/
+│   ├── en-US/
+│   │   └── VendorTechnology.psd1
+│   ├── es-ES/
+│   │   └── VendorTechnology.psd1
+│   ├── fr-FR/
+│   │   └── VendorTechnology.psd1
+│   └── de-DE/
+│       └── VendorTechnology.psd1
+```
+
+#### Language File Format
+Language files use PowerShell data files (.psd1) with a hashtable structure containing multiple `ConvertFrom-StringData` blocks. This format allows you to organise translations by function or section:
+
+```powershell
+# culture = 'en-US'
+@{
+    # Main module translations
+    InvokeAsBuiltReportVendorTechnology = ConvertFrom-StringData @'
+        Connecting = Connecting to {0}.
+        DefaultOrder = No custom section order specified. Using default order.
+        CustomOrder = Using custom section order from report JSON configuration.
+        InfoLevelNotFound = InfoLevel for '{0}' not found.
+        SectionError = Error processing section '{0}': {1}
+'@
+
+    # Virtual Machine section translations (Get-AbrVirtualMachine)
+    GetAbrVirtualMachine = ConvertFrom-StringData @'
+        InfoLevel = VirtualMachine InfoLevel set at {0}.
+        Collecting = Collecting Virtual Machine information.
+        SectionInfo = Virtual machines provide compute resources in a virtualized environment.
+        ParagraphSummary = The following table summarizes the virtual machines within the {0} environment.
+
+        Heading = Virtual Machines
+        TableHeading = Virtual Machines
+        Name = Name
+        PowerState = Power State
+        PoweredOn = Powered On
+        PoweredOff = Powered Off
+        CPUCount = CPU Count
+        MemoryGB = Memory (GB)
+        StorageGB = Storage (GB)
+        GuestOS = Guest OS
+        IPAddress = IP Address
+        None = None
+'@
+
+    # Storage section translations (Get-AbrStorageInfo)
+    GetAbrStorageInfo = ConvertFrom-StringData @'
+        InfoLevel = Storage InfoLevel set at {0}.
+        Collecting = Collecting Storage information.
+        ParagraphSummary = The following table summarizes the storage configuration within the {0} environment.
+
+        Heading = Storage
+        TableHeading = Storage Details
+        Name = Name
+        Type = Type
+        CapacityGB = Capacity (GB)
+        UsedGB = Used (GB)
+        FreeGB = Free (GB)
+        PercentUsed = Percent Used
+'@
+}
+```
+
+**Spanish (es-ES) example:**
+```powershell
+# culture = 'es-ES'
+@{
+    # Traducciones principales del módulo
+    InvokeAsBuiltReportVendorTechnology = ConvertFrom-StringData @'
+        Connecting = Conectando a {0}.
+        DefaultOrder = No se especificó un orden de sección personalizado. Usando orden predeterminado.
+        CustomOrder = Usando orden de sección personalizado de la configuración JSON del informe.
+        InfoLevelNotFound = InfoLevel para '{0}' no encontrado.
+        SectionError = Error al procesar la sección '{0}': {1}
+'@
+
+    # Traducciones de sección de máquinas virtuales
+    GetAbrVirtualMachine = ConvertFrom-StringData @'
+        InfoLevel = VirtualMachine InfoLevel establecido en {0}.
+        Collecting = Recopilando información de máquinas virtuales.
+        SectionInfo = Las máquinas virtuales proporcionan recursos informáticos en un entorno virtualizado.
+        ParagraphSummary = La siguiente tabla resume las máquinas virtuales en el entorno {0}.
+
+        Heading = Máquinas Virtuales
+        TableHeading = Máquinas Virtuales
+        Name = Nombre
+        PowerState = Estado de Energía
+        PoweredOn = Encendido
+        PoweredOff = Apagado
+        CPUCount = Recuento de CPU
+        MemoryGB = Memoria (GB)
+        StorageGB = Almacenamiento (GB)
+        GuestOS = SO Invitado
+        IPAddress = Dirección IP
+        None = Ninguno
+'@
+
+    # Traducciones de sección de almacenamiento
+    GetAbrStorageInfo = ConvertFrom-StringData @'
+        InfoLevel = Storage InfoLevel establecido en {0}.
+        Collecting = Recopilando información de almacenamiento.
+        ParagraphSummary = La siguiente tabla resume la configuración de almacenamiento en el entorno {0}.
+
+        Heading = Almacenamiento
+        TableHeading = Detalles de Almacenamiento
+        Name = Nombre
+        Type = Tipo
+        CapacityGB = Capacidad (GB)
+        UsedGB = Usado (GB)
+        FreeGB = Libre (GB)
+        PercentUsed = Porcentaje Usado
+'@
+}
+```
+
+**Key formatting requirements:**
+
+- File must start with a culture comment: `# culture = 'en-US'`
+- Use a hashtable structure with `@{ }` wrapping all translations
+- Group translations by function name (e.g., `GetAbrVirtualMachine`)
+- Each group uses `ConvertFrom-StringData @'...'@` for its translations
+- Use meaningful key names that describe the content
+- Use format strings (`{0}`, `{1}`) for dynamic values
+- Include comments to organise sections within the file
+
+### Implementing Language Support in Your Module
+
+Language support is automatically initialized by the AsBuiltReport.Core module when a report is generated. The Core module loads your language files based on the available and/or configured language and makes translations available through the `$reportTranslate` global variable.
+
+**What you need to do:**
+
+1. Create language files in the `Language/` folder structure
+2. Use the `$reportTranslate` variable in your report code to reference translations
+
+**What the Core module handles automatically:**
+
+- Loading the appropriate language file based on user configuration
+- Falling back to parent languages or 'en-US' if needed
+- Setting the `$reportTranslate` global variable
+- Managing culture-specific formatting
+
+#### Using Translations in Your Report Module
+Reference translation strings using the `$reportTranslate` global variable. When using the hashtable structure, access translations through the appropriate function/section key:
+
+```powershell
+# Access translations for the main module
+$moduleTranslate = $reportTranslate.InvokeAsBuiltReportVendorTechnology
+
+# Access translations for specific functions
+$vmTranslate = $reportTranslate.GetAbrVirtualMachine
+$storageTranslate = $reportTranslate.GetAbrStorageInfo
+
+# Use in section headings
+Section -Name $vmTranslate.Heading -Style Heading1 {
+
+    # Display informational paragraph with formatted string
+    Paragraph ($vmTranslate.ParagraphSummary -f $TargetName)
+
+    # Table column headers using translations
+    $VMData = foreach ($VM in $VMs) {
+        [PSCustomObject]@{
+            $vmTranslate.Name = $VM.Name
+            $vmTranslate.PowerState = if ($VM.PowerState -eq 'PoweredOn') {
+                $vmTranslate.PoweredOn
+            } else {
+                $vmTranslate.PoweredOff
+            }
+            $vmTranslate.CPUCount = $VM.NumCpu
+            $vmTranslate.MemoryGB = $VM.MemoryGB
+            $vmTranslate.StorageGB = [Math]::Round($VM.ProvisionedSpaceGB, 2)
+            $vmTranslate.GuestOS = $VM.GuestOS
+        }
+    }
+
+    # Translated messages
+    if ($VMData) {
+        $TableParams = @{
+            Name = $vmTranslate.TableHeading
+            List = $false
+            ColumnWidths = 20, 15, 10, 12, 12, 20
+        }
+        $VMData | Sort-Object $vmTranslate.Name | Table @TableParams
+    } else {
+        Paragraph $vmTranslate.None
+    }
+}
+```
+
+**Alternative approach for simpler modules:**
+
+For smaller modules with fewer translations, you can use a simpler flat structure:
+
+```powershell
+# Simpler language file structure (VendorTechnology.psd1)
+# culture = 'en-US'
+ConvertFrom-StringData @'
+    SectionTitle = Virtual Infrastructure Overview
+    HostSummary = Host Summary
+    VMName = VM Name
+    PoweredOn = Powered On
+    PoweredOff = Powered Off
+'@
+
+# Usage in code
+Section -Name $reportTranslate.SectionTitle -Style Heading1 {
+    Section -Name $reportTranslate.HostSummary -Style Heading2 {
+        # Direct access to translations
+        Paragraph "Status: $($reportTranslate.PoweredOn)"
+    }
+}
+```
+
+### Culture Fallback System
+
+AsBuiltReport implements intelligent culture fallback through the `Resolve-Culture` function:
+
+**Example fallback chains:**
+- `fr-CA` (French-Canada) → `fr-FR` → `en-US`
+- `es-MX` (Spanish-Mexico) → `es-ES` → `en-US`
+- `en-AU` (English-Australia) → `en-GB` → `en-US`
+- `zh-HK` (Chinese-Hong Kong) → `zh-Hant` → `zh-TW` → `en-US`
+
+This ensures that if a specific regional translation isn't available, the module will use the parent language before falling back to English.
+
+### Supported Language Codes
+
+The following language codes are supported with comprehensive fallback mappings:
+
+| Code | Language | Code | Language |
+| --- | --- | --- | --- |
+| en-US | English (US) | ja-JP | Japanese |
+| en-GB | English (UK) | ko-KR | Korean |
+| es-ES | Spanish (Spain) | nl-NL | Dutch |
+| es-MX | Spanish (Mexico) | sv-SE | Swedish |
+| fr-FR | French (France) | nb-NO | Norwegian |
+| fr-CA | French (Canada) | da-DK | Danish |
+| de-DE | German (Germany) | fi-FI | Finnish |
+| it-IT | Italian | pl-PL | Polish |
+| pt-PT | Portuguese (Portugal) | cs-CZ | Czech |
+| pt-BR | Portuguese (Brazil) | hu-HU | Hungarian |
+| ru-RU | Russian | tr-TR | Turkish |
+| ar-SA | Arabic | el-GR | Greek |
+| zh-CN | Chinese (Simplified) | he-IL | Hebrew |
+| zh-TW | Chinese (Traditional) | hi-IN | Hindi |
+| zh-Hans | Chinese (Simplified) | th-TH | Thai |
+| zh-Hant | Chinese (Traditional) | vi-VN | Vietnamese |
+
+### Best Practices
+
+1. **Start with en-US**: Always create the English (US) language file first as this is the fallback language
+2. **Consistent Key Names**: Use descriptive, consistent key names across all language files
+3. **Avoid Hardcoded Text**: Never hardcode text in your module - always use translation keys
+4. **Test Fallbacks**: Test your module with various language settings to ensure fallback chains work correctly
+5. **Format Strings**: Use PowerShell format strings (`{0}`, `{1}`) for dynamic values:
+   ```powershell
+   # In language file:
+   VMCount = Found {0} virtual machines
+
+   # In code:
+   Paragraph ($reportTranslate.VMCount -f $VMs.Count)
+   ```
+6. **RTL Language Support**: For right-to-left languages (Arabic, Hebrew), ensure your table layouts work correctly
+
+### Testing Language Support
+
+Test your module with different languages:
+
+```powershell
+# Test with Spanish
+New-AsBuiltReport -Report Vendor.Technology -Target server01 -Credential $cred -ReportLanguage 'es-ES'
+
+# Test with French (uses configuration file setting)
+New-AsBuiltReport -Report Vendor.Technology -Target server01 -Credential $cred -ReportConfigFilePath 'C:\Config\report-fr.json'
+
+# Test fallback (if es-MX not available, falls back to es-ES)
+New-AsBuiltReport -Report Vendor.Technology -Target server01 -Credential $cred -ReportLanguage 'es-MX'
+```
+
+### Example: Complete Language Implementation
+
+Here's a complete example showing language support implementation:
+
+```powershell
+function Invoke-AsBuiltReport.VMware.vSphere {
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory = $true)]
+        [String[]] $Target,
+
+        [Parameter(Mandatory = $true)]
+        [PSCredential] $Credential
+    )
+
+    # Access configuration (language support is automatically initialized by Core module)
+    $Report = $ReportConfig.Report
+    $InfoLevel = $ReportConfig.InfoLevel
+
+    # Access translations (automatically loaded by Core module)
+    $vmTranslate = $reportTranslate.GetAbrVMwareVSphere
+
+    foreach ($VIServer in $Target) {
+        try {
+            $vCenter = Connect-VIServer -Server $VIServer -Credential $Credential
+
+            # Use translated section title
+            Section -Name $vmTranslate.Heading -Style Heading1 {
+
+                if ($InfoLevel.Infrastructure -ge 1) {
+                    $VMData = Get-VM -Server $vCenter | Select-Object Name, PowerState, NumCpu, MemoryGB
+
+                    # Use translated column headers
+                    $VMInfo = foreach ($VM in $VMData) {
+                        [PSCustomObject]@{
+                            $vmTranslate.Name = $VM.Name
+                            $vmTranslate.PowerState = if ($VM.PowerState -eq 'PoweredOn') { $vmTranslate.PoweredOn } else { $vmTranslate.PoweredOff }
+                            $vmTranslate.CPUCount = $VM.NumCpu
+                            $vmTranslate.MemoryGB = $VM.MemoryGB
+                        }
+                    }
+
+                    if ($VMInfo) {
+                        $VMInfo | Sort-Object $vmTranslate.Name | Table @{
+                            Name = $vmTranslate.TableHeading
+                            List = $false
+                            ColumnWidths = 30, 20, 25, 25
+                        }
+                    } else {
+                        # Use translated message
+                        Paragraph $vmTranslate.None
+                    }
+                }
+            }
+        } catch {
+            Write-Warning ($vmTranslate.ConnectionError -f $VIServer, $_.Exception.Message)
+        }
+    }
+}
+```
+
+### Migration Guide for Existing Modules
+
+To add language support to an existing report module:
+
+1. **Create the language directory structure**
+   - Create `Language/en-US/` folder in your module root
+   - Create a .psd1 file named after your module (without dots)
+
+2. **Extract hardcoded strings**
+   - Identify all hardcoded text in your module (section titles, table headers, messages, etc.)
+   - Add them to the 'en-US' language file using the hashtable structure
+   - Group translations by function name for better organization
+
+3. **Replace hardcoded strings**
+   - Replace all hardcoded text with `$reportTranslate.FunctionName.Key` references
+   - For simpler modules, use `$reportTranslate.Key` for flat structure
+
+4. **Update JSON configuration**
+   - Add the `"Language": "en-US"` property to your JSON configuration template
+
+5. **Test thoroughly**
+   - Test with 'en-US' to ensure all translations work correctly
+   - Verify that no hardcoded strings remain
+   - Test table formatting and column widths
+
+6. **Add additional languages**
+   - Create language folders for other languages (es-ES, fr-FR, etc.)
+   - Translate all strings while maintaining the same structure and keys
+   - Test fallback behavior
+
+7. **Update documentation**
+   - Update your module's README with supported languages
+   - Document any language-specific considerations
+   - Include example usage with `-ReportLanguage` parameter
+
+!!! Note
+    The AsBuiltReport.Core module automatically handles language initialization - you don't need to call `Initialize-LocalizedData` in your report module.
 
 ## PowerShell Best Practices
 
