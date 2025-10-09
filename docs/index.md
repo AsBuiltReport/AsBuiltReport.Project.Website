@@ -34,7 +34,7 @@ AsBuiltReport is an open source configuration document framework which utilises 
 
     Use the default style or [create your own](dev-guide/creating-a-report-style.md) to match your corporate identity. Set page orientation, text and table formatting with fonts, colours, borders and highlighted cells and rows.
 
--   :fontawesome-solid-language: **Multilingual Support**
+-   :fontawesome-solid-language: **Multilingual Support - Coming Soon!**
 
     ---
 
@@ -111,7 +111,7 @@ AsBuiltReport is an open source configuration document framework which utilises 
 
 ## **Report Modules**
 
-Click each vendor logo to view available report modules and associated documentation.
+Click each vendor logo to view [available report modules](user-guide/report-modules/overview.md) and associated documentation.
 
 <table width="100%">
     <tr>
