@@ -33,7 +33,7 @@ Please refer to the [report module user guide](../user-guide/report-modules/over
 
 ```powershell title="Install third party PowerShell modules"
 # Install third party PowerShell module examples
-Install-Module -Name 'VMware.PowerCLI' -Scope 'CurrentUser'
+Install-Module -Name 'VCF.PowerCLI' -Scope 'CurrentUser' -AllowClobber -SkipPublisherCheck
 Install-Module -Name 'PureStoragePowerShellSDK' -Scope 'CurrentUser'
 ```
 

@@ -10,7 +10,39 @@ This guide can be used to create custom style scripts which match your individua
 
 !!! tip
 
-    Use the [default style script](https://github.com/AsBuiltReport/AsBuiltReport.Core/blob/master/AsBuiltReport.Core.Style.ps1){:target="_blank"} as a reference for creating a new style script, or download some sample styles from our [GitHub repository](https://github.com/AsBuiltReport/AsBuiltReport.Core/tree/master/Samples){:target="_blank"}.
+    Use the [default style script](https://github.com/AsBuiltReport/AsBuiltReport.Core/blob/master/AsBuiltReport.Core.Style.ps1){:target="_blank"} as a reference for creating a new style script.
+
+### Language Support
+
+!!! info
+    Language support is **coming soon**! This feature is currently in development and will be included in AsBuiltReport.Core v1.5.0.
+
+To support report language translations in AsBuiltReport v1.5.0 or higher, ensure the following code is added to the top of your style scripts.
+
+```powershell
+try {
+    # Try to initialize localized data for style elements
+    # Use the report language from parent scope if available, otherwise fallback to OS language
+    if ($PSScriptRoot) {
+        if ($FinalReportLanguage) {
+            Initialize-LocalizedData -ModuleBasePath $PSScriptRoot -LanguageFile <StyleScriptName> -ModuleType 'Core' -Language $FinalReportLanguage
+        } else {
+            Initialize-LocalizedData -ModuleBasePath $PSScriptRoot -LanguageFile <StyleScriptName> -ModuleType 'Core'
+        }
+    } else {
+        # Fallback if $PSScriptRoot is not available
+        $StyleModulePath = Split-Path -Path $MyInvocation.MyCommand.Path -Parent
+        if ($FinalReportLanguage) {
+            Initialize-LocalizedData -ModuleBasePath $StyleModulePath -LanguageFile <StyleScriptName> -ModuleType 'Core' -Language $FinalReportLanguage
+        } else {
+            Initialize-LocalizedData -ModuleBasePath $StyleModulePath -LanguageFile <StyleScriptName> -ModuleType 'Core'
+        }
+    }
+} catch {
+    # If localization fails, continue with default style (don't break report generation)
+    Write-Warning "Could not load style localization: $($_.Exception.Message)"
+}
+```
 
 ### Global Document Options
 
@@ -178,6 +210,7 @@ Each report will include a JSON configuration file which provides an option to e
         "Name": "VMware vSphere As Built Report",
         "Version": "1.0",
         "Status": "Released",
+        "Language": "en-US",
         "ShowCoverPageImage": true,
         "ShowTableOfContents": true,
         "ShowHeaderFooter": true,

@@ -18,9 +18,11 @@ This is a mandatory parameter.
 
 ### Filename
 
-Specifies the filename of the report JSON configuration file. If a filename is not specified, a JSON configuration file will be created with a default filename `AsBuiltReport.<Vendor>.<Product>.json`
+Specifies the filename of the report JSON configuration file.
 
 This is an optional parameter.
+
+If a filename is not specified, a JSON configuration file will be created with a default filename `AsBuiltReport.<Vendor>.<Technology>.json`
 
 ### Force
 
@@ -54,6 +56,7 @@ This is an optional parameter.
             "Name": "VMware vSphere As Built Report",   // The name of the As Built Report
             "Version": "1.0",                           // The report version
             "Status": "Released",                       // The report release status
+            "Language": "es-ES",                        // The report content language (Default en-US)
             "ShowCoverPageImage": true,                 // Toggle to enable/disable the display of the cover page image
             "ShowTableOfContents": true,                // Toggle to enable/disable table of contents
             "ShowHeaderFooter": true,                   // Toggle to enable/disable document headers & footers

@@ -6,7 +6,7 @@ Before beginning development of a new report module, you should first discuss yo
 
 - Creating an issue in the [main AsBuiltReport repository](https://github.com/AsBuiltReport/AsBuiltReport.Core)
 - Reaching out via the project's [discussion board](https://github.com/orgs/AsBuiltReport/discussions) or [social channels](../about/contact.md)
-- Contacting the maintainers directly
+- Contacting the [maintainers](../about/contributors.md) directly
 
 Once your module proposal is approved, a new GitHub repository will be created under the AsBuiltReport organisation following the standard naming convention. The initial module structure will be scaffolded using a Plaster template, providing you with the standardised directory structure, manifest files, and basic code framework needed to begin development.
 
@@ -35,10 +35,8 @@ AsBuiltReport.Vendor.Technology/
 ├── Language/                                      # Language support folders
 │   ├── en-US/
 │   │   └── VendorTechnology.psd1                  # en-US language translation file
-│   ├── <xx>-<YY>/                                 # Additional language support folders
-│   ├── es-ES/
-│   ├── fr-FR/
-│   └── de-DE/
+│   └── <language>-<REGION>/                       # Additional language support folders
+│       └── VendorTechnology.psd1
 ├── Samples/                                       # Sample report outputs
 ├── Src/
 │   ├── Private/                                   # Private helper functions
@@ -65,12 +63,12 @@ Your module manifest must include these standardised properties:
     Author = 'Your Name'
     Description = 'A PowerShell module to generate an as built report on the configuration of [Technology]'
     PowerShellVersion = '5.1'
-    CompatiblePSEditions = @('Desktop', 'Core')    # Where possible
+    CompatiblePSEditions = @('Desktop', 'Core')    # Where applicable
 
     RequiredModules = @(
         @{
             ModuleName = 'AsBuiltReport.Core'
-            ModuleVersion = '1.4.3'               # Minimum required version
+            ModuleVersion = '1.5.0'               # Minimum required version
         }
         # Add additional vendor-specific modules as needed
     )
@@ -79,9 +77,11 @@ Your module manifest must include these standardised properties:
 
     PrivateData = @{
         PSData = @{
-            Tags = @('AsBuiltReport', '[Vendor]', '[Technology]')
+            Tags = @('AsBuiltReport', 'Report', 'Documentation', 'PScribo', 'Windows', 'Linux', 'MacOS', 'PSEdition_Desktop', 'PSEdition_Core', '[Vendor]', '[Technology]')     # Include tags which are applicable
             LicenseUri = 'https://github.com/AsBuiltReport/AsBuiltReport.Vendor.Technology/blob/master/LICENSE'
             ProjectUri = 'https://github.com/AsBuiltReport/AsBuiltReport.Vendor.Technology'
+            IconUri = 'https://raw.githubusercontent.com/AsBuiltReport/.github/main/profile/images/AsBuiltReport.png'
+            ReleaseNotes = 'https://raw.githubusercontent.com/AsBuiltReport/AsBuiltReport.Vendor.Technology/master/CHANGELOG.md'
         }
     }
 }
@@ -90,7 +90,7 @@ Your module manifest must include these standardised properties:
 ## Configuration File Standards
 
 ### JSON Configuration Structure
-Create a configuration file using the JSON template provided in the report module repository. The `Report` section uses standard properties which **should not be modified**, only values should be customised. The `Options`, `InfoLevel`, and `HealthCheck` sections should be tailored to your specific module requirements. Additional schemas may be added if necessary.
+Create a configuration file using the JSON template provided in the report module repository. The `Report` section uses standard properties. Avoid modifying the property fields, only values should be customised. The `Options`, `InfoLevel`, and `HealthCheck` sections should be tailored to your specific module requirements. Additional schemas may be added if necessary.
 
 ```json
 {
@@ -115,6 +115,10 @@ Create a configuration file using the JSON template provided in the report modul
 ```
 
 ### Language Configuration
+
+!!! info
+    Language support is **coming soon**! This feature is currently in development and will be included in AsBuiltReport.Core v1.5.0.
+
 The `Language` property in the `Report` section specifies the default language for report content. This setting can be overridden at runtime using the [New-AsBuiltReport](../user-guide/new-asbuiltreport.md) `-ReportLanguage` parameter when generating reports.
 
 **Language Support Requirements:**
@@ -266,35 +270,19 @@ if ($InfoLevel.Infrastructure -ge 2) {
 
 ### Standard Module Messages
 
-Include standard informational messages at the beginning of your module:
+Include standard informational messages at the beginning of your module using `Write-ReportModuleInfo`
 
 ```powershell
-Write-PScriboMessage -Plugin "Module" -Message "Please refer to https://www.asbuiltreport.com for more detailed information about this project."
-Write-PScriboMessage -Plugin "Module" -Message "Do not forget to update your report configuration file after each new version release: https://www.asbuiltreport.com/user-guide/new-asbuiltreportconfig/"
-Write-PScriboMessage -Plugin "Module" -Message "Documentation: https://github.com/AsBuiltReport/AsBuiltReport.Vendor.Technology"
-Write-PScriboMessage -Plugin "Module" -Message "Issues or bug reporting: https://github.com/AsBuiltReport/AsBuiltReport.Vendor.Technology/issues"
+Write-ReportModuleInfo -ModuleName "Vendor.Technology"
 ```
 
 ### Version Checking
 
-Include version checking to help users maintain current modules:
+Include version checking for prerequisite PowerShell modules by using `Get-RequiredModule`
 
 ```powershell
-# Check for module updates
-Try {
-    $InstalledVersion = Get-Module -ListAvailable -Name AsBuiltReport.Vendor.Technology -ErrorAction SilentlyContinue | Sort-Object -Property Version -Descending | Select-Object -First 1 -ExpandProperty Version
-
-    if ($InstalledVersion) {
-        Write-PScriboMessage -Plugin "Module" -Message "AsBuiltReport.Vendor.Technology $($InstalledVersion.ToString()) is currently installed."
-        $LatestVersion = Find-Module -Name AsBuiltReport.Vendor.Technology -Repository PSGallery -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Version
-        if ($LatestVersion -gt $InstalledVersion) {
-            Write-PScriboMessage -Plugin "Module" -Message "AsBuiltReport.Vendor.Technology $($LatestVersion.ToString()) is available."
-            Write-PScriboMessage -Plugin "Module" -Message "Run 'Update-Module -Name AsBuiltReport.Vendor.Technology -Force' to install the latest version."
-        }
-    }
-} Catch {
-    Write-PScriboMessage -Plugin "Module" -IsWarning $_.Exception.Message
-}
+# Check for prerequisite PowerShell module versions
+Get-RequiredModule -Name 'Az' -Version '14.4.0'
 ```
 
 ## Report Structure and Flow
@@ -397,11 +385,11 @@ Every module must export a single main function following this pattern:
 function Invoke-AsBuiltReport.Vendor.Technology {
     <#
     .SYNOPSIS
-        A PowerShell function to generate a [Technology] As Built report.
+        A PowerShell function to generate a [Vendor] [Technology] As Built report.
     .DESCRIPTION
-        Documents the configuration of [Technology] in Word/HTML/Text formats.
+        Documents the configuration of [Vendor] [Technology] in Word/HTML/Text formats.
     .PARAMETER Target
-        The target [Technology] system(s) to report on.
+        The target [Vendor] [Technology] system(s) to report on.
     .PARAMETER Credential
         PowerShell credential to use for authentication.
     .NOTES
@@ -458,6 +446,9 @@ Create focused helper functions in the `Src/Private` directory:
 - Implement proper error handling
 
 ## Language Support Implementation
+
+!!! info
+    Language support is **coming soon**! This feature is currently in development and will be included in AsBuiltReport.Core v1.5.0.
 
 AsBuiltReport v1.5.0+ introduces comprehensive multilingual support, allowing report modules to generate documentation in multiple languages. This section explains how to implement language support in your report module.
 
