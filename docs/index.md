@@ -38,7 +38,7 @@ AsBuiltReport is an open source configuration document framework which utilises 
 
     ---
 
-    Comprehensive multilingual support allows reports to be generated in multiple languages, where available.
+    Comprehensive [multilingual support](dev-guide/creating-a-report-module.md#language-support-implementation) allows reports to be generated in [multiple languages](dev-guide/creating-a-report-module.md#language-configuration), where available.
 
 
 -   :octicons-apps-16: **Modular Architecture**
