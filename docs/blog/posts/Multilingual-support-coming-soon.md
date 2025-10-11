@@ -11,7 +11,7 @@ slug: Multilingual-support
 
 # Multilingual support is coming soon to AsBuiltReport
 
-Today I can announce that one of the most requested features for AsBuiltReport is currently in development, with work underway to bring **multilingual support** to the AsBuiltReport framework.
+Today I can announce that one of the most requested features for AsBuiltReport is currently in pre-release, with testing underway to bring **multilingual support** to the AsBuiltReport framework.
 
 ![multilingual](../../assets/images/blog/multilingual.jpg){ loading=lazy }
 
@@ -32,7 +32,7 @@ Today I can announce that one of the most requested features for AsBuiltReport i
 
 - Automated string extraction and translation
 
-**🔧 New Commandline Parameters**
+**💻 New Commandline Parameters**
 
 - Dynamic language selection - language selection is determined by what each AsBuiltReport module supports
 
@@ -40,7 +40,7 @@ Today I can announce that one of the most requested features for AsBuiltReport i
 
 - Fallback mechanism to ensure reports generate even with incomplete translations
 
-**📊 Report Module Integration**
+**:gear: Report Module Integration**
 
 - Documentation and templates for new and existing report modules to add multilingual support
 
@@ -64,12 +64,12 @@ Multilingual support is being implemented using PowerShell's native localization
 ## Timeline and Current Status
 **Development Status**: Active development in progress
 
-1. 🔄 Localization framework design (in progress)
-2. 🔄 Resource file and folder structures (in progress)
-3. 🔄 Documentation and templates (in progress)
+1. ✅ Localization framework design (complete)
+2. ✅ Resource file and folder structures (complete)
+3. ✅ Documentation and templates (complete)
 4. 🔄 AsBuiltReport Core module implementation and testing (in progress)
-5. 📋 AsBuiltReport report module implementation and testing (planned)
-6. 📋 Community translation coordination (planned)
+5. 🔄 AsBuiltReport report module implementation and testing (in progress)
+6. 🔄 Community translation coordination (in progress)
 
 **Target Completion**: While I don't have a specific release date yet, I can share that the foundational work is well underway.
 
@@ -78,10 +78,18 @@ Multilingual support is being implemented using PowerShell's native localization
 As an open-source project, AsBuiltReport thrives on community contributions. Here's how you can get involved with the multilingual initiative:
 
 ### For Developers
-- Review the [`multilingual-support`](https://github.com/AsBuiltReport/AsBuiltReport.Core/tree/multilingual-support){:target="_blank"} branch and provide feedback
+- Review the [`dev`](https://github.com/AsBuiltReport/AsBuiltReport.Core/tree/dev){:target="_blank"} branch and provide feedback
+- Download the `AsBuiltReport.Core v1.5.0` release candidate
+
+    `Install-Module AsBuiltReport.Core -Repository PSGallery -RequiredVersion 1.5.0 -AllowPrerelease`
+
+- Download the `AsBuiltReport.System.Resources` report module to use for testing the new report language features
+
+    `Install-Module AsBuiltReport.System.Resources -Repository PSGallery`
+
 - Help test the new localization features
 - Contribute code improvements or bug fixes
-- Update existing report modules to support the new framework
+- [Update existing report modules](../../dev-guide/creating-a-report-module.md#language-support-implementation) to support the new framework
 
 ### For Translators and Linguists
 - Express interest in translating AsBuiltReport modules to your language
