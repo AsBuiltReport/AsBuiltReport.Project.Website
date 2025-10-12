@@ -81,7 +81,7 @@ As an open-source project, AsBuiltReport thrives on community contributions. Her
 - Review the [`dev`](https://github.com/AsBuiltReport/AsBuiltReport.Core/tree/dev){:target="_blank"} branch and provide feedback
 - Download the `AsBuiltReport.Core v1.5.0` release candidate
 
-    `Install-Module AsBuiltReport.Core -Repository PSGallery -RequiredVersion 1.5.0 -AllowPrerelease`
+    `Install-Module AsBuiltReport.Core -Repository PSGallery -AllowPrerelease`
 
 - Download the `AsBuiltReport.System.Resources` report module to use for testing the new report language features
 
