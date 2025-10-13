@@ -127,7 +127,24 @@ The `Language` property in the `Report` section specifies the default language f
 - **Recommended:** Report modules should aim to support as many languages as possible from the available languages list
 - **Optional:** Additional languages can be provided based on contributor availability and community needs
 
-**Available languages supported by AsBuiltReport.Core:** en-US (default), en-GB, es-ES, fr-FR, de-DE, it-IT, pt-PT, ja-JP, zh-CN, zh-Hans, zh-Hant, ar-SA, ru-RU, ko-KR, nl-NL, sv-SE, nb-NO, da-DK, fi-FI, pl-PL, cs-CZ, hu-HU, tr-TR, el-GR, he-IL, hi-IN, th-TH, vi-VN
+#### Languages supported by AsBuiltReport.Core
+
+| Locale Code | Language | Locale Code | Language |
+|-------------|----------|-------------|----------|
+| **en-US (default)** | English (United States) | **hu-HU** | Hungarian (Hungary) |
+| **en-GB** | English (United Kingdom) | **it-IT** | Italian (Italy) |
+| **ar-SA** | Arabic (Saudi Arabia) | **ja-JP** | Japanese (Japan) |
+| **cs-CZ** | Czech (Czech Republic) | **ko-KR** | Korean (South Korea) |
+| **da-DK** | Danish (Denmark) | **nb-NO** | Norwegian Bokmål (Norway) |
+| **de-DE** | German (Germany) | **nl-NL** | Dutch (Netherlands) |
+| **el-GR** | Greek (Greece) | **pl-PL** | Polish (Poland) |
+| **es-ES** | Spanish (Spain) | **pt-PT** | Portuguese (Portugal) |
+| **fi-FI** | Finnish (Finland) | **ru-RU** | Russian (Russia) |
+| **fr-FR** | French (France) | **sv-SE** | Swedish (Sweden) |
+| **he-IL** | Hebrew (Israel) | **th-TH** | Thai (Thailand) |
+| **hi-IN** | Hindi (India) | **tr-TR** | Turkish (Turkey) |
+| **vi-VN** | Vietnamese (Vietnam) | **zh-CN** | Chinese (China, Simplified) |
+| **zh-Hans** | Chinese (Simplified) | **zh-Hant** | Chinese (Traditional) |
 
 For comprehensive language mapping and fallback chains, see the [Language Support Implementation](#language-support-implementation) section below.
 
