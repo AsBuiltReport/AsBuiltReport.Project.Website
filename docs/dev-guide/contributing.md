@@ -52,26 +52,50 @@ A good quality pull request will have the following characteristics:
 - The code contained within will meet the best practices set by the team wherever possible. If in doubt, please [contact us](../about/contact.md).
 
 #### Submitting pull requests
-**Always create a pull request to the `dev` branch of a repository.**
+##### Submitting Pull Requests to `dev` branch (Contributors)
 
-1. Fork an [AsBuiltReport repository](https://github.com/AsBuiltReport){:target="_blank"}. The example below uses the main AsBuiltReport.Core repository in the command examples.
+Always create a pull request to the `dev` branch of a repository.
+
+1. Fork an AsBuiltReport repository. The example below uses the main AsBuiltReport.Core repository in the command examples.
 2. Add `https://github.com/AsBuiltReport/AsBuiltReport.Core.git` as a remote named `upstream`.
-    - `git remote add upstream https://github.com/AsBuiltReport/AsBuiltReport.Core.git`
+   * `git remote add upstream https://github.com/AsBuiltReport/AsBuiltReport.Core.git`
 3. Create your feature branch from `dev`.
+   * `git checkout dev`
+   * `git checkout -b feature/your-feature-name`
 4. Work on your feature.
-    - Update `CHANGELOG.md` in the repository you have worked in with add / remove / fix / change information
-    - Update `README.md` in the repository you have worked in with any new information, such as features, instructions, parameters and/or examples
-5. Squash commits into one or two succinct commits.
-    - `git rebase -i HEAD~n` # n being the number of previous commits to rebase
-6. Ensure that your branch is up to date with `upstream/dev`.
-    - `git checkout <branch>`
-    - `git fetch upstream`
-    - `git rebase upstream/dev`
-7. Push branch to your fork.
-    - `git push --force`
-8. Open a Pull Request against the `dev` branch of a repository. We have Pull Requests templates in all repositories for this project. Please follow the template with each Pull Request.
+   * Make commits with clear, descriptive messages
+   * Update `CHANGELOG.md` in the repository you have worked in with add / remove / fix / change information
+   * Update `README.md` in the repository you have worked in with any new information, such as features, instructions, parameters and/or examples
+5. Ensure that your branch is up to date with `upstream/dev`.
+   * `git checkout <branch>`
+   * `git fetch upstream`
+   * `git rebase upstream/dev`
+6. Push branch to your fork.
+   * `git push --force`
+7. Open a Pull Request against the `dev` branch of a repository.
 
-Pull requests will be reviewed as soon as possible.
+We have Pull Requests templates in all repositories for this project. Please follow the template with each Pull Request.
+
+Pull requests will be reviewed as soon as possible. Maintainers will handle commit consolidation during the merge process.
+
+##### Releasing from `dev` branch to `master` branch (Maintainers)
+
+When ready to create a release:
+
+1. Ensure `dev` is stable and all tests pass
+2. Open a Pull Request from `dev` to `master`
+3. Review all changes that will be released
+4. Merge the Pull Request (preserves full commit history)
+5. After merging, sync `dev` with `master`:
+```bash
+   git checkout master
+   git pull
+   git checkout dev
+   git rebase master
+   git push --force origin dev
+```
+6. Tag the release on `master`
+7. Update release notes
 
 ### :octicons-bug-16: Reporting Issues and Bugs
 GitHub issues is used to track issues and bugs. Report a bug by opening a new [issue](https://docs.github.com/issues/tracking-your-work-with-issues/about-issues#working-with-issues){:target="_blank"} in the relevant [AsBuiltReport repository](https://github.com/AsBuiltReport){:target="_blank"}.
