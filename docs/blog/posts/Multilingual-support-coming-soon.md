@@ -11,11 +11,11 @@ slug: Multilingual-support
 
 # Multilingual support is coming soon to AsBuiltReport
 
-Today I can announce that one of the most requested features for AsBuiltReport is currently in pre-release, with testing underway to bring **multilingual support** to the AsBuiltReport framework.
+Today I can announce that **multilingual support** for the AsBuiltReport framework is now available!
 
 ![multilingual](../../assets/images/blog/multilingual.jpg){ loading=lazy }
 
-## Key Features in Development
+## Key Features
 
 
 **🌐 Comprehensive Localization Framework**
@@ -51,7 +51,7 @@ Today I can announce that one of the most requested features for AsBuiltReport i
 <!-- more -->
 
 ## Technical Implementation
-Multilingual support is being implemented using PowerShell's native localization features, including:
+Multilingual support has been implemented using PowerShell's native localization features, including:
 
 - **Resource Files**: Utilising `.psd1` resource files for each supported language
 
@@ -67,11 +67,11 @@ Multilingual support is being implemented using PowerShell's native localization
 1. ✅ Localization framework design (complete)
 2. ✅ Resource file and folder structures (complete)
 3. ✅ Documentation and templates (complete)
-4. 🔄 AsBuiltReport Core module implementation and testing (in progress)
+4. ✅ AsBuiltReport Core module implementation and testing (complete)
 5. 🔄 AsBuiltReport report module implementation and testing (in progress)
 6. 🔄 Community translation coordination (in progress)
 
-**Target Completion**: While I don't have a specific release date yet, I can share that the foundational work is well underway.
+**Target Completion**: The foundational work for multilingual support is now complete. Work is now underway to add support for additional languages to individual report modules.
 
 ## How You Can Help
 
@@ -79,9 +79,9 @@ As an open-source project, AsBuiltReport thrives on community contributions. Her
 
 ### For Developers
 - Review the [`dev`](https://github.com/AsBuiltReport/AsBuiltReport.Core/tree/dev){:target="_blank"} branch and provide feedback
-- Download the `AsBuiltReport.Core v1.5.0` release candidate
+- Download the latest `AsBuiltReport.Core` module
 
-    `Install-Module AsBuiltReport.Core -Repository PSGallery -AllowPrerelease`
+    `Install-Module AsBuiltReport.Core -MinimumVersion 1.5.0 -Repository PSGallery`
 
 - Download the `AsBuiltReport.System.Resources` report module to use for testing the new report language features
 
@@ -120,9 +120,5 @@ We're committed to keeping the community informed about our progress. To stay up
 ## Acknowledgments
 
 Thanks to all the users and contributors who requested this feature, those who provide feedback, and to everyone who has made AsBuiltReport what it is today. As always, AsBuiltReport remains committed to being a community-driven, open-sourced project, that serves the needs of IT professionals worldwide.
-
----
-
-**The AsBuiltReport multilingual support feature is currently in active development and is not yet ready for production use. Future announcements will be made when this feature is available for testing and general release.**
 
 ---
