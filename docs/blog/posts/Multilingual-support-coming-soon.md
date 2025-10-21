@@ -9,7 +9,7 @@ categories:
 slug: Multilingual-support
 ---
 
-# Multilingual support is coming soon to AsBuiltReport
+# Multilingual support now available for AsBuiltReport
 
 Today I can announce that **multilingual support** for the AsBuiltReport framework is now available!
 
@@ -93,7 +93,7 @@ As an open-source project, AsBuiltReport thrives on community contributions. Her
 
 ### For Translators and Linguists
 - Express interest in translating AsBuiltReport modules to your language
-- Join our [GitHub discussion](https://github.com/orgs/AsBuiltReport/discussions/1){:target="_blank"} to share your ideas and feedback
+- Use our GitHub [discussion board](https://github.com/orgs/AsBuiltReport/discussions){:target="_blank"} to share your ideas and feedback
 
 ### For Users
 - Share your language requirements and use cases
