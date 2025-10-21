@@ -14,9 +14,6 @@ This guide can be used to create custom style scripts which match your individua
 
 ### Language Support
 
-!!! info
-    Language support is **coming soon**! This feature is currently in development and will be included in AsBuiltReport.Core v1.5.0.
-
 To support report language translations in AsBuiltReport v1.5.0 or higher, ensure the following code is added to the top of your style scripts.
 
 ```powershell

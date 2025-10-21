@@ -117,14 +117,17 @@ Create a configuration file using the JSON template provided in the report modul
 ### Language Configuration
 
 !!! info
-    Language support is **coming soon**! This feature is currently in development and will be included in AsBuiltReport.Core v1.5.0.
+    AsBuiltReport.Core v1.5.0+ provides the translation functionality for both core UI prompts and report module content.
+
+    Individual report modules provide their own translation files for report-specific content such as headings, text, and tables.
+
+    Please refer to individual [report module documentation](https://www.asbuiltreport.com/user-guide/report-modules/overview/) for their language support.
 
 The `Language` property in the `Report` section specifies the default language for report content. This setting can be overridden at runtime using the [New-AsBuiltReport](../user-guide/new-asbuiltreport.md) `-ReportLanguage` parameter when generating reports.
 
 **Language Support Requirements:**
 
 - **Minimum requirement:** All report modules must provide `en-US` (English - United States) language support
-- **Recommended:** Report modules should aim to support as many languages as possible from the available languages list
 - **Optional:** Additional languages can be provided based on contributor availability and community needs
 
 #### Languages supported by AsBuiltReport.Core
@@ -463,9 +466,6 @@ Create focused helper functions in the `Src/Private` directory:
 - Implement proper error handling
 
 ## Language Support Implementation
-
-!!! info
-    Language support is **coming soon**! This feature is currently in development and will be included in AsBuiltReport.Core v1.5.0.
 
 AsBuiltReport v1.5.0+ introduces comprehensive multilingual support, allowing report modules to generate documentation in multiple languages. This section explains how to implement language support in your report module.
 

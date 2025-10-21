@@ -34,7 +34,7 @@ AsBuiltReport is an open source configuration document framework which utilises 
 
     Use the default style or [create your own](dev-guide/creating-a-report-style.md) to match your corporate identity. Set page orientation, text and table formatting with fonts, colours, borders and highlighted cells and rows.
 
--   :fontawesome-solid-language: **Multilingual Support - Coming Soon!**
+-   :fontawesome-solid-language: **Multilingual Support**
 
     ---
 
@@ -60,19 +60,6 @@ AsBuiltReport is an open source configuration document framework which utilises 
     Attach and send reports via email to one or more recipients.
 
 </div>
-
-
-<!--
-<p align="center" style="background-image: url('../../assets/images/laptop.png');background-size: 100% 100%;color:white;">
-    <br><br>
-    <br>AsBuiltReport is an open source configuration document framework which utilises
-    <br>Microsoft PowerShell to produce as-built documentation in multiple document formats
-    <br>for multiple vendors and technologies.
-    <br><br>The framework allows users to easily generate clear and consistent documentation,
-    <br>for any environment which supports Microsoft PowerShell and/or a RESTful API.
-    <br><br><br><br>
-</p>
--->
 
 ## **Components**
 <div class="grid cards" markdown>

@@ -23,7 +23,7 @@ There are no additional parameters for this command.
 
         **Company Information**
 
-        Would you like to enter Company information for the AsBuiltReport? (y/n): `y`
+        Would you like to enter Company information for the AsBuiltReport? (y/N): `y`
 
         Enter the Full Company Name: `Wayne Enterprises`
 
@@ -39,7 +39,7 @@ There are no additional parameters for this command.
 
         **Email Configuration**
 
-        Would you like to enter SMTP configuration? (y/n): `y`
+        Would you like to enter SMTP configuration? (y/N): `y`
 
         Enter the mail server FQDN / IP address: `172.16.10.30`
 
@@ -53,13 +53,13 @@ There are no additional parameters for this command.
 
         Enter the mail server recipient address: `bruce.wayne@waynecorp.com`
 
-        Do you want to enter another recipient? (y/n): `n`
+        Do you want to enter another recipient? (y/N): `n`
 
         Enter the email message body content: `AsBuiltReport attached`
 
         **AsBuiltReport Configuration**
 
-        Would you like to save the AsBuiltReport configuration file? (y/n): `y`
+        Would you like to save the AsBuiltReport configuration file? (Y/n): `y`
 
         Enter a name for the AsBuiltReport configuration file [AsBuiltReport]: `WayneCorp`
 
