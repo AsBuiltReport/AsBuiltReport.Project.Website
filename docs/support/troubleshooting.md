@@ -5,6 +5,9 @@ This page provides guidance on troubleshooting common issues when generating AsB
 !!! tip "Installation Issues?"
     For help with installation, module updates, or uninstallation issues, please see the [Installation Troubleshooting](../user-guide/installation.md#troubleshooting) section.
 
+!!! info "Known Limitations"
+    Some issues are due to platform or framework limitations that cannot be resolved through troubleshooting. Check the [Known Issues](known-issues.md) page for documented limitations (e.g., image support on Linux/macOS, Word TOC behavior).
+
 ## Report Generation Issues
 
 ### Enable Verbose Output
@@ -292,8 +295,9 @@ $Error[0] | Format-List -Force
 ### 2. Check Existing Resources
 
 - Review the [FAQ](faq.md) for common questions
-- Check [Known Issues](known-issues.md) for documented problems
+- Check [Known Issues](known-issues.md) for documented platform/framework limitations
 - Search the [GitHub Discussions](https://github.com/orgs/AsBuiltReport/discussions) for similar issues
+- Search the specific report module's GitHub Issues for module-specific problems
 
 ### 3. Report the Issue
 

@@ -1,5 +1,8 @@
 This section provides information relating to common and/or known issues when generating an As Built Report.
 
+!!! tip "Need Help Troubleshooting?"
+    For guidance on diagnosing and resolving report generation problems, see the [Troubleshooting](troubleshooting.md) page. This page documents platform and framework limitations that cannot be resolved through troubleshooting.
+
 #### Table Of Contents (TOC) is missing in Word formatted report
 
 !!! attention

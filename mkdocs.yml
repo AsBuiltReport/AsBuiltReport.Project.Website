@@ -153,8 +153,8 @@ nav:
   - Support:
     - FAQ: support/faq.md
     - Troubleshooting: support/troubleshooting.md
-    - Discussion Board: https://github.com/orgs/AsBuiltReport/discussions
     - Known Issues: support/known-issues.md
+    - Discussion Board: https://github.com/orgs/AsBuiltReport/discussions
     - Donate: support/donate.md
   - Blog:
     - blog/index.md
