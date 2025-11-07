@@ -102,6 +102,8 @@ markdown_extensions:
   - pymdownx.mark
   - pymdownx.tilde
   - pymdownx.details
+  - toc:
+      toc_depth: 3
 
 # Page Navigation
 nav:
@@ -150,6 +152,7 @@ nav:
     - Creating a report style: dev-guide/creating-a-report-style.md
   - Support:
     - FAQ: support/faq.md
+    - Troubleshooting: support/troubleshooting.md
     - Discussion Board: https://github.com/orgs/AsBuiltReport/discussions
     - Known Issues: support/known-issues.md
     - Donate: support/donate.md
