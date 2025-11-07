@@ -70,14 +70,114 @@ On the offline system, open a PowerShell console window and run the following co
 
 **Windows**
 
-```powershell title=""
+```powershell title="View PowerShell module paths on Windows"
 $env:PSModulePath -Split ';'
 ```
 
 **macOS & Linux**
 
-```powershell title=""
+```powershell title="View PowerShell module paths on macOS & Linux"
 $env:PSModulePath -Split ':'
 ```
 
 Copy the downloaded PowerShell module folders to a folder specified in the `$env:PSModulePath` output.
+
+## Installing from GitHub Branch
+
+To install a development version or specific branch from GitHub, follow these steps to download and install the code into your PowerShell module folder.
+
+!!! warning "Development Code"
+    Code downloaded from GitHub branches (especially development or feature branches) may be incomplete, untested, or in a non-working state. Only use this installation method if you need to test specific features or contribute to development. For production use, always install stable releases from the PowerShell Gallery.
+
+!!! note "Report Module Naming"
+    In the examples below, replace `AsBuiltReport.Vendor.Technology` with the report module name you wish to install (e.g. `AsBuiltReport.VMware.vSphere`, `AsBuiltReport.Microsoft.AD`).
+
+### Step 1: Download the Branch
+
+Navigate to the GitHub repository and download the desired branch as a ZIP file:
+
+1. Go to the repository (e.g., `https://github.com/AsBuiltReport/AsBuiltReport.Vendor.Technology`)
+2. Click the **Code** button
+3. Select the branch you want to download from the branch dropdown
+4. Click **Download ZIP**
+
+Alternatively, use Git to clone the specific branch:
+
+```bash title="Clone specific branch using Git"
+git clone -b branch-name https://github.com/AsBuiltReport/AsBuiltReport.Vendor.Technology.git
+```
+
+### Step 2: Determine PowerShell Module Path
+
+Open a PowerShell console and run the following command to find your PowerShell module paths:
+
+**Windows**
+
+```powershell title="View PowerShell module paths on Windows"
+$env:PSModulePath -Split ';'
+```
+
+**macOS & Linux**
+
+```powershell title="View PowerShell module paths on macOS & Linux"
+$env:PSModulePath -Split ':'
+```
+
+!!! tip "Recommended Module Path"
+    For user-specific installations, use the path containing your user profile:
+
+    - **Windows**: `C:\Users\YourUsername\Documents\PowerShell\Modules` (PowerShell 7) or `C:\Users\YourUsername\Documents\WindowsPowerShell\Modules` (Windows PowerShell 5.1)
+    - **macOS**: `~/.local/share/powershell/Modules`
+    - **Linux**: `~/.local/share/powershell/Modules`
+
+### Step 3: Extract and Install the Module
+
+**If you downloaded a ZIP file:**
+
+1. Extract the ZIP file contents
+2. Locate the module folder (it should contain a `.psd1` manifest file)
+3. Copy the module folder to one of the paths from Step 2
+
+**Windows Example:**
+
+```powershell title="Install module from downloaded ZIP on Windows"
+# Extract ZIP file (adjust paths as needed)
+Expand-Archive -Path "C:\Downloads\AsBuiltReport.Vendor.Technology-dev.zip" -DestinationPath "C:\Temp"
+
+# Copy module folder to PowerShell modules directory
+Copy-Item -Path "C:\Temp\AsBuiltReport.Vendor.Technology-dev" -Destination "$HOME\Documents\PowerShell\Modules\AsBuiltReport.Vendor.Technology" -Recurse -Force
+```
+
+**macOS & Linux Example:**
+
+```bash title="Install module from downloaded ZIP on macOS & Linux"
+# Extract ZIP file (adjust paths as needed)
+unzip ~/Downloads/AsBuiltReport.Vendor.Technology-dev.zip -d /tmp
+
+# Copy module folder to PowerShell modules directory
+cp -r /tmp/AsBuiltReport.Vendor.Technology-dev ~/.local/share/powershell/Modules/AsBuiltReport.Vendor.Technology
+```
+
+**If you cloned with Git:**
+
+Simply copy or move the cloned repository folder to your PowerShell modules directory:
+
+```powershell title="Install module from Git clone"
+# Copy cloned repository to PowerShell modules directory
+Copy-Item -Path "./AsBuiltReport.Vendor.Technology" -Destination "$HOME/.local/share/powershell/Modules/AsBuiltReport.Vendor.Technology" -Recurse -Force
+```
+
+### Step 4: Verify Installation
+
+Verify the module is installed correctly:
+
+```powershell title="Verify module installation"
+# List installed AsBuiltReport modules
+Get-Module -Name 'AsBuiltReport.*' -ListAvailable
+
+# Import the module to test
+Import-Module -Name 'AsBuiltReport.Vendor.Technology' -Force
+```
+
+!!! warning "Module Version Conflicts"
+    If you have the same module installed from the PowerShell Gallery, the version in `$env:PSModulePath` that appears first will take precedence. Use `Get-Module -Name Vendor.Technology -ListAvailable` to see all installed versions and their locations.
