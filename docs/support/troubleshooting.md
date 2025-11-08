@@ -1,3 +1,15 @@
+---
+title: Troubleshooting Guide
+description: Step-by-step troubleshooting for report generation issues, verbose output, InfoLevel isolation, and common errors
+tags:
+  - troubleshooting
+  - help
+  - support
+  - errors
+  - verbose
+  - infolevel
+---
+
 # Troubleshooting
 
 This page provides guidance on troubleshooting common issues when generating AsBuiltReport reports.
@@ -212,6 +224,21 @@ Higher InfoLevels collect more data but take longer to process and may be more p
 
 4. Verify the target system version is supported by the report module
 
+5. **Regenerate the report JSON configuration file after updating a report module:**
+
+    Report modules may add new sections, options, or InfoLevel settings in updates. Create a fresh configuration file to ensure you have the latest structure:
+
+    ```powershell
+    # Generate a new configuration file (use -Force to overwrite existing file)
+    New-AsBuiltReportConfig -Report VMware.vSphere -Path C:\Reports -Force
+
+    # Or save to a different location and merge changes manually
+    New-AsBuiltReportConfig -Report VMware.vSphere -Path C:\Reports\NewConfig
+    ```
+
+    !!! tip "Preserve Your Customisations"
+        If you've customised your configuration file, save it with a different name first, then compare the old and new files to manually merge your customisations into the updated structure
+
 #### Out of Memory Errors
 
 **Symptoms:**
@@ -277,7 +304,7 @@ Each report module may have unique requirements and known issues. Always check:
 
 If you continue to experience issues after trying these troubleshooting steps:
 
-### 1. Gather Diagnostic Information
+**1. Gather Diagnostic Information**
 
 Before seeking help, collect the following information:
 
@@ -292,14 +319,14 @@ Get-Module -Name AsBuiltReport.* -ListAvailable | Select-Object Name, Version
 $Error[0] | Format-List -Force
 ```
 
-### 2. Check Existing Resources
+**2. Check Existing Resources**
 
 - Review the [FAQ](faq.md) for common questions
 - Check [Known Issues](known-issues.md) for documented platform/framework limitations
 - Search the [GitHub Discussions](https://github.com/orgs/AsBuiltReport/discussions) for similar issues
 - Search the specific report module's GitHub Issues for module-specific problems
 
-### 3. Report the Issue
+**3. Report the Issue**
 
 If you've found a bug or need assistance:
 
@@ -313,7 +340,7 @@ If you've found a bug or need assistance:
     - Verbose output (sanitise sensitive information)
     - Relevant error messages
 
-### 4. Community Support
+**4. Community Support**
 
 Join the community discussion board for general questions and support:
 

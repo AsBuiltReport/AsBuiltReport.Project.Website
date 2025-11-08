@@ -1,8 +1,38 @@
+---
+title: New-AsBuiltConfig
+description: Create AsBuiltReport core configuration files for company information, branding, and email settings
+tags:
+  - command
+  - cmdlet
+  - configuration
+  - setup
+  - json
+---
+
 ## Description
 
 `New-AsBuiltConfig` starts a menu-driven procedure in the PowerShell console asking the user a series of questions to create a JSON configuration file. The JSON configuration file may be saved and referenced by the `AsBuiltConfigFilePath` parameter in `New-AsBuiltReport`.
 
 `New-AsBuiltConfig` is automatically called by `New-AsBuiltReport` if the `AsBuiltConfigFilePath` parameter is not specified. If a user wishes to generate a new AsBuiltReport configuration without generating a new report, this command can be called as a standalone cmdlet.
+
+## When to Use This Command
+
+| Scenario | Recommended Approach |
+|----------|---------------------|
+| **First Time User** | Let `New-AsBuiltReport` prompt you automatically |
+| **Multiple Clients/Sites** | Run `New-AsBuiltConfig` to create separate configs for each |
+| **Corporate Branding** | Create a config once, reuse for all reports |
+| **Email Distribution** | Configure SMTP settings once, use across all reports |
+| **Quick Test** | Skip this - just run `New-AsBuiltReport` and answer prompts |
+
+!!! tip "Configuration Reuse"
+    Create configuration files for different scenarios:
+
+    - **Client-specific**: `ACME-Config.json`, `WayneCorp-Config.json`
+    - **Environment-specific**: `Production-Config.json`, `Development-Config.json`
+    - **Purpose-specific**: `Audit-Config.json`, `Documentation-Config.json`
+
+    Then reference them with: `-AsBuiltConfigFilePath 'C:\Configs\ACME-Config.json'`
 
 ## Parameters
 
@@ -101,3 +131,38 @@ There are no additional parameters for this command.
             }
         }
     ```
+
+!!! warning "SMTP Credentials Security"
+    If your SMTP server requires authentication (`"Credentials": true`), you will be prompted for credentials when running `New-AsBuiltReport`. These credentials are not stored in the configuration file. For automated/scheduled reports, consider:
+
+    - Using an SMTP server that doesn't require authentication (internal relay)
+    - Configuring SMTP to allow sending from your server without authentication
+    - Using application-specific passwords or service accounts
+
+## Using Configuration Files
+
+Once created, reference your configuration file when generating reports:
+
+```powershell title="Using a saved configuration"
+New-AsBuiltReport -Report VMware.vSphere -Target vcenter.example.com `
+-Credential $Cred -AsBuiltConfigFilePath 'C:\Configs\WayneCorp.json' `
+-OutputFolderPath 'C:\Reports'
+```
+
+You can create and maintain multiple configuration files for different purposes:
+
+```powershell title="Multiple configurations example"
+# Client A - Full branding and email
+New-AsBuiltReport -Report VMware.vSphere -Target vcenter-clienta.com `
+-Credential $Cred -AsBuiltConfigFilePath 'C:\Configs\ClientA.json'
+
+# Client B - Different branding and email
+New-AsBuiltReport -Report VMware.vSphere -Target vcenter-clientb.com `
+-Credential $Cred -AsBuiltConfigFilePath 'C:\Configs\ClientB.json'
+```
+
+## See Also
+
+- [New-AsBuiltReport](new-asbuiltreport.md) - Generate as-built configuration reports
+- [New-AsBuiltReportConfig](new-asbuiltreportconfig.md) - Create report-specific configuration files
+- [FAQ - How do I schedule reports?](../support/faq.md#how-do-i-schedule-reports-to-run-automatically) - Automating report generation

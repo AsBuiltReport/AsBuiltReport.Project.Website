@@ -1,3 +1,17 @@
+---
+title: Creating a Report Style
+description: Create custom style scripts using PScribo to match your corporate identity and branding
+tags:
+  - development
+  - styling
+  - customisation
+  - pscribo
+  - branding
+  - themes
+---
+
+# Creating a Report Style
+
 When generating an AsBuiltReport, its formatting and style is defined using a PowerShell (.ps1) script which utilises a set of [PScribo](../support/faq.md#what-is-pscribo) cmdlets.
 
 This guide can be used to create custom style scripts which match your individual and/or corporate identities.
@@ -16,7 +30,7 @@ This guide can be used to create custom style scripts which match your individua
 
 To support report language translations in AsBuiltReport v1.5.0 or higher, ensure the following code is added to the top of your style scripts.
 
-```powershell
+```powershell title="Initialize language support in style scripts"
 try {
     # Try to initialize localized data for style elements
     # Use the report language from parent scope if available, otherwise fallback to OS language
@@ -57,11 +71,11 @@ The `DocumentOption` cmdlet is used to set global document options, including de
 
 `Orientation` sets the document's default page orientation. It is highly recommended that you do not modify the `$Orientation` parameter value.
 
-```powershell title="Additonal Information"
+```powershell title="Additional information about DocumentOption"
 get-help about_PScriboDocument
 ```
 
-```powershell title="DocumentOption"
+```powershell title="DocumentOption examples"
 # Default DocumentOption
 DocumentOption -EnableSectionNumbering -PageSize 'A4' -DefaultFont 'Arial' -MarginLeftAndRight 71 -MarginTopAndBottom 71 -Orientation $Orientation
 
@@ -74,7 +88,7 @@ DocumentOption -PageSize 'Letter' -DefaultFont 'Tahoma' -MarginLeftAndRight 74 -
 ### Styles
 The `Style` cmdlet defines a custom formatting style which can be applied to section headings, paragraphs and within table styles. Styles need to be defined before any formatting can be applied within a document (with the exception of paragraphs). Each style permits the setting of the font to use, the font size and colour.
 
-```powershell title="Additonal Information"
+```powershell title="Additional information about Styles"
 get-help about_PScriboStyles
 ```
 
@@ -82,7 +96,7 @@ get-help about_PScriboStyles
 #### Default Styles
 A style script uses a standard set of styles for a report. These styles are defined below and must be included in every style script.
 
-```text title=""
+```text title="Default style names and descriptions"
 ## Title & Heading Styles
 Normal              - Default text style
 Title               - Cover Page Title text style
@@ -218,7 +232,7 @@ Each report will include a JSON configuration file which provides an option to e
 
 Should you wish to include an option for a Table of Contents within your style script, ensure you add the following code to the end of your script.
 
-```powershell title=""
+```powershell title="Add Table of Contents to style script"
 # Set TOC, if enabled in report JSON configuration
 if ($ReportConfig.Report.ShowTableOfContents) {
     # Add Table of Contents
@@ -286,7 +300,7 @@ Each report will include a JSON configuration file which provides an option to e
 
 The following code should be included in your style script to utilise the report configration option. The highlighted lines can be modified to suit your requirements.
 
-```powershell title="" hl_lines="3 4 7 8"
+```powershell title="Add header and footer to style script" hl_lines="3 4 7 8"
 # Set Header & Footer, if enabled in report JSON configuration
 if ($ReportConfig.Report.ShowHeaderFooter) {
     Header -Default {
@@ -299,7 +313,7 @@ if ($ReportConfig.Report.ShowHeaderFooter) {
 }
 ```
 
-```powershell title="Additional Information"
+```powershell title="Additional information about Headers and Footers"
 get-help Header -Detailed
 get-help Footer -Detailed
 ```
@@ -316,7 +330,7 @@ Images can be converted to a Base64 string using an online image converter such 
 
 `Align` and `Percent` values can be adjusted to horizontally position and size the image.
 
-```powershell title="Additional Information"
+```powershell title="Additional information about Images"
 get-help Image -Detailed
 ```
 #### Cover Page

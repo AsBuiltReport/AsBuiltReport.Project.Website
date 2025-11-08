@@ -1,6 +1,18 @@
+---
+title: Contributors
+description: Meet the lead contributors and community members who have built and maintained AsBuiltReport modules
+tags:
+  - contributors
+  - team
+  - community
+  - acknowledgements
+---
+
+# Contributors
+
 ## Lead Contributors
 
-### Tim Carman <img align=left src='../../assets/images/contributors/tim-carman.jpg' width='30%' height='30%' style='vertical-align:middle' />
+### Tim Carman <img align=left src='../../assets/images/contributors/tim-carman.jpg' alt='Tim Carman profile photo' width='30%' height='30%' style='vertical-align:middle' />
 
 <h4>Project Creator & Lead Developer</h4>
 
@@ -10,7 +22,7 @@
 
 :fontawesome-brands-github: GitHub - [@tpcarman](https://github.com/tpcarman){:target='_blank'}
 
-### Jonathan Colon <img align=left src='../../assets/images/contributors/jonathan-colon.jpg' width='30%' height='30%' style='vertical-align:middle' />
+### Jonathan Colon <img align=left src='../../assets/images/contributors/jonathan-colon.jpg' alt='Jonathan Colon profile photo' width='30%' height='30%' style='vertical-align:middle' />
 
 <h4>Project Advocate & Lead Contributor</h4>
 
@@ -20,7 +32,7 @@
 
 :fontawesome-solid-blog: Blog - [TechMyth.blog](https://techmyth.blog/){:target='_blank'}
 
-### Matt Allford <img align=left src='../../assets/images/contributors/matt-allford.jpg' width='30%' height='30%' style='vertical-align:middle' />
+### Matt Allford <img align=left src='../../assets/images/contributors/matt-allford.jpg' alt='Matt Allford profile photo' width='30%' height='30%' style='vertical-align:middle' />
 
 <h4>Project Advocate & Contributor</h4>
 
@@ -32,7 +44,7 @@
 
 :fontawesome-solid-blog: Blog - [mattallford.com](https://www.mattallford.com){:target='_blank'}
 
-### Iain Brighton <img align=left src='../../assets/images/contributors/iain-brighton.jpg' width='30%' height='30%' style='vertical-align:middle' />
+### Iain Brighton <img align=left src='../../assets/images/contributors/iain-brighton.jpg' alt='Iain Brighton profile photo' width='30%' height='30%' style='vertical-align:middle' />
 
 <h4>PScribo Creator & Lead Developer</h4>
 

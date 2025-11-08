@@ -1,3 +1,15 @@
+---
+title: Installation Guide
+description: Complete guide for installing AsBuiltReport modules from PowerShell Gallery, offline, or from GitHub
+tags:
+  - installation
+  - getting-started
+  - setup
+  - powershell-gallery
+  - offline
+  - github
+---
+
 Please follow these quick and simple instructions to install AsBuiltReport.
 
 ## Installation Method Comparison
@@ -136,7 +148,7 @@ GitHub Releases contain the same stable code versions published to the PowerShel
 !!! note "Report Module Naming"
     In the examples below, replace `AsBuiltReport.Vendor.Technology` with the report module name you wish to install (e.g. `AsBuiltReport.VMware.vSphere`, `AsBuiltReport.Microsoft.AD`).
 
-#### Step 1: Download the Release { data-toc-label="" }
+**Step 1: Download the Release**
 
 **Via GitHub Web Interface:**
 
@@ -170,7 +182,7 @@ $asset = $release.assets | Where-Object { $_.name -like "*.zip" } | Select-Objec
 Invoke-WebRequest -Uri $asset.browser_download_url -OutFile "$env:TEMP\$($asset.name)"
 ```
 
-#### Step 2: Determine PowerShell Module Path { data-toc-label="" }
+**Step 2: Determine PowerShell Module Path**
 
 Open a PowerShell console and run the following command to find your PowerShell module paths:
 
@@ -193,7 +205,7 @@ $env:PSModulePath -Split ':'
     - **macOS**: `~/.local/share/powershell/Modules`
     - **Linux**: `~/.local/share/powershell/Modules`
 
-#### Step 3: Extract and Install the Module { data-toc-label="" }
+**Step 3: Extract and Install the Module**
 
 **Windows Example:**
 
@@ -220,7 +232,7 @@ unzip ~/Downloads/AsBuiltReport.Vendor.Technology-v1.0.0.zip -d /tmp/module
 cp -r /tmp/module/* ~/.local/share/powershell/Modules/AsBuiltReport.Vendor.Technology/
 ```
 
-#### Step 4: Verify Installation { data-toc-label="" }
+**Step 4: Verify Installation**
 
 Verify the module is installed correctly:
 
@@ -245,7 +257,7 @@ To install a development version or specific branch from GitHub, follow these st
 !!! note "Report Module Naming"
     In the examples below, replace `AsBuiltReport.Vendor.Technology` with the report module name you wish to install (e.g. `AsBuiltReport.VMware.vSphere`, `AsBuiltReport.Microsoft.AD`).
 
-#### Step 1: Download the Branch { data-toc-label="" }
+**Step 1: Download the Branch**
 
 Navigate to the GitHub repository and download the desired branch as a ZIP file:
 
@@ -260,7 +272,7 @@ Alternatively, use Git to clone the specific branch:
 git clone -b branch-name https://github.com/AsBuiltReport/AsBuiltReport.Vendor.Technology.git
 ```
 
-#### Installing from Pull Requests { data-toc-label="" }
+**Installing from Pull Requests**
 
 !!! info "Installing from Pull Requests"
     When installing from a pull request, you're testing code submitted by a contributor that hasn't been merged yet. This is useful for testing proposed changes or bug fixes before they're officially released. The code comes from the contributor's fork repository, not the main AsBuiltReport repository.
@@ -287,7 +299,7 @@ git fetch origin pull/123/head:pr-123
 git checkout pr-123
 ```
 
-#### Step 2: Determine PowerShell Module Path { data-toc-label="" }
+**Step 2: Determine PowerShell Module Path**
 
 Open a PowerShell console and run the following command to find your PowerShell module paths:
 
@@ -310,7 +322,7 @@ $env:PSModulePath -Split ':'
     - **macOS**: `~/.local/share/powershell/Modules`
     - **Linux**: `~/.local/share/powershell/Modules`
 
-#### Step 3: Extract and Install the Module { data-toc-label="" }
+**Step 3: Extract and Install the Module**
 
 **If you downloaded a ZIP file:**
 
@@ -347,7 +359,7 @@ Simply copy or move the cloned repository folder to your PowerShell modules dire
 Copy-Item -Path "./AsBuiltReport.Vendor.Technology" -Destination "$HOME/.local/share/powershell/Modules/AsBuiltReport.Vendor.Technology" -Recurse -Force
 ```
 
-#### Step 4: Verify Installation { data-toc-label="" }
+**Step 4: Verify Installation**
 
 Verify the module is installed correctly:
 
@@ -478,7 +490,7 @@ File cannot be loaded because running scripts is disabled on this system.
 **Solution:**
 Set the execution policy for the current user (see [PowerShell Execution Policy](#powershell-execution-policy)):
 
-```powershell
+```powershell title="Set execution policy"
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 ```
 
@@ -492,7 +504,7 @@ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 
 1. Verify the module is in the correct location:
 
-    ```powershell
+    ```powershell title="Check module paths"
     $env:PSModulePath -Split ';'  # Windows
     $env:PSModulePath -Split ':'  # macOS/Linux
     ```
@@ -501,7 +513,7 @@ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 
 3. Refresh the module cache:
 
-    ```powershell
+    ```powershell title="Refresh module cache"
     Get-Module -ListAvailable -Refresh
     ```
 
@@ -514,7 +526,7 @@ The specified module 'AsBuiltReport.Core' was not loaded because no valid module
 **Solution:**
 Install AsBuiltReport.Core first (see [Module Dependencies](#module-dependencies)):
 
-```powershell
+```powershell title="Install AsBuiltReport.Core"
 Install-Module -Name 'AsBuiltReport.Core' -Scope 'CurrentUser'
 ```
 
@@ -530,13 +542,13 @@ Unable to resolve package source 'https://www.powershellgallery.com/api/v2'
 
 2. Configure TLS 1.2:
 
-    ```powershell
+    ```powershell title="Configure TLS 1.2"
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
     ```
 
 3. Use a proxy if required:
 
-    ```powershell
+    ```powershell title="Install via proxy"
     Install-Module -Name 'AsBuiltReport.Core' -Proxy 'http://proxy.company.com:8080'
     ```
 
@@ -552,13 +564,13 @@ Unable to resolve package source 'https://www.powershellgallery.com/api/v2'
 
 1. List all installed versions:
 
-    ```powershell
+    ```powershell title="List all module versions"
     Get-Module -Name 'AsBuiltReport.VMware.vSphere' -ListAvailable
     ```
 
 2. Remove unwanted versions:
 
-    ```powershell
+    ```powershell title="Remove specific module versions"
     # Remove specific version
     Uninstall-Module -Name 'AsBuiltReport.VMware.vSphere' -RequiredVersion '1.0.0'
 
@@ -569,7 +581,7 @@ Unable to resolve package source 'https://www.powershellgallery.com/api/v2'
 
 3. Import specific version explicitly:
 
-    ```powershell
+    ```powershell title="Import specific module version"
     Import-Module -Name 'AsBuiltReport.VMware.vSphere' -RequiredVersion '1.2.0'
     ```
 
@@ -583,7 +595,7 @@ Access to the path is denied
 
 1. Install to CurrentUser scope instead of AllUsers:
 
-    ```powershell
+    ```powershell title="Install to CurrentUser scope"
     Install-Module -Name 'AsBuiltReport.Core' -Scope 'CurrentUser'
     ```
 
@@ -601,7 +613,7 @@ This module requires PowerShell version X.X
 
 1. Check your PowerShell version:
 
-    ```powershell
+    ```powershell title="Check PowerShell version"
     $PSVersionTable.PSVersion
     ```
 

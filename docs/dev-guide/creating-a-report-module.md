@@ -1,3 +1,17 @@
+---
+title: Creating a Report Module
+description: Comprehensive standards and guidelines for developing AsBuiltReport report modules
+tags:
+  - development
+  - report-modules
+  - guidelines
+  - standards
+  - powershell
+  - best-practices
+---
+
+# Creating a Report Module
+
 This guide provides comprehensive standards and guidelines for developing AsBuiltReport report modules. Following these practices ensures consistency, maintainability, and quality across the AsBuiltReport ecosystem.
 
 ## Getting Started
@@ -15,7 +29,7 @@ Once your module proposal is approved, a new GitHub repository will be created u
 ### Naming Convention
 All AsBuiltReport modules must follow the standardised naming pattern:
 
-```
+```text title="Module naming pattern"
 AsBuiltReport.Vendor.Technology
 ```
 
@@ -28,7 +42,7 @@ AsBuiltReport.Vendor.Technology
 ### Repository Structure
 Organise your module repository with the following standard structure:
 
-```
+```text title="Repository folder structure"
 AsBuiltReport.Vendor.Technology/
 ├── .github/                                       # GitHub workflows and templates
 ├── .vscode/                                       # VS Code configuration
@@ -57,7 +71,7 @@ AsBuiltReport.Vendor.Technology/
 ### Essential Properties
 Your module manifest must include these standardised properties:
 
-```powershell
+```powershell title="Module manifest (.psd1) template"
 @{
     ModuleVersion = '0.1.0'                        # Semantic versioning
     Author = 'Your Name'
@@ -92,7 +106,7 @@ Your module manifest must include these standardised properties:
 ### JSON Configuration Structure
 Create a configuration file using the JSON template provided in the report module repository. The `Report` section uses standard properties. Avoid modifying the property fields, only values should be customised. The `Options`, `InfoLevel`, and `HealthCheck` sections should be tailored to your specific module requirements. Additional schemas may be added if necessary.
 
-```json
+```json title="Report configuration JSON template"
 {
 "Report": {                                         // Avoid modifying the Report parameters, use Options if needed
     "Name": "<Vendor> <Technology> As Built Report",
@@ -180,13 +194,13 @@ PScribo organises reports using a hierarchical structure:
 
 ### Essential PScribo Commandlets
 
-```powershell
+```powershell title="List PScribo commands"
 # List all PScribo Commandlets
 Get-Command -Module PScribo
 ```
 
 #### Document Structure
-```powershell
+```powershell title="Create sections for report organisation"
 # Create sections for logical organisation
 Section -Name 'Infrastructure Overview' -Style Heading1 {
     # Content goes here
@@ -199,7 +213,7 @@ Section -Name 'Virtual Machines' -Style Heading2 {
 ```
 
 #### Content Creation
-```powershell
+```powershell title="Add content to report sections"
 # Add descriptive text
 Paragraph "This section provides detailed information about the virtual infrastructure."
 
@@ -211,7 +225,7 @@ $VMData | Table @TableParams
 ```
 
 #### Messaging and Logging
-```powershell
+```powershell title="User feedback and logging"
 # Provide user feedback during report generation
 Write-PScriboMessage -Plugin "Module" -Message "Collecting virtual machine information..."
 
@@ -223,7 +237,7 @@ Write-PScriboMessage -Plugin "Module" -IsWarning "Unable to collect storage info
 
 PScribo tables are the primary method for presenting structured data:
 
-```powershell
+```powershell title="Create tables with structured data"
 # Collect and structure your data
 $ServerData = foreach ($Server in $Servers) {
     [PSCustomObject]@{
@@ -255,7 +269,7 @@ $ServerData | Sort-Object 'Server Name' | Table @TableParams
 
 Use PScribo styling to highlight important information based on health checks:
 
-```powershell
+```powershell title="Apply conditional formatting for health checks"
 # Apply conditional formatting based on health check results
 if ($ReportConfig.HealthCheck.Infrastructure.CPUUtilisation) {
     foreach ($Server in $ServerData) {
@@ -274,7 +288,7 @@ if ($ReportConfig.HealthCheck.Infrastructure.CPUUtilisation) {
 
 AsBuiltReport modules automatically receive configuration data through the `$ReportConfig` variable:
 
-```powershell
+```powershell title="Access report configuration"
 # Access configuration sections in your module
 $Report = $ReportConfig.Report
 $InfoLevel = $ReportConfig.InfoLevel
@@ -292,7 +306,7 @@ if ($InfoLevel.Infrastructure -ge 2) {
 
 Include standard informational messages at the beginning of your module using `Write-ReportModuleInfo`
 
-```powershell
+```powershell title="Display module information"
 Write-ReportModuleInfo -ModuleName "Vendor.Technology"
 ```
 
@@ -300,7 +314,7 @@ Write-ReportModuleInfo -ModuleName "Vendor.Technology"
 
 Include version checking for prerequisite PowerShell modules by using `Get-RequiredModule`
 
-```powershell
+```powershell title="Check prerequisite module versions"
 # Check for prerequisite PowerShell module versions
 Get-RequiredModule -Name 'Az' -Version '14.4.0'
 ```
@@ -311,7 +325,7 @@ Get-RequiredModule -Name 'Az' -Version '14.4.0'
 
 Structure your reports logically using PScribo sections:
 
-```powershell
+```powershell title="Organise report with nested sections"
 # Main infrastructure section
 Section -Name 'Infrastructure' -Style Heading1 {
 
@@ -342,7 +356,7 @@ Section -Name 'Infrastructure' -Style Heading1 {
 
 Use InfoLevel settings to control the depth of information presented:
 
-```powershell
+```powershell title="Control content depth with InfoLevel"
 # Implement progressive information disclosure
 switch ($InfoLevel.Storage) {
     0 {
@@ -371,7 +385,7 @@ switch ($InfoLevel.Storage) {
 
 Implement graceful error handling that doesn't break report generation:
 
-```powershell
+```powershell title="Graceful error handling in reports"
 # Collect data with error resilience
 try {
     Write-PScriboMessage -Plugin "Module" -Message "Collecting network information..."
@@ -401,7 +415,7 @@ try {
 ### Main Function Structure
 Every module must export a single main function following this pattern:
 
-```powershell
+```powershell title="Main module function template"
 function Invoke-AsBuiltReport.Vendor.Technology {
     <#
     .SYNOPSIS
@@ -489,7 +503,7 @@ Report modules use the following priority for determining the document language:
 #### Directory Structure
 Create a `Language` folder in your module root with subfolders for each supported language:
 
-```
+```text title="Language folder structure"
 AsBuiltReport.Vendor.Technology/
 ├── Language/
 │   ├── en-US/
@@ -505,7 +519,7 @@ AsBuiltReport.Vendor.Technology/
 #### Language File Format
 Language files use PowerShell data files (.psd1) with a hashtable structure containing multiple `ConvertFrom-StringData` blocks. This format allows you to organise translations by function or section:
 
-```powershell
+```powershell title="Language file template (en-US)"
 # culture = 'en-US'
 @{
     # Main module translations
@@ -557,7 +571,7 @@ Language files use PowerShell data files (.psd1) with a hashtable structure cont
 ```
 
 **Spanish (es-ES) example:**
-```powershell
+```powershell title="Language file example (es-ES)"
 # culture = 'es-ES'
 @{
     # Traducciones principales del módulo
@@ -620,7 +634,7 @@ Language files use PowerShell data files (.psd1) with a hashtable structure cont
 
 ### Implementing Language Support in Your Module
 
-Language support is automatically initialized by the AsBuiltReport.Core module when a report is generated. The Core module loads your language files based on the available and/or configured language and makes translations available through the `$reportTranslate` global variable.
+Language support is automatically initialised by the AsBuiltReport.Core module when a report is generated. The Core module loads your language files based on the available and/or configured language and makes translations available through the `$reportTranslate` global variable.
 
 **What you need to do:**
 
@@ -637,7 +651,7 @@ Language support is automatically initialized by the AsBuiltReport.Core module w
 #### Using Translations in Your Report Module
 Reference translation strings using the `$reportTranslate` global variable. When using the hashtable structure, access translations through the appropriate function/section key:
 
-```powershell
+```powershell title="Use translations in report code"
 # Access translations for the main module
 $moduleTranslate = $reportTranslate.InvokeAsBuiltReportVendorTechnology
 
@@ -685,7 +699,7 @@ Section -Name $vmTranslate.Heading -Style Heading1 {
 
 For smaller modules with fewer translations, you can use a simpler flat structure:
 
-```powershell
+```powershell title="Simpler flat language file structure"
 # Simpler language file structure (VendorTechnology.psd1)
 # culture = 'en-US'
 ConvertFrom-StringData @'
@@ -747,7 +761,7 @@ The following language codes are supported with comprehensive fallback mappings:
 3. **Avoid Hardcoded Text**: Never hardcode text in your module - always use translation keys
 4. **Test Fallbacks**: Test your module with various language settings to ensure fallback chains work correctly
 5. **Format Strings**: Use PowerShell format strings (`{0}`, `{1}`) for dynamic values:
-   ```powershell
+   ```powershell title="Format strings for dynamic values"
    # In language file:
    VMCount = Found {0} virtual machines
 
@@ -760,7 +774,7 @@ The following language codes are supported with comprehensive fallback mappings:
 
 Test your module with different languages:
 
-```powershell
+```powershell title="Test reports with different languages"
 # Test with Spanish
 New-AsBuiltReport -Report Vendor.Technology -Target server01 -Credential $cred -ReportLanguage 'es-ES'
 
@@ -775,7 +789,7 @@ New-AsBuiltReport -Report Vendor.Technology -Target server01 -Credential $cred -
 
 Here's a complete example showing language support implementation:
 
-```powershell
+```powershell title="Complete language implementation example"
 function Invoke-AsBuiltReport.VMware.vSphere {
     [CmdletBinding()]
     param (
@@ -786,7 +800,7 @@ function Invoke-AsBuiltReport.VMware.vSphere {
         [PSCredential] $Credential
     )
 
-    # Access configuration (language support is automatically initialized by Core module)
+    # Access configuration (language support is automatically initialised by Core module)
     $Report = $ReportConfig.Report
     $InfoLevel = $ReportConfig.InfoLevel
 
@@ -843,7 +857,7 @@ To add language support to an existing report module:
 2. **Extract hardcoded strings**
    - Identify all hardcoded text in your module (section titles, table headers, messages, etc.)
    - Add them to the 'en-US' language file using the hashtable structure
-   - Group translations by function name for better organization
+   - Group translations by function name for better organisation
 
 3. **Replace hardcoded strings**
    - Replace all hardcoded text with `$reportTranslate.FunctionName.Key` references
@@ -868,7 +882,7 @@ To add language support to an existing report module:
    - Include example usage with `-ReportLanguage` parameter
 
 !!! Note
-    The AsBuiltReport.Core module automatically handles language initialization - you don't need to call `Initialize-LocalizedData` in your report module.
+    The AsBuiltReport.Core module automatically handles language initialisation - you don't need to call `Initialize-LocalizedData` in your report module.
 
 ## PowerShell Best Practices
 
@@ -883,7 +897,7 @@ Follow PowerShell and .NET naming standards:
 ### Code Organisation and Style
 
 :octicons-check-circle-fill-16:{ .check-circle } DO
-```powershell
+```powershell title="Good PowerShell practices"
 # Use PascalCasing for functions and parameters
 function Get-AbrVirtualMachine {
     [CmdletBinding()]
@@ -927,7 +941,7 @@ function Get-AbrVirtualMachine {
 ```
 
 :octicons-x-circle-fill-16:{ .x-circle-fill } DO NOT
-```powershell
+```powershell title="Avoid these practices"
 # Avoid functions within report scripts
 # Avoid hardcoded credentials
 # Avoid excessive global variables
@@ -937,7 +951,7 @@ function Get-AbrVirtualMachine {
 ### Parameter Validation
 Implement robust parameter validation:
 
-```powershell
+```powershell title="Parameter validation examples"
 param (
     [Parameter(Mandatory = $true)]
     [ValidateNotNullOrEmpty()]
@@ -957,7 +971,7 @@ param (
 ### Error Handling
 Implement comprehensive error handling:
 
-```powershell
+```powershell title="Comprehensive error handling"
 try {
     # Validate prerequisites
     if (-not (Get-Module VMware.PowerCLI -ListAvailable)) {
@@ -1000,7 +1014,7 @@ Follow these patterns for efficient data collection:
 
 Here's a complete example showing how to structure a section of an AsBuiltReport module:
 
-```powershell
+```powershell title="Complete module section example"
 # Virtual Machine Section Example
 if ($InfoLevel.VirtualMachines -gt 0) {
     Section -Name 'Virtual Machines' -Style Heading1 {
@@ -1137,7 +1151,7 @@ This example demonstrates:
 ### Table Formatting Standards
 Use consistent table formatting throughout your module:
 
-```powershell
+```powershell title="Consistent table formatting"
 # Create PSCustomObject for structured data
 $ServerInfo = [PSCustomObject]@{
     'Server Name' = $Server.Name
@@ -1167,7 +1181,7 @@ $ServerInfo | Table @TableParams
 ### Health Check Implementation
 Implement health checks with configurable thresholds:
 
-```powershell
+```powershell title="Health check implementation"
 if ($ReportConfig.HealthCheck.Infrastructure.CPUUtilization) {
     if ($Server.CPUUsage -gt $ReportConfig.HealthCheck.Infrastructure.CPUThreshold) {
         $ServerInfo | Set-Style -Style Warning -Property 'CPU Usage'
@@ -1198,7 +1212,7 @@ Test your module for:
 ### README.md Requirements
 Include these sections in your README:
 
-```markdown
+```markdown title="README template structure"
 # AsBuiltReport.Vendor.Technology
 
 ## Installation
@@ -1279,7 +1293,7 @@ Use semantic versioning (`Major.Minor.Patch`):
 ### Change Log Maintenance
 Maintain `CHANGELOG.md` following [Keep a Changelog](https://keepachangelog.com/) format:
 
-```markdown
+```markdown title="Changelog format example"
 ## [1.2.0] - 2024-MM-dd
 ### Added
 - New health check for storage utilisation

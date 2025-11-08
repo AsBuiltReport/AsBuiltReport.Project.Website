@@ -1,7 +1,7 @@
 # Project information
 site_name: AsBuiltReport
 site_author: Tim Carman
-site_description: Document Your Datacenter With PowerShell
+site_description: AsBuiltReport is an open source configuration document framework which utilises Microsoft PowerShell to produce as-built documentation in multiple document formats for multiple vendors and technologies.
 site_url: https://www.asbuiltreport.com
 
 # Copyright
@@ -40,17 +40,23 @@ extra:
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/AsBuiltReport
+      name: AsBuiltReport on GitHub
     - icon: fontawesome/brands/Bluesky
       link: https://bsky.app/profile/asbuiltreport.com
+      name: AsBuiltReport on Bluesky
     - icon: fontawesome/brands/x-twitter
       link: https://x.com/AsBuiltReport
+      name: AsBuiltReport on X (Twitter)
+  generator: false
 
 extra_css:
   - assets/stylesheets/extra.css
 
 # Plugins
 plugins:
-  - search
+  - search:
+      lang: en
+      separator: '[\s\-\.]+'
   - git-revision-date-localized:
       enable_creation_date: false
       fallback_to_build_date: true
@@ -86,7 +92,11 @@ markdown_extensions:
   - admonition
   - meta
   - tables
-  - pymdownx.superfences
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
   - pymdownx.emoji:
       emoji_index: !!python/name:material.extensions.emoji.twemoji
       emoji_generator: !!python/name:material.extensions.emoji.to_svg
@@ -102,6 +112,8 @@ markdown_extensions:
   - pymdownx.mark
   - pymdownx.tilde
   - pymdownx.details
+  - pymdownx.tabbed:
+      alternate_style: true
   - toc:
       toc_depth: 3
 
@@ -110,7 +122,9 @@ nav:
   - Home: index.md
   - User Guide:
     - Getting Started:
+      - Quickstart: user-guide/quickstart.md
       - Installation: user-guide/installation.md
+      - Best Practices: user-guide/best-practices.md
     - Commands:
       - New-AsBuiltConfig: user-guide/new-asbuiltconfig.md
       - New-AsBuiltReport: user-guide/new-asbuiltreport.md

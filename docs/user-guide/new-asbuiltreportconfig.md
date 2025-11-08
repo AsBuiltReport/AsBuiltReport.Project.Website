@@ -1,6 +1,52 @@
+---
+title: New-AsBuiltReportConfig
+description: Create report-specific configuration files to control InfoLevel, health checks, and report options
+tags:
+  - command
+  - cmdlet
+  - configuration
+  - infolevel
+  - healthcheck
+  - json
+---
+
 ## Description
 
 `New-AsBuiltReportConfig` creates JSON configuration files for individual As Built Reports.
+
+These configuration files control:
+
+- **InfoLevel**: How much detail is included in each section (0=disabled, 1=summary, 2-5=increasing detail)
+- **HealthCheck**: Which health checks are enabled to highlight configuration issues
+- **Options**: Report-specific settings (e.g., mask license keys, show VM snapshots)
+- **Report Settings**: Language, cover page, table of contents preferences
+
+!!! tip "When to Use This Command"
+    Run this command to:
+
+    - **Generate a baseline configuration file** - Create the JSON file you can then edit to customise InfoLevels and health checks
+    - **Create reusable templates** - Generate different configurations for different customers, environments, or report types
+    - **After module updates** - Regenerate config files to get new sections and options (use `-Force` to overwrite)
+    - **Troubleshooting** - Generate a fresh config file for testing (see [Troubleshooting](../support/troubleshooting.md#use-infolevel-to-isolate-issues))
+
+## Understanding InfoLevel
+
+InfoLevel controls the depth of information collected for each section:
+
+| Level | Detail            | Description                                                                                                                                |
+|:-----:|-------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
+| **0** | Disabled          | Does not collect or display any information                                                                                                |
+| **1** | Summary           | Provides summarised information for a collection of objects                                                                                |
+| **2** | Advanced Summary  | Provides condensed, detailed information for a collection of objects                                                                       |
+| **3** | Detailed          | Provides detailed information for individual objects (recommended starting point)                                                          |
+| **4** | Advanced Detailed | Provides detailed information for individual objects, as well as information for associated objects (Hosts, Clusters, Datastores, VMs etc) |
+| **5** | Comprehensive     | Provides comprehensive information for individual objects, such as advanced configuration settings                                         |
+
+!!! note "Report Module Differences"
+    Each report module defines its own InfoLevel implementation. Not all modules support levels 0-5. Check the generated JSON configuration file or the report module's README to see which InfoLevels are available for each section.
+
+!!! warning "Performance Impact"
+    Higher InfoLevels collect more data and take longer to generate. Start with InfoLevel 2 and increase only for sections you need detailed information about.
 
 ## Parameters
 
@@ -141,3 +187,85 @@ This is an optional parameter.
         }
     }
     ```
+
+## Modifying Configuration Files
+
+After creating a configuration file, you can edit it with any text editor to customise settings:
+
+### Example: Create a Summary-Only Report
+
+```json title="Summary report configuration"
+{
+  "InfoLevel": {
+    "vCenter": 1,
+    "Cluster": 1,
+    "VMHost": 1,
+    "VM": 1,
+    "Network": 0,    // Skip network section
+    "vSAN": 0,       // Skip vSAN section
+    "Datastore": 1
+  }
+}
+```
+
+### Example: Detailed Cluster and Host Information Only
+
+```json title="Focused detailed report"
+{
+  "InfoLevel": {
+    "vCenter": 1,
+    "Cluster": 3,      // Detailed cluster info
+    "VMHost": 3,       // Detailed host info
+    "VM": 0,           // Skip VMs
+    "Network": 0,
+    "vSAN": 0,
+    "Datastore": 1
+  }
+}
+```
+
+### Example: Disable Specific Health Checks
+
+```json title="Selective health checks"
+{
+  "HealthCheck": {
+    "VMHost": {
+      "SSH": false,            // Don't check SSH status
+      "ESXiShell": false,      // Don't check ESXi Shell status
+      "NTP": true,             // Do check NTP
+      "Licensing": true        // Do check licensing
+    }
+  }
+}
+```
+
+## Using Configuration Files
+
+Reference your customised configuration file when generating reports:
+
+```powershell title="Using a custom report configuration"
+New-AsBuiltReport -Report VMware.vSphere -Target vcenter.example.com `
+-Credential $Cred -ReportConfigFilePath 'C:\Configs\VMware.vSphere-Summary.json' `
+-OutputFolderPath 'C:\Reports'
+```
+
+Create different configurations for different scenarios:
+
+```powershell title="Multiple report configurations"
+# Quick summary for weekly review
+New-AsBuiltReport -Report VMware.vSphere -Target vcenter.example.com `
+-Credential $Cred -ReportConfigFilePath 'C:\Configs\vSphere-Weekly.json'
+
+# Comprehensive audit report
+New-AsBuiltReport -Report VMware.vSphere -Target vcenter.example.com `
+-Credential $Cred -ReportConfigFilePath 'C:\Configs\vSphere-Audit.json' `
+-EnableHealthCheck
+```
+
+## See Also
+
+- [New-AsBuiltReport](new-asbuiltreport.md) - Generate as-built configuration reports
+- [New-AsBuiltConfig](new-asbuiltconfig.md) - Create core configuration files
+- [FAQ - How do I customise report detail?](../support/faq.md#how-do-i-customise-the-level-of-detail-in-my-reports) - InfoLevel guide
+- [Troubleshooting - Using InfoLevel to isolate issues](../support/troubleshooting.md#use-infolevel-to-isolate-issues) - Troubleshooting with InfoLevel
+- [Report Modules](report-modules/overview.md) - Available report modules and their specific options

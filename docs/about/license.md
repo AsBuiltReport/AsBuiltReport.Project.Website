@@ -1,3 +1,15 @@
+---
+title: License
+description: AsBuiltReport is licensed under the MIT License - free to use, modify, and distribute
+tags:
+  - license
+  - mit
+  - open-source
+  - legal
+---
+
+# License
+
 **MIT License**
 
 Copyright (c) 2016-2025 Tim Carman

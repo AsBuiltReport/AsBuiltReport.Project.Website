@@ -1,10 +1,21 @@
 ---
-title: Document Your Datacenter With PowerShell
+title: AsBuiltReport - Document Your Datacenter With PowerShell
+description: Open source PowerShell framework for automated infrastructure documentation in Word, HTML, and Text formats
+tags:
+  - asbuiltreport
+  - powershell
+  - documentation
+  - automation
+  - infrastructure
+  - vmware
+  - microsoft
+  - veeam
+  - open-source
 ---
 
 <h1 align="center" style="background-image: url('../../assets/images/background.jpg');color:white;">
     <br>
-    <img src='../../assets/images/logos/AsBuiltReport.png' width="15%" height="15%" />
+    <img src='../../assets/images/logos/AsBuiltReport.png' alt='AsBuiltReport Logo' width="15%" height="15%" />
     <br>AsBuiltReport
     <br><br>Document Your Datacenter
     <br>With PowerShell
@@ -102,19 +113,19 @@ Click each vendor logo to view [available report modules](user-guide/report-modu
 
 <table width="100%">
     <tr>
-        <td align="center" valign="middle" width="50%"><a href="https://github.com/orgs/AsBuiltReport/repositories?q=VMware&type=all&language=&sort=" target="_blank"><img src="../assets/images/logos/VMware.png" width="75%" height="75%" /></a></td>
-        <td align="center" valign="middle" width="50%"><a href="https://github.com/orgs/AsBuiltReport/repositories?q=Microsoft&type=all&language=&sort=" target="_blank"><img src="../assets/images/logos/Microsoft.png" width="75%" height="75%" /></a></td>
+        <td align="center" valign="middle" width="50%"><a href="https://github.com/orgs/AsBuiltReport/repositories?q=VMware&type=all&language=&sort=" target="_blank"><img src="../assets/images/logos/VMware.png" alt="VMware Report Modules" width="75%" height="75%" /></a></td>
+        <td align="center" valign="middle" width="50%"><a href="https://github.com/orgs/AsBuiltReport/repositories?q=Microsoft&type=all&language=&sort=" target="_blank"><img src="../assets/images/logos/Microsoft.png" alt="Microsoft Report Modules" width="75%" height="75%" /></a></td>
     </tr>
     <tr>
-        <td align="center" valign="middle" width="50%"><a href="https://github.com/orgs/AsBuiltReport/repositories?q=DellEMC&type=all&language=&sort=" target="_blank"><img src="../assets/images/logos/Dell_EMC.png" width="75%" height="75%" /></a></td>
-        <td align="center" valign="middle" width="50%"><a href="https://github.com/orgs/AsBuiltReport/repositories?q=NetApp&type=all&language=&sort=" target="_blank"><img src="../assets/images/logos/NetApp.png" /></a></td>
+        <td align="center" valign="middle" width="50%"><a href="https://github.com/orgs/AsBuiltReport/repositories?q=DellEMC&type=all&language=&sort=" target="_blank"><img src="../assets/images/logos/Dell_EMC.png" alt="Dell EMC Report Modules" width="75%" height="75%" /></a></td>
+        <td align="center" valign="middle" width="50%"><a href="https://github.com/orgs/AsBuiltReport/repositories?q=NetApp&type=all&language=&sort=" target="_blank"><img src="../assets/images/logos/NetApp.png" alt="NetApp Report Modules" /></a></td>
     </tr>
     <tr>
-        <td align="center" valign="middle" width="50%"><a href="https://github.com/orgs/AsBuiltReport/repositories?q=Nutanix&type=all&language=&sort=" target="_blank"><img src="../assets/images/logos/Nutanix.png" width="85%" height="85%" /></a></td>
-        <td align="center" valign="middle" width="50%"><a href="https://github.com/orgs/AsBuiltReport/repositories?q=PureStorage&type=all&language=&sort=" target="_blank"><img src="../assets/images/logos/PureStorage.jpg" width="85%" height="85%" /></a></td>
+        <td align="center" valign="middle" width="50%"><a href="https://github.com/orgs/AsBuiltReport/repositories?q=Nutanix&type=all&language=&sort=" target="_blank"><img src="../assets/images/logos/Nutanix.png" alt="Nutanix Report Modules" width="85%" height="85%" /></a></td>
+        <td align="center" valign="middle" width="50%"><a href="https://github.com/orgs/AsBuiltReport/repositories?q=PureStorage&type=all&language=&sort=" target="_blank"><img src="../assets/images/logos/PureStorage.jpg" alt="Pure Storage Report Modules" width="85%" height="85%" /></a></td>
     </tr>
     <tr>
-        <td align="center" valign="middle" width="50%"><a href="https://github.com/orgs/AsBuiltReport/repositories?q=Veeam&type=all&language=&sort=" target="_blank"><img src="../assets/images/logos/Veeam.png" width="75%" height="75%" /></a></td>
-        <td align="center" valign="middle" width="50%"><a href="https://github.com/orgs/AsBuiltReport/repositories?q=Rubrik&type=all&language=&sort=" target="_blank"><img src="../assets/images/logos/Rubrik.png" width="75%" height="75%" /></a></td>
+        <td align="center" valign="middle" width="50%"><a href="https://github.com/orgs/AsBuiltReport/repositories?q=Veeam&type=all&language=&sort=" target="_blank"><img src="../assets/images/logos/Veeam.png" alt="Veeam Report Modules" width="75%" height="75%" /></a></td>
+        <td align="center" valign="middle" width="50%"><a href="https://github.com/orgs/AsBuiltReport/repositories?q=Rubrik&type=all&language=&sort=" target="_blank"><img src="../assets/images/logos/Rubrik.png" alt="Rubrik Report Modules" width="75%" height="75%" /></a></td>
     </tr>
 </table>

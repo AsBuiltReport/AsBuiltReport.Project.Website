@@ -1,10 +1,75 @@
+---
+title: New-AsBuiltReport
+description: Generate as-built configuration reports for multiple systems in Word, HTML, and Text formats
+tags:
+  - command
+  - cmdlet
+  - report-generation
+  - powershell
+  - documentation
+---
+
 ## Description
 
-`New-AsBuiltReport` creates as-built configuration reports for one or more target systems and exports the report in to one or more supported document formats, such as DOCX, HTML and Text.
+`New-AsBuiltReport` creates as-built configuration reports for one or more target systems and exports the report into one or more supported document formats, such as DOCX, HTML and Text.
 
 `New-AsBuiltReport` provides additional parameters, allowing users to generate and customise a report to their requirements.
 
+!!! tip "Quick Start"
+    For your first report, you only need to specify: `-Report`, `-Target`, authentication (credentials), and `-OutputFolderPath`. The command will prompt you to create configuration files on first run.
+
+    ```powershell
+    New-AsBuiltReport -Report VMware.vSphere -Target vcenter.domain.local -Credential (Get-Credential) -OutputFolderPath C:\Reports
+    ```
+
+## Authentication Methods
+
+AsBuiltReport supports multiple authentication methods. Choose the method that suits your environment:
+
+| Method | When to Use | Parameters |
+|--------|-------------|------------|
+| **Credential Object** | Most common - pre-stored credentials | `-Credential` |
+| **Username & Password** | Direct authentication | `-Username` and `-Password` |
+| **API Token** | Token-based authentication | `-Token` |
+| **Interactive Auth** | Multi-factor authentication (MFA) | `-UseInteractiveAuth` |
+
+!!! warning "Parameter Combinations"
+    You must use **one** of the following authentication combinations:
+
+    - `-Credential` (recommended)
+    - `-Username` **and** `-Password`
+    - `-Token`
+    - `-UseInteractiveAuth`
+
+    Do not mix different authentication methods in the same command.
+
 ## Parameters
+
+### Quick Reference
+
+| Parameter | Type | Mandatory | Default | Description |
+|-----------|------|-----------|---------|-------------|
+| Report | String | Yes | - | Report module to run |
+| Target | String[] | Yes | - | Target system(s) IP/FQDN |
+| Credential | PSCredential | Yes* | - | Stored credentials |
+| Username | String | Yes* | - | Username for authentication |
+| Password | SecureString | Yes* | - | Password for authentication |
+| Token | String | No | - | API token |
+| UseInteractiveAuth | Switch | No | False | Interactive/MFA authentication |
+| Format | String[] | No | Word | Output format(s) |
+| ReportLanguage | String | No | en-US | Report content language |
+| Orientation | String | No | Portrait | Page orientation |
+| StyleFilePath | String | No | - | Custom style script path |
+| OutputFolderPath | String | Yes | - | Report save location |
+| AsBuiltConfigFilePath | String | No | - | Core config file path |
+| ReportConfigFilePath | String | No | - | Report config file path |
+| Timestamp | Switch | No | False | Append timestamp to filename |
+| EnableHealthCheck | Switch | No | False | Enable health checks |
+| SendEmail | Switch | No | False | Email report to recipients |
+
+_* At least one authentication method is mandatory_
+
+### Detailed Parameters
 
 ### Report
 
@@ -174,5 +239,42 @@ This is an optional parameter.
 4. Creates a Microsoft Azure As Built Report in HTML format with Spanish language content. Authentication to Microsoft Azure uses an external identity provider.
 
     ```powershell title="Example 4"
-    New-AsBuiltReport -Report Microsoft.Azure -Target dc01.corp.local -UseIteractiveAuth -Format HTML -ReportLanguage 'es-ES' -OutputFolderPath 'H:\Documents\'
+    New-AsBuiltReport -Report Microsoft.Azure -Target dc01.corp.local -UseInteractiveAuth -Format HTML -ReportLanguage 'es-ES' -OutputFolderPath 'H:\Documents\'
     ```
+
+5. Creates a VMware vSphere report using a stored credential, custom configurations, and sends the report via email. The report includes health checks and is generated in both HTML and Word formats.
+
+    ```powershell title="Example 5"
+    $Cred = Get-Credential
+    New-AsBuiltReport -Report VMware.vSphere -Target vcenter.example.com `
+    -Credential $Cred -Format HTML,Word -EnableHealthCheck -SendEmail `
+    -AsBuiltConfigFilePath 'C:\Reports\Config\AsBuiltReport.json' `
+    -ReportConfigFilePath 'C:\Reports\Config\VMware.vSphere.json' `
+    -OutputFolderPath 'C:\Reports\Output'
+    ```
+
+6. Creates a Veeam Backup & Replication report for multiple VBR servers with a timestamp appended to the filename.
+
+    ```powershell title="Example 6"
+    New-AsBuiltReport -Report Veeam.VBR -Target 'vbr01.example.com','vbr02.example.com' `
+    -Username 'administrator' -Password (ConvertTo-SecureString 'P@ssw0rd' -AsPlainText -Force) `
+    -Format HTML -OutputFolderPath 'C:\Reports' -Timestamp
+    ```
+
+7. Creates a NetApp ONTAP report using an API token for authentication with a landscape page orientation.
+
+    ```powershell title="Example 7"
+    New-AsBuiltReport -Report NetApp.ONTAP -Target cluster01.example.com `
+    -Token 'your-api-token-here' -Format Word -Orientation Landscape `
+    -OutputFolderPath 'C:\Reports'
+    ```
+
+## See Also
+
+- [New-AsBuiltConfig](new-asbuiltconfig.md) - Create AsBuiltReport core configuration files
+- [New-AsBuiltReportConfig](new-asbuiltreportconfig.md) - Create report-specific configuration files
+- [Installation Guide](installation.md) - How to install AsBuiltReport modules
+- [FAQ - How do I generate my first report?](../support/faq.md#how-do-i-generate-my-first-report) - Quick start guide
+- [FAQ - How do I customise report detail?](../support/faq.md#how-do-i-customise-the-level-of-detail-in-my-reports) - InfoLevel configuration
+- [Troubleshooting](../support/troubleshooting.md) - Solutions for common report generation issues
+- [Creating a Report Style](../dev-guide/creating-a-report-style.md) - Customise report appearance

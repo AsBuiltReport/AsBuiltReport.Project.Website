@@ -1,3 +1,14 @@
+---
+title: Frequently Asked Questions (FAQ)
+description: Common questions and answers about installing, using, and contributing to AsBuiltReport
+tags:
+  - faq
+  - help
+  - getting-started
+  - support
+  - questions
+---
+
 # Frequently Asked Questions
 
 This page answers common questions about AsBuiltReport. Can't find what you're looking for? Check our [Troubleshooting](troubleshooting.md) guide or visit the [Discussion Board](https://github.com/orgs/AsBuiltReport/discussions).
@@ -20,7 +31,7 @@ Please refer to the [report module user guides](../user-guide/report-modules/ove
 
 The easiest way to install AsBuiltReport is from the PowerShell Gallery:
 
-```powershell
+```powershell title="Install AsBuiltReport modules"
 # Install the Core module
 Install-Module -Name AsBuiltReport.Core -Scope CurrentUser
 
@@ -70,11 +81,11 @@ AsBuiltReport supports three output formats:
 
 You can generate multiple formats simultaneously:
 
-```powershell
-New-AsBuiltReport -Report VMware.vSphere -Target vcenter.example.com -Credential $Cred -Format HTML,DOCX
+```powershell title="Generate multiple report formats"
+New-AsBuiltReport -Report VMware.vSphere -Target vcenter.example.com -Credential $Cred -Format Word,HTML
 ```
 
-### Do I need Microsoft Word installed to generate a report in DOCX format?
+### Do I need Microsoft Word installed to generate a report in Word/DOCX format?
 
 No. Microsoft Word is not required to generate the report, however a document viewer which supports the DOCX format would be required to view the report.
 
@@ -107,7 +118,7 @@ Higher InfoLevels provide more detail but take longer to generate. Start with lo
 
 Yes, you can specify multiple targets:
 
-```powershell
+```powershell title="Generate reports for multiple targets"
 New-AsBuiltReport -Report VMware.vSphere -Target vcenter01.example.com,vcenter02.example.com -Credential $Cred
 ```
 
@@ -163,7 +174,7 @@ PScribo provides a set of functions that make it easy to create a document-like 
 
 AsBuiltReport supports a wide range of vendors and technologies, including:
 
-- **VMware** (vSphere, ESXi, Horizon, NSX, SRM, App Volumes)
+- **VMware** (vSphere, ESXi, Site Recovery Manager)
 - **Microsoft** (Active Directory, Azure, DHCP, SCVMM, Windows Server)
 - **Veeam** (Backup & Replication, Backup for Microsoft 365)
 - **NetApp** (ONTAP)
@@ -213,13 +224,13 @@ See the [Troubleshooting - Missing or Incomplete Data](troubleshooting.md#missin
 
 To update all AsBuiltReport modules to the latest versions:
 
-```powershell
+```powershell title="Update all AsBuiltReport modules"
 Update-Module -Name AsBuiltReport.*
 ```
 
 To update a specific module:
 
-```powershell
+```powershell title="Update a specific module"
 Update-Module -Name AsBuiltReport.VMware.vSphere
 ```
 
