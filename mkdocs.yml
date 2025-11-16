@@ -3,6 +3,8 @@ site_name: AsBuiltReport
 site_author: Tim Carman
 site_description: AsBuiltReport is an open source configuration document framework which utilises Microsoft PowerShell to produce as-built documentation in multiple document formats for multiple vendors and technologies.
 site_url: https://www.asbuiltreport.com
+repo_name: asbuiltreport/asbuiltreport.core
+repo_url: https://github.com/AsBuiltReport/AsBuiltReport.Core
 
 # Copyright
 copyright: Copyright &copy; 2016 - 2025 Tim Carman

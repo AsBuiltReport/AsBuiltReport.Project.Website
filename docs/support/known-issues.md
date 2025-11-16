@@ -77,8 +77,6 @@ This page documents known platform and framework limitations that affect AsBuilt
 
 Add this to your PowerShell profile for permanent configuration.
 
-See [Installation - PowerShell Gallery Access](../user-guide/installation.md#powershell-gallery-access) for details.
-
 ## Report Module-Specific Issues
 
 Each report module may have its own known issues and limitations based on:
