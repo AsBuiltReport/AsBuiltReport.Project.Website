@@ -24,7 +24,7 @@ This guide can be used to create custom style scripts which match your individua
 
 !!! tip
 
-    Use the [default style script](https://github.com/AsBuiltReport/AsBuiltReport.Core/blob/master/AsBuiltReport.Core.Style.ps1){:target="_blank"} as a reference for creating a new style script.
+    Use the [default style script](https://github.com/AsBuiltReport/AsBuiltReport.Core/blob/master/AsBuiltReport.Core/AsBuiltReport.Core.Style.ps1){:target="_blank"} as a reference for creating a new style script.
 
 ### Language Support
 
