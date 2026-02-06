@@ -54,7 +54,8 @@ AsBuiltReport supports multiple authentication methods. Choose the method that s
 | Credential | PSCredential | Yes* | - | Stored credentials |
 | Username | String | Yes* | - | Username for authentication |
 | Password | SecureString | Yes* | - | Password for authentication |
-| Token | String | No | - | API token |
+| Token | String | No | - | API token authentication|
+| TokenParameters | Hashtable | No | - | Additional parameters for API token authentication |
 | UseInteractiveAuth | Switch | No | False | Interactive/MFA authentication |
 | Format | String[] | No | Word | Output format(s) |
 | ReportLanguage | String | No | en-US | Report content language |
@@ -112,6 +113,15 @@ This is a mandatory parameter.
 
 ### Token
 Specifies an API token to authenticate to the target system.
+
+This is an optional parameter.
+
+### TokenParameters
+Specifies additional parameters required for token authentication as a hashtable.
+
+The required parameters will vary by report module.
+
+Consult the specific report module documentation for required token parameters.
 
 This is an optional parameter.
 
@@ -236,6 +246,7 @@ This is an optional parameter.
     -StyleFilePath 'C:\AsBuiltReport\MyCompanyStyle.ps1'`
     -AsBuiltConfigFilePath 'C:\AsBuiltReport\MyCompanyConfig.json' -Timestamp
     ```
+
 4. Creates a Microsoft Azure As Built Report in HTML format with Spanish language content. Authentication to Microsoft Azure uses an external identity provider.
 
     ```powershell title="Example 4"
@@ -267,6 +278,14 @@ This is an optional parameter.
     New-AsBuiltReport -Report NetApp.ONTAP -Target cluster01.example.com `
     -Token 'your-api-token-here' -Format Word -Orientation Landscape `
     -OutputFolderPath 'C:\Reports'
+    ```
+
+8. Creates a Microsoft Azure AsBuiltReport using token authentication with additional parameters. The AccountId parameter is required for Azure token authentication and is passed via the TokenParameters hashtable.
+
+    ```powershell title="Example 8"
+    New-AsBuiltReport -Report Microsoft.Azure -Target 'contoso.onmicrosoft.com' `
+    -Token 'your-api-token-here' -TokenParameters @{AccountId='admin@contoso.com'} `
+    -Format HTML,Word -OutputFolderPath 'C:\Reports'
     ```
 
 ## See Also
