@@ -87,6 +87,7 @@ plugins:
       redirect_maps:
         'about/contributing.md': 'dev-guide/contributing.md'
         'about/acknowledgements.md': 'about/contributors.md'
+        'user-guide/known-issues.md': 'support/known-issues.md'
 
 # Extensions
 markdown_extensions:
