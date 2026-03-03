@@ -121,7 +121,7 @@ If your as-built process involves opening a design document and changing verb te
 
 ## Getting Started with AsBuiltReport
 
-AsBuiltReport is free and open source. Whether you are looking to document an existing environment, prepare for an audit, or simply get up to speed on an infrastructure you have inherited, the best place to start is the [Quickstart Guide](https://www.asbuiltreport.com/quickstart), which walks through installation, configuration, and generating your first report.
+AsBuiltReport is free and open source. Whether you are looking to document an existing environment, prepare for an audit, or simply get up to speed on an infrastructure you have inherited, the best place to start is the [Quickstart Guide](https://www.asbuiltreport.com/user-guide/quickstart/), which walks through installation, configuration, and generating your first report.
 
 For those who want to go further — whether that means contributing to an existing report module, building a new one for a platform not yet covered, or extending the framework for your own use case — the [Developer Guide](https://www.asbuiltreport.com/developer) provides everything you need to get started. AsBuiltReport is built on a modular architecture, making it straightforward to develop report modules for virtually any infrastructure platform that exposes a PowerShell interface or API.
 
