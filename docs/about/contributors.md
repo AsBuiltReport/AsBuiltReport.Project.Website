@@ -24,7 +24,7 @@ tags:
 
 ### Jonathan Colon <img align=left src='../../assets/images/contributors/jonathan-colon.jpg' alt='Jonathan Colon profile photo' width='30%' height='30%' style='vertical-align:middle' />
 
-<h4>Project Advocate & Lead Contributor</h4>
+<h4>Project Co-Developer</h4>
 
 :fontawesome-brands-bluesky: Bluesky - [@jcolonfpr](https://bsky.app/profile/jcolonfpr.bsky.social){:target='_blank'}
 
@@ -35,8 +35,6 @@ tags:
 ### Matt Allford <img align=left src='../../assets/images/contributors/matt-allford.jpg' alt='Matt Allford profile photo' width='30%' height='30%' style='vertical-align:middle' />
 
 <h4>Project Advocate & Contributor</h4>
-
-:fontawesome-brands-square-x-twitter:{ .X } X - [@mattallford](https://x.com/mattallford){:target='_blank'}
 
 :fontawesome-brands-bluesky: Bluesky - [@mattalfford](https://bsky.app/profile/mattallford.com){:target='_blank'}
 

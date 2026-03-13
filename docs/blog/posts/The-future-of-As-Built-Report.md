@@ -5,6 +5,11 @@ authors:
   - Tim
 categories:
   - General
+tags:
+  - open source
+  - contributing
+  - community
+  - roadmap
 slug: The-future-of-As-Built-Report
 ---
 

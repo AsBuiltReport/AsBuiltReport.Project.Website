@@ -6,6 +6,11 @@ authors:
 categories:
   - Features
   - Announcements
+tags:
+  - multilingual
+  - localisation
+  - powershell
+  - new feature
 slug: Multilingual-support
 ---
 

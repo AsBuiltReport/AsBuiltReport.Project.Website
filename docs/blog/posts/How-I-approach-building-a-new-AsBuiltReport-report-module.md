@@ -5,6 +5,12 @@ authors:
   - Tim
 categories:
   - General
+tags:
+  - report module
+  - powershell
+  - development
+  - best practices
+  - ai
 slug: How-I-approach-building-a-new-AsBuiltReport-report-module
 ---
 

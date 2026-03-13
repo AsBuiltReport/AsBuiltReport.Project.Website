@@ -5,6 +5,11 @@ authors:
   - Tim
 categories:
   - General
+tags:
+  - history
+  - open source
+  - powershell
+  - vmware
 slug: the-history-of-asbuiltreport
 ---
 

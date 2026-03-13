@@ -5,6 +5,11 @@ authors:
   - Tim
 categories:
   - General
+tags:
+  - as-built
+  - documentation
+  - best practices
+  - design
 slug: Stop-Updating-Your-Design-Doc-and-Calling-It-an-As-Built
 ---
 
