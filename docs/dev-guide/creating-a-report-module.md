@@ -22,7 +22,7 @@ Before beginning development of a new report module, you should first discuss yo
 - Reaching out via the project's [discussion board](https://github.com/orgs/AsBuiltReport/discussions) or [social channels](../about/contact.md)
 - Contacting the [maintainers](../about/contributors.md) directly
 
-Once your module proposal is approved, a new GitHub repository will be created under the AsBuiltReport organisation following the standard naming convention. The initial module structure will be scaffolded using a Plaster template, providing you with the standardised directory structure, manifest files, and basic code framework needed to begin development.
+Once your module proposal is approved, a new GitHub repository will be created under the AsBuiltReport organisation following the standard naming convention. Review the naming standards and repository structure below, then use the AsBuiltReport Plaster template to scaffold the module locally before beginning development.
 
 ## Module Naming and Structure
 
@@ -72,6 +72,64 @@ AsBuiltReport.Vendor.Technology/                       # Repository root
 ├── SECURITY.md                                        # Security policy
 └── LICENSE                                            # MIT License
 ```
+
+## Scaffolding Your Module with Plaster
+
+The AsBuiltReport project provides a [Plaster](https://github.com/PowerShellOrg/Plaster) template that generates the complete, standardised module structure automatically, including the directory layout, manifest, module script, CI/CD workflows, Pester tests, and documentation templates.
+
+### Prerequisites
+
+- PowerShell 5.1 or 7+
+- [Plaster](https://www.powershellgallery.com/packages/Plaster) module
+
+```powershell title="Install Plaster"
+Install-Module -Name Plaster -Scope CurrentUser
+```
+
+### 1. Clone the template
+
+```powershell title="Clone the AsBuiltReport Plaster template"
+git clone https://github.com/AsBuiltReport/AsBuiltReport.Plaster.Template C:\AsBuiltReport.Plaster.Template
+```
+
+### 2. Scaffold a new module
+
+Run `Invoke-Plaster`, specifying the cloned template path and your destination directory:
+
+```powershell title="Scaffold a new module"
+Invoke-Plaster -TemplatePath 'C:\AsBuiltReport.Plaster.Template' -DestinationPath 'C:\Development'
+```
+
+Plaster will prompt for the following:
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| `VendorName` | Vendor or technology name (e.g. `VMware`) | — |
+| `ProductName` | Product name (e.g. `vSphere`) | — |
+| `ModuleName` | Full module name | `AsBuiltReport.<VendorName>.<ProductName>` |
+| `Description` | Brief module description | Auto-generated |
+| `Version` | Initial module version | `0.1.0` |
+| `Author` | Module author name | Git config value |
+| `CompanyName` | Company or organisation name | `Unknown` |
+| `PowerShellVersion` | Supported PowerShell edition(s) | `PowerShell 7+ only` |
+
+**PowerShell edition options:**
+
+| Choice | `PowerShellVersion` | `CompatiblePSEditions` |
+|--------|---------------------|------------------------|
+| Windows PowerShell 5.1 only | `5.1` | `@('Desktop')` |
+| PowerShell 7+ only | `7.0` | `@('Core')` |
+| Windows PowerShell 5.1 and PowerShell 7+ | `5.1` | `@('Desktop', 'Core')` |
+
+### 3. Next steps
+
+After `Invoke-Plaster` completes, the module directory is ready for development. The key files to work on are:
+
+1. **Rename and populate** `Src\Private\Get-AbrVendorProductExample.ps1` — add your data collection functions following the [private helper functions](#private-helper-functions) standards
+2. **Update** `Src\Public\Invoke-AsBuiltReport.Vendor.Product.ps1` — wire up your private functions inside the `foreach ($System in $Target)` loop
+3. **Expand** `AsBuiltReport.Vendor.Product.json` — add your sections under `InfoLevel` and `HealthCheck`
+4. **Update** `Language\en-US\VendorProduct.psd1` — add your translation strings following the [language support](#language-support-implementation) standards
+5. **Initialise git** — run `git init`, add the remote repository URL provided by the maintainers, and push
 
 ## PowerShell Manifest (.psd1) Requirements
 
