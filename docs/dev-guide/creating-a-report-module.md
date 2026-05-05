@@ -43,27 +43,34 @@ AsBuiltReport.Vendor.Technology
 Organise your module repository with the following standard structure:
 
 ```text title="Repository folder structure"
-AsBuiltReport.Vendor.Technology/
-├── .github/                                       # GitHub workflows and templates
-├── .vscode/                                       # VS Code configuration
-├── Language/                                      # Language support folders
-│   ├── en-US/
-│   │   └── VendorTechnology.psd1                  # en-US language translation file
-│   └── <language>-<REGION>/                       # Additional language support folders
-│       └── VendorTechnology.psd1
-├── Samples/                                       # Sample report outputs
-├── Src/
-│   ├── Private/                                   # Private helper functions
-│   └── Public/                                    # Exported functions
-├── AsBuiltReport.Vendor.Technology.json           # Report configuration file
-├── AsBuiltReport.Vendor.Technology.psd1           # PowerShell manifest
-├── AsBuiltReport.Vendor.Technology.psm1           # PowerShell module script
-├── README.md                                      # Module documentation
-├── CHANGELOG.md                                   # Version history
-├── CODE_OF_CONDUCT.md                             # Code of Conduct policy
-├── CONTRIBUTING.md                                # Contributing guidelines
-├── SECURITY.md                                    # Security policy
-└── LICENSE                                        # MIT License
+AsBuiltReport.Vendor.Technology/                       # Repository root
+├── .github/                                           # GitHub workflows and templates
+├── .vscode/                                           # VS Code configuration
+├── AsBuiltReport.Vendor.Technology/                   # PowerShell module directory
+│   ├── AsBuiltReport.Vendor.Technology.json           # Report configuration file
+│   ├── AsBuiltReport.Vendor.Technology.psd1           # PowerShell manifest
+│   ├── AsBuiltReport.Vendor.Technology.psm1           # PowerShell module script
+│   ├── Language/                                      # Language support folders
+│   │   ├── en-US/
+│   │   │   └── VendorTechnology.psd1                  # en-US language translation file
+│   │   └── <language>-<REGION>/                       # Additional language support folders
+│   │       └── VendorTechnology.psd1
+│   └── Src/
+│       ├── Private/                                   # Private helper functions
+│       │   └── Get-Abr[VendorAbbr][Resource].ps1      # One file per resource type
+│       └── Public/                                    # Exported functions
+│           └── Invoke-AsBuiltReport.Vendor.Technology.ps1
+├── Samples/                                           # Sample report outputs
+├── Tests/                                             # Pester test suite
+│   ├── AsBuiltReport.Vendor.Technology.Tests.ps1      # Module manifest and structure tests
+│   ├── LocalizationData.Tests.ps1                     # Localization key validation tests
+│   └── Invoke-Tests.ps1                               # Test runner
+├── README.md                                          # Module documentation
+├── CHANGELOG.md                                       # Version history
+├── CODE_OF_CONDUCT.md                                 # Code of Conduct policy
+├── CONTRIBUTING.md                                    # Contributing guidelines
+├── SECURITY.md                                        # Security policy
+└── LICENSE                                            # MIT License
 ```
 
 ## PowerShell Manifest (.psd1) Requirements
@@ -82,9 +89,9 @@ Your module manifest must include these standardised properties:
     RequiredModules = @(
         @{
             ModuleName = 'AsBuiltReport.Core'
-            ModuleVersion = '1.5.0'               # Minimum required version
+            ModuleVersion = '1.6.1'               # Minimum required version
         }
-        # Add additional vendor-specific modules as needed
+        # Add vendor-specific modules as needed
     )
 
     FunctionsToExport = 'Invoke-AsBuiltReport.Vendor.Technology'
@@ -100,6 +107,32 @@ Your module manifest must include these standardised properties:
     }
 }
 ```
+
+## Module Script (.psm1) Pattern
+
+The `.psm1` file should dynamically discover and load all function files from `Src/Public` and `Src/Private` using dot-sourcing. This avoids maintaining a manual import list as the module grows.
+
+```powershell title="Module script (.psm1) template"
+# Dot-source all Public and Private function files
+foreach ($Folder in @('Public', 'Private')) {
+    $FolderPath = Join-Path -Path $PSScriptRoot -ChildPath "Src\$Folder"
+    if (Test-Path -Path $FolderPath) {
+        Get-ChildItem -Path $FolderPath -Filter '*.ps1' -Recurse | ForEach-Object {
+            try {
+                . $_.FullName
+            } catch {
+                Write-Warning "Failed to import function $($_.FullName): $_"
+            }
+        }
+    }
+}
+```
+
+**Key points:**
+
+- Uses `$PSScriptRoot` for portable path resolution — do not use relative paths
+- Errors on individual files are non-fatal (warns and continues loading)
+- No explicit `Export-ModuleMember` call is needed; the `FunctionsToExport` field in the `.psd1` manifest controls what is exported to callers
 
 ## Configuration File Standards
 
@@ -472,12 +505,42 @@ function Invoke-AsBuiltReport.Vendor.Technology {
 ```
 
 ### Private Helper Functions
-Create focused helper functions in the `Src/Private` directory:
 
-- Use descriptive names with "Abr" prefix: `Get-AbrVMwareCluster`
-- Keep functions focused on single responsibilities
-- Include comprehensive comment-based help
-- Implement proper error handling
+Create focused helper functions in the `Src/Private` directory, one `.ps1` file per resource type or logical grouping:
+
+- **Naming**: `Get-Abr[VendorAbbr][ResourceType]` — a short, consistent vendor abbreviation followed by the resource type in PascalCase (e.g. `Get-AbrVTResourceName` where `VT` is the vendor abbreviation for your module)
+- **Single responsibility**: One function per resource type. Nested or child resources get their own functions, called from within the parent function.
+- **Comment-based help**: Include `.SYNOPSIS` and `.DESCRIPTION` blocks.
+- **Error handling**: Wrap data collection in `try`/`catch` and emit warnings via `Write-PScriboMessage` for non-critical failures.
+
+**Example skeleton:**
+
+```powershell title="Private function skeleton"
+function Get-AbrVTResourceName {
+    <#
+    .SYNOPSIS
+        Generates the Resource Name section of a Vendor Technology As Built report.
+    .DESCRIPTION
+        Collects resource configuration data and outputs a formatted PScribo section.
+    #>
+
+    $translate = $reportTranslate.GetAbrVTResourceName
+
+    Write-PScriboMessage -Plugin 'VendorTechnology' -Message $translate.Collecting
+
+    try {
+        $Resources = Get-VTResource -ErrorAction Stop
+
+        if ($Resources) {
+            Section -Name $translate.Heading -Style Heading2 {
+                # Build and output table
+            }
+        }
+    } catch {
+        Write-PScriboMessage -Plugin 'VendorTechnology' -IsWarning "Unable to collect resource data: $($_.Exception.Message)"
+    }
+}
+```
 
 ## Language Support Implementation
 
@@ -1206,6 +1269,66 @@ Test your module for:
 - **Functionality**: Core report generation works
 - **Error Handling**: Graceful handling of common error scenarios
 - **Cross-Platform**: Compatibility across PowerShell editions
+
+### Pester Test Structure
+
+All modules must include a `Tests/` directory with Pester v5 tests. The Plaster scaffold creates the initial test files; expand them as new functions are added.
+
+#### Required test files
+
+| File | Purpose |
+|------|---------|
+| `AsBuiltReport.Vendor.Technology.Tests.ps1` | Module manifest validation, directory structure, exported functions, private function inventory, JSON config schema, PSScriptAnalyzer |
+| `LocalizationData.Tests.ps1` | Validates that all language files have identical keys and that no keys are missing from non-en-US files |
+| `Invoke-Tests.ps1` | Test runner — invokes Pester with project-standard settings |
+
+#### Running tests
+
+```powershell title="Run the test suite"
+# From the module root directory
+.\Tests\Invoke-Tests.ps1
+
+# Or invoke Pester directly
+Invoke-Pester -Path .\Tests\ -Output Detailed
+```
+
+#### Key test categories
+
+```powershell title="Test categories to cover"
+Describe 'Module Manifest' {
+    It 'Has a valid module version' { ... }
+    It 'Exports the correct Invoke-AsBuiltReport function' { ... }
+    It 'Declares AsBuiltReport.Core as a required module' { ... }
+}
+
+Describe 'Module Structure' {
+    It 'Has a Src\Public directory' { ... }
+    It 'Has a Src\Private directory' { ... }
+    It 'Has a Language\en-US directory' { ... }
+    It 'Has a Tests directory' { ... }
+}
+
+Describe 'Private Functions' {
+    It 'Has a Get-Abr[VendorAbbr][Resource] function for each resource type' { ... }
+}
+
+Describe 'JSON Configuration' {
+    It 'Has InfoLevel values in the range 0-5' { ... }
+    It 'Has boolean HealthCheck values' { ... }
+}
+
+Describe 'Localization' {
+    It 'en-US language file exists' { ... }
+    It 'All language files have identical keys' { ... }
+}
+
+Describe 'Code Quality' {
+    It 'Passes PSScriptAnalyzer with no errors or warnings' {
+        $Results = Invoke-ScriptAnalyzer -Path .\Src\ -Recurse
+        $Results | Should -BeNullOrEmpty
+    }
+}
+```
 
 ## Documentation Standards
 
