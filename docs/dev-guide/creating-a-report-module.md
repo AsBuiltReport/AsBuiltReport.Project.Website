@@ -101,7 +101,7 @@ Your module manifest must include these standardised properties:
             Tags = @('AsBuiltReport', 'Report', 'Documentation', 'PScribo', 'Windows', 'Linux', 'MacOS', 'PSEdition_Desktop', 'PSEdition_Core', '[Vendor]', '[Technology]')     # Include tags which are applicable
             LicenseUri = 'https://github.com/AsBuiltReport/AsBuiltReport.Vendor.Technology/blob/master/LICENSE'
             ProjectUri = 'https://github.com/AsBuiltReport/AsBuiltReport.Vendor.Technology'
-            IconUri = 'https://raw.githubusercontent.com/AsBuiltReport/.github/main/profile/images/AsBuiltReport.png'
+            IconUri = 'AsBuiltReport.png'
             ReleaseNotes = 'https://raw.githubusercontent.com/AsBuiltReport/AsBuiltReport.Vendor.Technology/master/CHANGELOG.md'
         }
     }
@@ -233,15 +233,35 @@ Get-Command -Module PScribo
 ```
 
 #### Document Structure
-```powershell title="Create sections for report organisation"
-# Create sections for logical organisation
-Section -Name 'Infrastructure Overview' -Style Heading1 {
-    # Content goes here
-}
 
-# Create subsections for detailed information
-Section -Name 'Virtual Machines' -Style Heading2 {
-    # VM information tables and content
+PScribo section styles control both visual hierarchy and Table of Contents (TOC) inclusion. To keep the TOC readable, headings at `Heading5` and above should use a `NOTOCHeading` style so they do not appear in the TOC.
+
+| Style | TOC | Typical use |
+|-------|-----|-------------|
+| `Heading1` | Yes | Top-level report section (e.g. tenant, site) |
+| `Heading2` | Yes | Major resource category |
+| `Heading3` | Yes | Resource type within a category |
+| `Heading4` | Yes | Individual resource instance |
+| `NOTOCHeading5` | No | Sub-detail within a resource instance |
+| `NOTOCHeading6` | No | Further nesting below Heading5 |
+
+```powershell title="Section heading styles"
+Section -Name 'Infrastructure' -Style Heading1 {
+
+    Section -Name 'Compute' -Style Heading2 {
+
+        Section -Name 'Virtual Machines' -Style Heading3 {
+
+            foreach ($VM in $VMs) {
+                Section -Name $VM.Name -Style Heading4 {
+
+                    Section -Name 'Network Adapters' -Style NOTOCHeading5 {
+                        # Detail tables that should not clutter the TOC
+                    }
+                }
+            }
+        }
+    }
 }
 ```
 
@@ -266,36 +286,62 @@ Write-PScriboMessage -Plugin "Module" -Message "Collecting virtual machine infor
 Write-PScriboMessage -Plugin "Module" -IsWarning "Unable to collect storage information: $($_.Exception.Message)"
 ```
 
-### Table Creation Standards
+### Table Standards
 
-PScribo tables are the primary method for presenting structured data:
+PScribo tables are the primary method for presenting structured data. Use `List = $false` for multi-row collections and `List = $true` for single-object key-value pairs.
 
-```powershell title="Create tables with structured data"
-# Collect and structure your data
+**Column width rules:**
+
+- Always specify `ColumnWidths` to avoid excessive text wrapping
+- List tables (`List = $true`) should use `40, 60` whenever possible
+- Non-list table column widths should sum to 100 and be sized to the data
+
+**Caption rule:** Always include a caption when `$Report.ShowTableCaptions` is set.
+
+```powershell title="Multi-row collection table (List = false)"
 $ServerData = foreach ($Server in $Servers) {
     [PSCustomObject]@{
-        'Server Name' = $Server.Name
-        'OS Version' = $Server.OperatingSystem
-        'CPU Cores' = $Server.ProcessorCount
-        'Memory (GB)' = [Math]::Round($Server.TotalPhysicalMemory / 1GB, 2)
-        'Status' = $Server.Status
+        'Server Name'  = $Server.Name
+        'OS Version'   = $Server.OperatingSystem
+        'CPU Cores'    = $Server.ProcessorCount
+        'Memory (GB)'  = [Math]::Round($Server.TotalPhysicalMemory / 1GB, 2)
+        'CPU Usage %'  = $Server.CPUUsagePercent
+        'Status'       = $Server.Status
     }
 }
 
-# Define table parameters for consistent formatting
 $TableParams = @{
-    Name = 'Server Inventory'
-    List = $false
-    ColumnWidths = 20, 25, 15, 15, 25
+    Name         = 'Server Inventory'
+    List         = $false
+    ColumnWidths = 20, 20, 12, 13, 15, 20
 }
 
-# Add table caption if configured
 if ($Report.ShowTableCaptions) {
     $TableParams['Caption'] = "- $($TableParams.Name)"
 }
 
-# Output the table with proper sorting
 $ServerData | Sort-Object 'Server Name' | Table @TableParams
+```
+
+```powershell title="Single-object key-value table (List = true)"
+$ServerInfo = [PSCustomObject]@{
+    'Server Name' = $Server.Name
+    'Version'     = $Server.Version
+    'Build'       = $Server.Build
+    'Edition'     = $Server.Edition
+}
+
+$TableParams = @{
+    Name         = 'Server Information'
+    List         = $true
+    ColumnWidths = 40, 60
+}
+
+if ($Report.ShowTableCaptions) {
+    $TableParams['Caption'] = "- $($TableParams.Name)"
+}
+
+$ServerInfo | Table @TableParams
 ```
 
 ### Conditional Formatting and Styling
@@ -303,7 +349,6 @@ $ServerData | Sort-Object 'Server Name' | Table @TableParams
 Use PScribo styling to highlight important information based on health checks:
 
 ```powershell title="Apply conditional formatting for health checks"
-# Apply conditional formatting based on health check results
 if ($ReportConfig.HealthCheck.Infrastructure.CPUUtilisation) {
     foreach ($Server in $ServerData) {
         if ($Server.'CPU Usage %' -gt $ReportConfig.HealthCheck.Infrastructure.CPUThreshold) {
@@ -544,7 +589,7 @@ function Get-AbrVTResourceName {
 
 ## Language Support Implementation
 
-AsBuiltReport v1.5.0+ introduces comprehensive multilingual support, allowing report modules to generate documentation in multiple languages. This section explains how to implement language support in your report module.
+AsBuiltReport.Core v1.5.0+ introduces comprehensive multilingual support, allowing report modules to generate documentation in multiple languages. This section explains how to implement language support in your report module.
 
 ### Overview
 
@@ -568,15 +613,16 @@ Create a `Language` folder in your module root with subfolders for each supporte
 
 ```text title="Language folder structure"
 AsBuiltReport.Vendor.Technology/
-├── Language/
-│   ├── en-US/
-│   │   └── VendorTechnology.psd1
-│   ├── es-ES/
-│   │   └── VendorTechnology.psd1
-│   ├── fr-FR/
-│   │   └── VendorTechnology.psd1
-│   └── de-DE/
-│       └── VendorTechnology.psd1
+└── AsBuiltReport.Vendor.Technology/
+    └── Language/
+        ├── en-US/
+        │   └── VendorTechnology.psd1
+        ├── es-ES/
+        │   └── VendorTechnology.psd1
+        ├── fr-FR/
+        │   └── VendorTechnology.psd1
+        └── de-DE/
+            └── VendorTechnology.psd1
 ```
 
 #### Language File Format
@@ -1204,48 +1250,16 @@ This example demonstrates:
 - **InfoLevel-based content control** (different levels show progressively more detail)
 - **Proper error handling** with informative messages
 - **Consistent table formatting** with appropriate column widths
-    - List tables should have column widths set to `40, 60` whenever possible
-    - Set column widths to avoid excessive text wrapping
 - **Health check integration** with conditional styling
 - **Data transformation** into readable formats
 - **User feedback** during data collection
 - **Graceful degradation** when data isn't available
 
-### Table Formatting Standards
-Use consistent table formatting throughout your module:
-
-```powershell title="Consistent table formatting"
-# Create PSCustomObject for structured data
-$ServerInfo = [PSCustomObject]@{
-    'Server Name' = $Server.Name
-    'Version' = $Server.Version
-    'Build' = $Server.Build
-    'Edition' = $Server.Edition
-}
-
-# Define table parameters with consistent formatting
-$TableParams = @{
-    Name = 'Server Information'
-    List = $true                   # Use List = $true for key-value pairs
-    ColumnWidths = 40, 60          # Always specify column widths
-                                   # Set list table column widths to 40, 60 whenever possible
-                                   # Set column widths to avoid excessive text wrapping
-}
-
-# Include table captions when configured
-if ($Report.ShowTableCaptions) {
-    $TableParams['Caption'] = "- $($TableParams.Name)"
-}
-
-# Output to table with sorting
-$ServerInfo | Table @TableParams
-```
-
 ### Health Check Implementation
 Implement health checks with configurable thresholds:
 
 ```powershell title="Health check implementation"
-if ($ReportConfig.HealthCheck.Infrastructure.CPUUtilization) {
+if ($ReportConfig.HealthCheck.Infrastructure.CPUUtilisation) {
     if ($Server.CPUUsage -gt $ReportConfig.HealthCheck.Infrastructure.CPUThreshold) {
         $ServerInfo | Set-Style -Style Warning -Property 'CPU Usage'
     }
@@ -1397,9 +1411,7 @@ Provide comprehensive comment-based help:
 Test your module with:
 
 - Small environments (1-10 objects)
-
 - Medium environments (100-1000 objects)
-
 - Large environments (1000+ objects)
 
 ## Version Control and Maintenance
@@ -1408,9 +1420,7 @@ Test your module with:
 Use semantic versioning (`Major.Minor.Patch`):
 
 - **Major**: Breaking changes
-
 - **Minor**: New features, backwards compatible
-
 - **Patch**: Bug fixes
 
 ### Change Log Maintenance
