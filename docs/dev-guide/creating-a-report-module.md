@@ -591,6 +591,7 @@ function Invoke-AsBuiltReport.Vendor.Technology {
     $Report = $ReportConfig.Report
     $InfoLevel = $ReportConfig.InfoLevel
     $Options = $ReportConfig.Options
+    $LocalizedData = $reportTranslate.InvokeAsBuiltReportVendorTechnology
 
     # Used to set values to TitleCase where required
     $TextInfo = (Get-Culture).TextInfo
@@ -599,7 +600,6 @@ function Invoke-AsBuiltReport.Vendor.Technology {
 
     #region foreach loop
     foreach ($System in $Target) {
-
 
 
 	}
@@ -626,21 +626,72 @@ function Get-AbrVTResourceName {
     .DESCRIPTION
         Collects resource configuration data and outputs a formatted PScribo section.
     #>
+    [CmdletBinding()]
+    param (
+    )
 
-    $translate = $reportTranslate.GetAbrVTResourceName
+    begin {
+        # Retrieve localized strings for headings, messages, and labels.
+        # This enables multi-language support and keeps text separate from logic.
+        $LocalizedData = $reportTranslate.GetAbrVTResourceName
 
-    Write-PScriboMessage -Plugin 'VendorTechnology' -Message $translate.Collecting
+        # Emit a verbose message indicating that data collection is starting.
+        # This helps with troubleshooting and provides visibility during report generation.
+        Write-PScriboMessage -Plugin 'VendorTechnology' -Message $LocalizedData.Collecting
+    }
 
-    try {
-        $Resources = Get-VTResource -ErrorAction Stop
+    process {
+        try {
+            # Collect resource data from the vendor platform.
+            # -ErrorAction Stop ensures any failure is caught by the catch block.
+            $Resources = Get-VTResource -ErrorAction Stop
 
-        if ($Resources) {
-            Section -Name $translate.Heading -Style Heading2 {
-                # Build and output table
+            # Only render the section if data was successfully returned.
+            # Avoids creating empty report sections.
+            if ($Resources) {
+
+                # Create a new section in the report using PScribo.
+                # The section name is sourced from localized data for consistency.
+                Section -Name $LocalizedData.Heading -Style Heading2 {
+                    # Prepare table data
+                    # Convert raw resource objects into a clean, report-friendly structure.
+                    # Typically flattened and ordered for readability.
+                    $TableData = $Resources | Select-Object Name, Status, Version
+
+                    # Define table formatting parameters
+                    # Using a hashtable allows conditional additions (e.g. captions)
+                    $TableParams = @{
+                        Name         = $LocalizedData.TableTitle      # Logical name of the table
+                        List         = $true                          # Render as key/value list (good for summaries)
+                        ColumnWidths = 40, 60                         # Adjust layout proportions
+                    }
+
+                    # Optionally include a caption if enabled in report configuration
+                    if ($Report.ShowTableCaptions) {
+                        $TableParams['Caption'] = "- $($TableParams.Name)"
+                    }
+
+                    # Output table to the report
+                    # PScribo handles rendering based on the provided parameters
+                    $TableData | Table @TableParams
+                }
+            } else {
+                # Optional: log that no data was returned.
+                # Useful for debugging or confirming expected empty states.
+                Write-PScriboMessage -Plugin 'VendorTechnology' -Message $LocalizedData.NoData
             }
+        } catch {
+            # Catch any errors during data collection or processing.
+
+            # Emit a warning rather than terminating execution.
+            # This ensures the report continues generating even if this section fails.
+            Write-PScriboMessage -Plugin 'VendorTechnology' -IsWarning "$($LocalizedData.ErrorMessage) $($_.Exception.Message)"
         }
-    } catch {
-        Write-PScriboMessage -Plugin 'VendorTechnology' -IsWarning "Unable to collect resource data: $($_.Exception.Message)"
+    }
+
+    end {
+        # Reserved for any cleanup if required.
+        # Typically unused, but included for completeness and consistency.
     }
 }
 ```
