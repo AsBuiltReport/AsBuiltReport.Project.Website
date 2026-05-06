@@ -86,13 +86,13 @@ The AsBuiltReport project provides a [Plaster](https://github.com/PowerShellOrg/
 Install-Module -Name Plaster -Scope CurrentUser
 ```
 
-### 1. Clone the template
+#### 1. Clone the template
 
 ```powershell title="Clone the AsBuiltReport Plaster template"
 git clone https://github.com/AsBuiltReport/AsBuiltReport.Plaster.Template C:\AsBuiltReport.Plaster.Template
 ```
 
-### 2. Scaffold a new module
+#### 2. Scaffold a new module
 
 Run `Invoke-Plaster`, specifying the cloned template path and your destination directory:
 
@@ -121,7 +121,7 @@ Plaster will prompt for the following:
 | PowerShell 7+ only | `7.0` | `@('Core')` |
 | Windows PowerShell 5.1 and PowerShell 7+ | `5.1` | `@('Desktop', 'Core')` |
 
-### 3. Next steps
+#### 3. Next steps
 
 After `Invoke-Plaster` completes, the module directory is ready for development. The key files to work on are:
 
