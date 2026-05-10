@@ -857,7 +857,7 @@ Language support is automatically initialised by the AsBuiltReport.Core module w
 **What you need to do:**
 
 1. Create language files in the `Language/` folder structure
-2. Use the `$reportTranslate` variable in your report code to reference translations
+2. Declare a local `$LocalizedData` variable in each function by accessing the appropriate key from the `$reportTranslate` global variable
 
 **What the Core module handles automatically:**
 
@@ -867,72 +867,66 @@ Language support is automatically initialised by the AsBuiltReport.Core module w
 - Managing culture-specific formatting
 
 #### Using Translations in Your Report Module
-Reference translation strings using the `$reportTranslate` global variable. When using the hashtable structure, access translations through the appropriate function/section key:
 
-```powershell title="Use translations in report code"
-# Access translations for the main module
-$moduleTranslate = $reportTranslate.InvokeAsBuiltReportVendorTechnology
+In each function, declare a local `$LocalizedData` variable at the top by accessing the matching key from `$reportTranslate`. This scopes translations to the current function and keeps the code readable.
 
-# Access translations for specific functions
-$vmTranslate = $reportTranslate.GetAbrVirtualMachine
-$storageTranslate = $reportTranslate.GetAbrStorageInfo
+**In the main `Invoke-AsBuiltReport` function:**
 
-# Use in section headings
-Section -Name $vmTranslate.Heading -Style Heading1 {
+```powershell title="Declare $LocalizedData in the main function"
+$LocalizedData = $reportTranslate.InvokeAsBuiltReportVendorTechnology
+```
 
-    # Display informational paragraph with formatted string
-    Paragraph ($vmTranslate.ParagraphSummary -f $TargetName)
+**In each private `Get-Abr*` function (in the `begin{}` block):**
 
-    # Table column headers using translations
-    $VMData = foreach ($VM in $VMs) {
-        [PSCustomObject]@{
-            $vmTranslate.Name = $VM.Name
-            $vmTranslate.PowerState = if ($VM.PowerState -eq 'PoweredOn') {
-                $vmTranslate.PoweredOn
-            } else {
-                $vmTranslate.PoweredOff
-            }
-            $vmTranslate.CPUCount = $VM.NumCpu
-            $vmTranslate.MemoryGB = $VM.MemoryGB
-            $vmTranslate.StorageGB = [Math]::Round($VM.ProvisionedSpaceGB, 2)
-            $vmTranslate.GuestOS = $VM.GuestOS
-        }
-    }
-
-    # Translated messages
-    if ($VMData) {
-        $TableParams = @{
-            Name = $vmTranslate.TableHeading
-            List = $false
-            ColumnWidths = 20, 15, 10, 12, 12, 20
-        }
-        $VMData | Sort-Object $vmTranslate.Name | Table @TableParams
-    } else {
-        Paragraph $vmTranslate.None
-    }
+```powershell title="Declare $LocalizedData in private functions"
+begin {
+    $LocalizedData = $reportTranslate.GetAbrVirtualMachine
+    Write-PScriboMessage ($LocalizedData.InfoLevel -f $InfoLevel.VirtualMachine)
+    Write-PScriboMessage $LocalizedData.Collecting
 }
 ```
 
-**Alternative approach for simpler modules:**
+Once declared, use `$LocalizedData` throughout the function for all headings, messages, paragraphs, and table column headers:
 
-For smaller modules with fewer translations, you can use a simpler flat structure:
+```powershell title="Use $LocalizedData in report code"
+process {
+    try {
+        Section -Style Heading2 $LocalizedData.Heading {
 
-```powershell title="Simpler flat language file structure"
-# Simpler language file structure (VendorTechnology.psd1)
-# culture = 'en-US'
-ConvertFrom-StringData @'
-    SectionTitle = Virtual Infrastructure Overview
-    HostSummary = Host Summary
-    VMName = VM Name
-    PoweredOn = Powered On
-    PoweredOff = Powered Off
-'@
+            Paragraph $LocalizedData.SectionInfo
+            Paragraph ($LocalizedData.ParagraphSummary -f $TargetName)
 
-# Usage in code
-Section -Name $reportTranslate.SectionTitle -Style Heading1 {
-    Section -Name $reportTranslate.HostSummary -Style Heading2 {
-        # Direct access to translations
-        Paragraph "Status: $($reportTranslate.PoweredOn)"
+            $VMData = foreach ($VM in $VMs) {
+                [Ordered]@{
+                    $LocalizedData.Name       = $VM.Name
+                    $LocalizedData.PowerState = if ($VM.PowerState -eq 'PoweredOn') {
+                        $LocalizedData.PoweredOn
+                    } else {
+                        $LocalizedData.PoweredOff
+                    }
+                    $LocalizedData.CPUCount   = $VM.NumCpu
+                    $LocalizedData.MemoryGB   = $VM.MemoryGB
+                    $LocalizedData.StorageGB  = [Math]::Round($VM.ProvisionedSpaceGB, 2)
+                    $LocalizedData.GuestOS    = $VM.GuestOS
+                }
+            }
+
+            if ($VMData) {
+                $TableParams = @{
+                    Name         = $LocalizedData.TableHeading
+                    List         = $false
+                    ColumnWidths = 20, 15, 10, 12, 12, 20
+                }
+                if ($Report.ShowTableCaptions) {
+                    $TableParams['Caption'] = "- $($TableParams.Name)"
+                }
+                $VMData | Sort-Object $LocalizedData.Name | Table @TableParams
+            } else {
+                Paragraph $LocalizedData.None
+            }
+        }
+    } catch {
+        Write-PScriboMessage -IsWarning "$($LocalizedData.ErrorMessage) $($_.Exception.Message)"
     }
 }
 ```
@@ -984,7 +978,7 @@ The following language codes are supported with comprehensive fallback mappings:
    VMCount = Found {0} virtual machines
 
    # In code:
-   Paragraph ($reportTranslate.VMCount -f $VMs.Count)
+   Paragraph ($LocalizedData.VMCount -f $VMs.Count)
    ```
 6. **RTL Language Support**: For right-to-left languages (Arabic, Hebrew), ensure your table layouts work correctly
 
@@ -1008,7 +1002,7 @@ New-AsBuiltReport -Report Vendor.Technology -Target server01 -Credential $cred -
 Here's a complete example showing language support implementation:
 
 ```powershell title="Complete language implementation example"
-function Invoke-AsBuiltReport.VMware.vSphere {
+function Invoke-AsBuiltReport.Vendor.Technology {
     [CmdletBinding()]
     param (
         [Parameter(Mandatory = $true)]
@@ -1018,47 +1012,75 @@ function Invoke-AsBuiltReport.VMware.vSphere {
         [PSCredential] $Credential
     )
 
-    # Access configuration (language support is automatically initialised by Core module)
-    $Report = $ReportConfig.Report
-    $InfoLevel = $ReportConfig.InfoLevel
+    $Report     = $ReportConfig.Report
+    $InfoLevel  = $ReportConfig.InfoLevel
+    $Options    = $ReportConfig.Options
 
-    # Access translations (automatically loaded by Core module)
-    $vmTranslate = $reportTranslate.GetAbrVMwareVSphere
+    # Scope translations for this function from the global $reportTranslate hashtable
+    $LocalizedData = $reportTranslate.InvokeAsBuiltReportVendorTechnology
 
-    foreach ($VIServer in $Target) {
+    foreach ($Target in $Target) {
         try {
-            $vCenter = Connect-VIServer -Server $VIServer -Credential $Credential
+            Write-PScriboMessage ($LocalizedData.Connecting -f $Target)
 
-            # Use translated section title
-            Section -Name $vmTranslate.Heading -Style Heading1 {
-
-                if ($InfoLevel.Infrastructure -ge 1) {
-                    $VMData = Get-VM -Server $vCenter | Select-Object Name, PowerState, NumCpu, MemoryGB
-
-                    # Use translated column headers
-                    $VMInfo = foreach ($VM in $VMData) {
-                        [PSCustomObject]@{
-                            $vmTranslate.Name = $VM.Name
-                            $vmTranslate.PowerState = if ($VM.PowerState -eq 'PoweredOn') { $vmTranslate.PoweredOn } else { $vmTranslate.PoweredOff }
-                            $vmTranslate.CPUCount = $VM.NumCpu
-                            $vmTranslate.MemoryGB = $VM.MemoryGB
-                        }
-                    }
-
-                    if ($VMInfo) {
-                        $VMInfo | Sort-Object $vmTranslate.Name | Table @{
-                            Name = $vmTranslate.TableHeading
-                            List = $false
-                            ColumnWidths = 30, 20, 25, 25
-                        }
-                    } else {
-                        # Use translated message
-                        Paragraph $vmTranslate.None
-                    }
-                }
+            Section -Style Heading1 $LocalizedData.Heading {
+                Get-AbrVTVirtualMachine
             }
         } catch {
-            Write-Warning ($vmTranslate.ConnectionError -f $VIServer, $_.Exception.Message)
+            Write-PScriboMessage -IsWarning ($LocalizedData.ConnectionError -f $Target, $_.Exception.Message)
+        }
+    }
+}
+
+function Get-AbrVTVirtualMachine {
+    [CmdletBinding()]
+    param ()
+
+    begin {
+        # Scope translations for this function
+        $LocalizedData = $reportTranslate.GetAbrVTVirtualMachine
+        Write-PScriboMessage ($LocalizedData.InfoLevel -f $InfoLevel.VirtualMachine)
+        Write-PScriboMessage $LocalizedData.Collecting
+    }
+
+    process {
+        try {
+            $VMs = Get-VTVirtualMachine -ErrorAction Stop
+
+            if ($VMs) {
+                Section -Style Heading2 $LocalizedData.Heading {
+
+                    Paragraph $LocalizedData.SectionInfo
+                    Paragraph ($LocalizedData.ParagraphSummary -f $TargetName)
+
+                    $VMInfo = foreach ($VM in $VMs) {
+                        [Ordered]@{
+                            $LocalizedData.Name       = $VM.Name
+                            $LocalizedData.PowerState = if ($VM.PowerState -eq 'PoweredOn') {
+                                $LocalizedData.PoweredOn
+                            } else {
+                                $LocalizedData.PoweredOff
+                            }
+                            $LocalizedData.CPUCount   = $VM.NumCpu
+                            $LocalizedData.MemoryGB   = $VM.MemoryGB
+                        }
+                    }
+
+                    $TableParams = @{
+                        Name         = $LocalizedData.TableHeading
+                        List         = $false
+                        ColumnWidths = 30, 20, 25, 25
+                    }
+                    if ($Report.ShowTableCaptions) {
+                        $TableParams['Caption'] = "- $($TableParams.Name)"
+                    }
+                    $VMInfo | Sort-Object $LocalizedData.Name | Table @TableParams
+                }
+            } else {
+                Paragraph $LocalizedData.None
+            }
+        } catch {
+            Write-PScriboMessage -IsWarning "$($LocalizedData.ErrorMessage) $($_.Exception.Message)"
         }
     }
 }
@@ -1078,8 +1100,8 @@ To add language support to an existing report module:
    - Group translations by function name for better organisation
 
 3. **Replace hardcoded strings**
-   - Replace all hardcoded text with `$reportTranslate.FunctionName.Key` references
-   - For simpler modules, use `$reportTranslate.Key` for flat structure
+   - Declare `$LocalizedData = $reportTranslate.FunctionName` at the top of each function (or in the `begin{}` block)
+   - Replace all hardcoded text with `$LocalizedData.Key` references
 
 4. **Update JSON configuration**
    - Add the `"Language": "en-US"` property to your JSON configuration template
