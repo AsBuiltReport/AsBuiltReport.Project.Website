@@ -23,12 +23,13 @@ Your contribution is welcomed and appreciated. Contributing to this project is a
 Not sure where to start? Here's a simple flowchart to guide you:
 
 ```mermaid
-graph TD
+flowchart TD
     A[Want to Contribute?] --> B{What type?}
     B -->|Found a Bug| C[Report Issue]
     B -->|Need a Feature| D[Propose Feature]
     B -->|Fix/Enhancement| E[Code Contribution]
     B -->|Documentation| F[Docs Update]
+    B -->|New Report Module| S[New Report Module]
 
     C --> G[Search Existing Issues]
     G --> H{Already Reported?}
@@ -39,13 +40,18 @@ graph TD
     K --> L[Get Feedback]
     L --> M[Create Issue/PR]
 
-    E --> N[Fork Repository]
+    E & F --> N[Fork Repository]
     N --> O[Create Branch]
     O --> P[Make Changes]
     P --> Q[Test Thoroughly]
-    Q --> R[Create Pull Request]
 
-    F --> N
+    S --> T[Raise Module Proposal]
+    T --> U[Proposal Approved]
+    U --> W[Repository Scaffolded]
+    W --> X[Develop Module]
+    X --> V[Test & Validate]
+
+    Q & V --> R[Create Pull Request]
 ```
 
 ### Ways to Contribute
