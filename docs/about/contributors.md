@@ -32,6 +32,7 @@ tags:
 
 :fontawesome-solid-blog: Blog - [TechMyth.blog](https://techmyth.blog/){:target='_blank'}
 
+<!--
 ### Matt Allford <img align=left src='../../assets/images/contributors/matt-allford.jpg' alt='Matt Allford profile photo' width='30%' height='30%' style='vertical-align:middle' />
 
 <h4>Project Advocate & Contributor</h4>
@@ -41,6 +42,7 @@ tags:
 :fontawesome-brands-github: GitHub - [@mattallford](https://github.com/mattallford){:target='_blank'}
 
 :fontawesome-solid-blog: Blog - [mattallford.com](https://www.mattallford.com){:target='_blank'}
+-->
 
 ### Iain Brighton <img align=left src='../../assets/images/contributors/iain-brighton.jpg' alt='Iain Brighton profile photo' width='30%' height='30%' style='vertical-align:middle' />
 

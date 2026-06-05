@@ -42,7 +42,7 @@ AsBuiltReport had taken months of my personal effort to produce by this point. I
 
 ## VMworld US 2018
 
-In August 2018, [Matt Allford](../../about/contributors.md#matt-allford) and I presented ['Documenting Your Virtual Infrastructure with PowerShell and PowerCLI'](https://www.youtube.com/watch?v=aQqHSEIUHl8){:target="_blank"} to a worldwide audience of 500+ people at VMworld in Las Vegas. Our session would go on to be the highest viewed session for the entire VMworld US conference. The word was out and the excitement began to grow.
+In August 2018, Matt Allford and I presented ['Documenting Your Virtual Infrastructure with PowerShell and PowerCLI'](https://www.youtube.com/watch?v=aQqHSEIUHl8){:target="_blank"} to a worldwide audience of 500+ people at VMworld in Las Vegas. Our session would go on to be the highest viewed session for the entire VMworld US conference. The word was out and the excitement began to grow.
 
 ![VMworld 2018](../../assets/images/blog/VMworld-2018.jpg){ loading=lazy }
 
