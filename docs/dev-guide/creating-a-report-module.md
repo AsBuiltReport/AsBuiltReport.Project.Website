@@ -24,10 +24,10 @@ Before beginning development of a new report module, you should first discuss yo
 
 Once your module proposal is approved, a new GitHub repository will be created under the AsBuiltReport organisation following the standard naming convention. Review the naming standards and repository structure below, then use the AsBuiltReport Plaster template to scaffold the module locally before beginning development.
 
-!!! warning "Do Not Publish AsBuiltReport Modules to the PowerShell Gallery Using Your Personal Account"
+!!! failure "Do Not Publish AsBuiltReport Modules to the PowerShell Gallery Using Your Personal Account"
     Never publish an `AsBuiltReport.*` module to the PowerShell Gallery under your own account. Once a package name is registered on the PowerShell Gallery, it is permanently claimed — no other account can ever use that name. Publishing under a personal account would prevent the AsBuiltReport project from officially releasing that module, and is a violation of the project guidelines.
 
-    All AsBuiltReport modules are published to the PowwerShell Gallery exclusively by project maintainers under the [AsBuiltReport organisation account](https://www.powershellgallery.com/profiles/tpcarman).
+    All AsBuiltReport modules are published to the PowerShell Gallery exclusively by the [project maintainer](https://www.powershellgallery.com/profiles/tpcarman).
 
 ## Module Naming and Structure
 
