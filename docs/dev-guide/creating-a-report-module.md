@@ -22,7 +22,7 @@ Before beginning development of a new report module, you should first discuss yo
 - Reaching out via the project's [discussion board](https://github.com/orgs/AsBuiltReport/discussions) or [social channels](../about/contact.md)
 - Contacting the [maintainers](../about/contributors.md) directly
 
-Once your module proposal is approved, a new GitHub repository will be created under the AsBuiltReport organisation following the standard naming convention. The initial module structure will be scaffolded using a Plaster template, providing you with the standardised directory structure, manifest files, and basic code framework needed to begin development.
+Once your module proposal is approved, a new GitHub repository will be created under the AsBuiltReport organisation following the standard naming convention. Review the naming standards and repository structure below, then use the AsBuiltReport Plaster template to scaffold the module locally before beginning development.
 
 !!! warning "Do Not Publish AsBuiltReport Modules to the PowerShell Gallery Using Your Personal Account"
     Never publish an `AsBuiltReport.*` module to the PowerShell Gallery under your own account. Once a package name is registered on the PowerShell Gallery, it is permanently claimed — no other account can ever use that name. Publishing under a personal account would prevent the AsBuiltReport project from officially releasing that module, and is a violation of the project guidelines.
@@ -48,28 +48,93 @@ AsBuiltReport.Vendor.Technology
 Organise your module repository with the following standard structure:
 
 ```text title="Repository folder structure"
-AsBuiltReport.Vendor.Technology/
-├── .github/                                       # GitHub workflows and templates
-├── .vscode/                                       # VS Code configuration
-├── Language/                                      # Language support folders
-│   ├── en-US/
-│   │   └── VendorTechnology.psd1                  # en-US language translation file
-│   └── <language>-<REGION>/                       # Additional language support folders
-│       └── VendorTechnology.psd1
-├── Samples/                                       # Sample report outputs
-├── Src/
-│   ├── Private/                                   # Private helper functions
-│   └── Public/                                    # Exported functions
-├── AsBuiltReport.Vendor.Technology.json           # Report configuration file
-├── AsBuiltReport.Vendor.Technology.psd1           # PowerShell manifest
-├── AsBuiltReport.Vendor.Technology.psm1           # PowerShell module script
-├── README.md                                      # Module documentation
-├── CHANGELOG.md                                   # Version history
-├── CODE_OF_CONDUCT.md                             # Code of Conduct policy
-├── CONTRIBUTING.md                                # Contributing guidelines
-├── SECURITY.md                                    # Security policy
-└── LICENSE                                        # MIT License
+AsBuiltReport.Vendor.Technology/                       # Repository root
+├── .github/                                           # GitHub workflows and templates
+├── .vscode/                                           # VS Code configuration
+├── AsBuiltReport.Vendor.Technology/                   # PowerShell module directory
+│   ├── AsBuiltReport.Vendor.Technology.json           # Report configuration file
+│   ├── AsBuiltReport.Vendor.Technology.psd1           # PowerShell manifest
+│   ├── AsBuiltReport.Vendor.Technology.psm1           # PowerShell module script
+│   ├── Language/                                      # Language support folders
+│   │   ├── en-US/
+│   │   │   └── VendorTechnology.psd1                  # en-US language translation file
+│   │   └── <language>-<REGION>/                       # Additional language support folders
+│   │       └── VendorTechnology.psd1
+│   └── Src/
+│       ├── Private/                                   # Private helper functions
+│       │   └── Get-Abr[VendorAbbr][Resource].ps1      # One file per resource type
+│       └── Public/                                    # Exported functions
+│           └── Invoke-AsBuiltReport.Vendor.Technology.ps1
+├── Samples/                                           # Sample report outputs
+├── Tests/                                             # Pester test suite
+│   ├── AsBuiltReport.Vendor.Technology.Tests.ps1      # Module manifest and structure tests
+│   ├── LocalizationData.Tests.ps1                     # Localization key validation tests
+│   └── Invoke-Tests.ps1                               # Test runner
+├── README.md                                          # Module documentation
+├── CHANGELOG.md                                       # Version history
+├── CODE_OF_CONDUCT.md                                 # Code of Conduct policy
+├── CONTRIBUTING.md                                    # Contributing guidelines
+├── SECURITY.md                                        # Security policy
+└── LICENSE                                            # MIT License
 ```
+
+## Scaffolding Your Module with Plaster
+
+The AsBuiltReport project provides a [Plaster](https://github.com/PowerShellOrg/Plaster) template that generates the complete, standardised module structure automatically, including the directory layout, manifest, module script, CI/CD workflows, Pester tests, and documentation templates.
+
+### Prerequisites
+
+- PowerShell 5.1 or 7+
+- [Plaster](https://www.powershellgallery.com/packages/Plaster) module
+
+```powershell title="Install Plaster"
+Install-Module -Name Plaster -Scope CurrentUser
+```
+
+#### 1. Clone the template
+
+```powershell title="Clone the AsBuiltReport Plaster template"
+git clone https://github.com/AsBuiltReport/AsBuiltReport.Plaster.Template C:\AsBuiltReport.Plaster.Template
+```
+
+#### 2. Scaffold a new module
+
+Run `Invoke-Plaster`, specifying the cloned template path and your destination directory:
+
+```powershell title="Scaffold a new module"
+Invoke-Plaster -TemplatePath 'C:\AsBuiltReport.Plaster.Template' -DestinationPath 'C:\Development'
+```
+
+Plaster will prompt for the following:
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| `VendorName` | Vendor or technology name (e.g. `VMware`) | — |
+| `ProductName` | Product name (e.g. `vSphere`) | — |
+| `ModuleName` | Full module name | `AsBuiltReport.<VendorName>.<ProductName>` |
+| `Description` | Brief module description | Auto-generated |
+| `Version` | Initial module version | `0.1.0` |
+| `Author` | Module author name | Git config value |
+| `CompanyName` | Company or organisation name | `Unknown` |
+| `PowerShellVersion` | Supported PowerShell edition(s) | `PowerShell 7+ only` |
+
+**PowerShell edition options:**
+
+| Choice | `PowerShellVersion` | `CompatiblePSEditions` |
+|--------|---------------------|------------------------|
+| Windows PowerShell 5.1 only | `5.1` | `@('Desktop')` |
+| PowerShell 7+ only | `7.0` | `@('Core')` |
+| Windows PowerShell 5.1 and PowerShell 7+ | `5.1` | `@('Desktop', 'Core')` |
+
+#### 3. Next steps
+
+After `Invoke-Plaster` completes, the module directory is ready for development. The key files to work on are:
+
+1. **Rename and populate** `Src\Private\Get-AbrVendorProductExample.ps1` — add your data collection functions following the [private helper functions](#private-helper-functions) standards
+2. **Update** `Src\Public\Invoke-AsBuiltReport.Vendor.Product.ps1` — wire up your private functions inside the `foreach ($System in $Target)` loop
+3. **Expand** `AsBuiltReport.Vendor.Product.json` — add your sections under `InfoLevel` and `HealthCheck`
+4. **Update** `Language\en-US\VendorProduct.psd1` — add your translation strings following the [language support](#language-support-implementation) standards
+5. **Initialise git** — run `git init`, add the remote repository URL provided by the maintainers, and push
 
 ## PowerShell Manifest (.psd1) Requirements
 
@@ -87,9 +152,9 @@ Your module manifest must include these standardised properties:
     RequiredModules = @(
         @{
             ModuleName = 'AsBuiltReport.Core'
-            ModuleVersion = '1.5.0'               # Minimum required version
+            ModuleVersion = '1.6.1'               # Minimum required version
         }
-        # Add additional vendor-specific modules as needed
+        # Add vendor-specific modules as needed
     )
 
     FunctionsToExport = 'Invoke-AsBuiltReport.Vendor.Technology'
@@ -99,12 +164,38 @@ Your module manifest must include these standardised properties:
             Tags = @('AsBuiltReport', 'Report', 'Documentation', 'PScribo', 'Windows', 'Linux', 'MacOS', 'PSEdition_Desktop', 'PSEdition_Core', '[Vendor]', '[Technology]')     # Include tags which are applicable
             LicenseUri = 'https://github.com/AsBuiltReport/AsBuiltReport.Vendor.Technology/blob/master/LICENSE'
             ProjectUri = 'https://github.com/AsBuiltReport/AsBuiltReport.Vendor.Technology'
-            IconUri = 'https://raw.githubusercontent.com/AsBuiltReport/.github/main/profile/images/AsBuiltReport.png'
+            IconUri = 'AsBuiltReport.png'
             ReleaseNotes = 'https://raw.githubusercontent.com/AsBuiltReport/AsBuiltReport.Vendor.Technology/master/CHANGELOG.md'
         }
     }
 }
 ```
+
+## Module Script (.psm1) Pattern
+
+The `.psm1` file should dynamically discover and load all function files from `Src/Public` and `Src/Private` using dot-sourcing. This avoids maintaining a manual import list as the module grows.
+
+```powershell title="Module script (.psm1) template"
+# Dot-source all Public and Private function files
+foreach ($Folder in @('Public', 'Private')) {
+    $FolderPath = Join-Path -Path $PSScriptRoot -ChildPath "Src\$Folder"
+    if (Test-Path -Path $FolderPath) {
+        Get-ChildItem -Path $FolderPath -Filter '*.ps1' -Recurse | ForEach-Object {
+            try {
+                . $_.FullName
+            } catch {
+                Write-Warning "Failed to import function $($_.FullName): $_"
+            }
+        }
+    }
+}
+```
+
+**Key points:**
+
+- Uses `$PSScriptRoot` for portable path resolution — do not use relative paths
+- Errors on individual files are non-fatal (warns and continues loading)
+- No explicit `Export-ModuleMember` call is needed; the `FunctionsToExport` field in the `.psd1` manifest controls what is exported to callers
 
 ## Configuration File Standards
 
@@ -205,15 +296,35 @@ Get-Command -Module PScribo
 ```
 
 #### Document Structure
-```powershell title="Create sections for report organisation"
-# Create sections for logical organisation
-Section -Name 'Infrastructure Overview' -Style Heading1 {
-    # Content goes here
-}
 
-# Create subsections for detailed information
-Section -Name 'Virtual Machines' -Style Heading2 {
-    # VM information tables and content
+PScribo section styles control both visual hierarchy and Table of Contents (TOC) inclusion. To keep the TOC readable, headings at `Heading5` and above should use a `NOTOCHeading` style so they do not appear in the TOC.
+
+| Style | TOC | Typical use |
+|-------|-----|-------------|
+| `Heading1` | Yes | Top-level report section (e.g. tenant, site) |
+| `Heading2` | Yes | Major resource category |
+| `Heading3` | Yes | Resource type within a category |
+| `Heading4` | Yes | Individual resource instance |
+| `NOTOCHeading5` | No | Sub-detail within a resource instance |
+| `NOTOCHeading6` | No | Further nesting below Heading5 |
+
+```powershell title="Section heading styles"
+Section -Name 'Infrastructure' -Style Heading1 {
+
+    Section -Name 'Compute' -Style Heading2 {
+
+        Section -Name 'Virtual Machines' -Style Heading3 {
+
+            foreach ($VM in $VMs) {
+                Section -Name $VM.Name -Style Heading4 {
+
+                    Section -Name 'Network Adapters' -Style NOTOCHeading5 {
+                        # Detail tables that should not clutter the TOC
+                    }
+                }
+            }
+        }
+    }
 }
 ```
 
@@ -238,36 +349,62 @@ Write-PScriboMessage -Plugin "Module" -Message "Collecting virtual machine infor
 Write-PScriboMessage -Plugin "Module" -IsWarning "Unable to collect storage information: $($_.Exception.Message)"
 ```
 
-### Table Creation Standards
+### Table Standards
 
-PScribo tables are the primary method for presenting structured data:
+PScribo tables are the primary method for presenting structured data. Use `List = $false` for multi-row collections and `List = $true` for single-object key-value pairs.
 
-```powershell title="Create tables with structured data"
-# Collect and structure your data
+**Column width rules:**
+
+- Always specify `ColumnWidths` to avoid excessive text wrapping
+- List tables (`List = $true`) should use `40, 60` whenever possible
+- Non-list table column widths should sum to 100 and be sized to the data
+
+**Caption rule:** Always include a caption when `$Report.ShowTableCaptions` is set.
+
+```powershell title="Multi-row collection table (List = false)"
 $ServerData = foreach ($Server in $Servers) {
     [PSCustomObject]@{
-        'Server Name' = $Server.Name
-        'OS Version' = $Server.OperatingSystem
-        'CPU Cores' = $Server.ProcessorCount
-        'Memory (GB)' = [Math]::Round($Server.TotalPhysicalMemory / 1GB, 2)
-        'Status' = $Server.Status
+        'Server Name'  = $Server.Name
+        'OS Version'   = $Server.OperatingSystem
+        'CPU Cores'    = $Server.ProcessorCount
+        'Memory (GB)'  = [Math]::Round($Server.TotalPhysicalMemory / 1GB, 2)
+        'CPU Usage %'  = $Server.CPUUsagePercent
+        'Status'       = $Server.Status
     }
 }
 
-# Define table parameters for consistent formatting
 $TableParams = @{
-    Name = 'Server Inventory'
-    List = $false
-    ColumnWidths = 20, 25, 15, 15, 25
+    Name         = 'Server Inventory'
+    List         = $false
+    ColumnWidths = 20, 20, 12, 13, 15, 20
 }
 
-# Add table caption if configured
 if ($Report.ShowTableCaptions) {
     $TableParams['Caption'] = "- $($TableParams.Name)"
 }
 
-# Output the table with proper sorting
 $ServerData | Sort-Object 'Server Name' | Table @TableParams
+```
+
+```powershell title="Single-object key-value table (List = true)"
+$ServerInfo = [PSCustomObject]@{
+    'Server Name' = $Server.Name
+    'Version'     = $Server.Version
+    'Build'       = $Server.Build
+    'Edition'     = $Server.Edition
+}
+
+$TableParams = @{
+    Name         = 'Server Information'
+    List         = $true
+    ColumnWidths = 40, 60
+}
+
+if ($Report.ShowTableCaptions) {
+    $TableParams['Caption'] = "- $($TableParams.Name)"
+}
+
+$ServerInfo | Table @TableParams
 ```
 
 ### Conditional Formatting and Styling
@@ -275,7 +412,6 @@ $ServerData | Sort-Object 'Server Name' | Table @TableParams
 Use PScribo styling to highlight important information based on health checks:
 
 ```powershell title="Apply conditional formatting for health checks"
-# Apply conditional formatting based on health check results
 if ($ReportConfig.HealthCheck.Infrastructure.CPUUtilisation) {
     foreach ($Server in $ServerData) {
         if ($Server.'CPU Usage %' -gt $ReportConfig.HealthCheck.Infrastructure.CPUThreshold) {
@@ -460,6 +596,7 @@ function Invoke-AsBuiltReport.Vendor.Technology {
     $Report = $ReportConfig.Report
     $InfoLevel = $ReportConfig.InfoLevel
     $Options = $ReportConfig.Options
+    $LocalizedData = $reportTranslate.InvokeAsBuiltReportVendorTechnology
 
     # Used to set values to TitleCase where required
     $TextInfo = (Get-Culture).TextInfo
@@ -470,23 +607,103 @@ function Invoke-AsBuiltReport.Vendor.Technology {
     foreach ($System in $Target) {
 
 
-
 	}
 	#endregion foreach loop
 }
 ```
 
 ### Private Helper Functions
-Create focused helper functions in the `Src/Private` directory:
 
-- Use descriptive names with "Abr" prefix: `Get-AbrVMwareCluster`
-- Keep functions focused on single responsibilities
-- Include comprehensive comment-based help
-- Implement proper error handling
+Create focused helper functions in the `Src/Private` directory, one `.ps1` file per resource type or logical grouping:
+
+- **Naming**: `Get-Abr[VendorAbbr][ResourceType]` — a short, consistent vendor abbreviation followed by the resource type in PascalCase (e.g. `Get-AbrVTResourceName` where `VT` is the vendor abbreviation for your module)
+- **Single responsibility**: One function per resource type. Nested or child resources get their own functions, called from within the parent function.
+- **Comment-based help**: Include `.SYNOPSIS` and `.DESCRIPTION` blocks.
+- **Error handling**: Wrap data collection in `try`/`catch` and emit warnings via `Write-PScriboMessage` for non-critical failures.
+
+**Example skeleton:**
+
+```powershell title="Private function skeleton"
+function Get-AbrVTResourceName {
+    <#
+    .SYNOPSIS
+        Generates the Resource Name section of a Vendor Technology As Built report.
+    .DESCRIPTION
+        Collects resource configuration data and outputs a formatted PScribo section.
+    #>
+    [CmdletBinding()]
+    param (
+    )
+
+    begin {
+        # Retrieve localized strings for headings, messages, and labels.
+        # This enables multi-language support and keeps text separate from logic.
+        $LocalizedData = $reportTranslate.GetAbrVTResourceName
+
+        # Emit a verbose message indicating that data collection is starting.
+        # This helps with troubleshooting and provides visibility during report generation.
+        Write-PScriboMessage -Plugin 'VendorTechnology' -Message $LocalizedData.Collecting
+    }
+
+    process {
+        try {
+            # Collect resource data from the vendor platform.
+            # -ErrorAction Stop ensures any failure is caught by the catch block.
+            $Resources = Get-VTResource -ErrorAction Stop
+
+            # Only render the section if data was successfully returned.
+            # Avoids creating empty report sections.
+            if ($Resources) {
+
+                # Create a new section in the report using PScribo.
+                # The section name is sourced from localized data for consistency.
+                Section -Name $LocalizedData.Heading -Style Heading2 {
+                    # Prepare table data
+                    # Convert raw resource objects into a clean, report-friendly structure.
+                    # Typically flattened and ordered for readability.
+                    $TableData = $Resources | Select-Object Name, Status, Version
+
+                    # Define table formatting parameters
+                    # Using a hashtable allows conditional additions (e.g. captions)
+                    $TableParams = @{
+                        Name         = $LocalizedData.TableTitle      # Logical name of the table
+                        List         = $true                          # Render as key/value list (good for summaries)
+                        ColumnWidths = 40, 60                         # Adjust layout proportions
+                    }
+
+                    # Optionally include a caption if enabled in report configuration
+                    if ($Report.ShowTableCaptions) {
+                        $TableParams['Caption'] = "- $($TableParams.Name)"
+                    }
+
+                    # Output table to the report
+                    # PScribo handles rendering based on the provided parameters
+                    $TableData | Table @TableParams
+                }
+            } else {
+                # Optional: log that no data was returned.
+                # Useful for debugging or confirming expected empty states.
+                Write-PScriboMessage -Plugin 'VendorTechnology' -Message $LocalizedData.NoData
+            }
+        } catch {
+            # Catch any errors during data collection or processing.
+
+            # Emit a warning rather than terminating execution.
+            # This ensures the report continues generating even if this section fails.
+            Write-PScriboMessage -Plugin 'VendorTechnology' -IsWarning "$($LocalizedData.ErrorMessage) $($_.Exception.Message)"
+        }
+    }
+
+    end {
+        # Reserved for any cleanup if required.
+        # Typically unused, but included for completeness and consistency.
+    }
+}
+```
 
 ## Language Support Implementation
 
-AsBuiltReport v1.5.0+ introduces comprehensive multilingual support, allowing report modules to generate documentation in multiple languages. This section explains how to implement language support in your report module.
+AsBuiltReport.Core v1.5.0+ introduces comprehensive multilingual support, allowing report modules to generate documentation in multiple languages. This section explains how to implement language support in your report module.
 
 ### Overview
 
@@ -510,15 +727,16 @@ Create a `Language` folder in your module root with subfolders for each supporte
 
 ```text title="Language folder structure"
 AsBuiltReport.Vendor.Technology/
-├── Language/
-│   ├── en-US/
-│   │   └── VendorTechnology.psd1
-│   ├── es-ES/
-│   │   └── VendorTechnology.psd1
-│   ├── fr-FR/
-│   │   └── VendorTechnology.psd1
-│   └── de-DE/
-│       └── VendorTechnology.psd1
+└── AsBuiltReport.Vendor.Technology/
+    └── Language/
+        ├── en-US/
+        │   └── VendorTechnology.psd1
+        ├── es-ES/
+        │   └── VendorTechnology.psd1
+        ├── fr-FR/
+        │   └── VendorTechnology.psd1
+        └── de-DE/
+            └── VendorTechnology.psd1
 ```
 
 #### Language File Format
@@ -644,7 +862,7 @@ Language support is automatically initialised by the AsBuiltReport.Core module w
 **What you need to do:**
 
 1. Create language files in the `Language/` folder structure
-2. Use the `$reportTranslate` variable in your report code to reference translations
+2. Declare a local `$LocalizedData` variable in each function by accessing the appropriate key from the `$reportTranslate` global variable
 
 **What the Core module handles automatically:**
 
@@ -654,72 +872,66 @@ Language support is automatically initialised by the AsBuiltReport.Core module w
 - Managing culture-specific formatting
 
 #### Using Translations in Your Report Module
-Reference translation strings using the `$reportTranslate` global variable. When using the hashtable structure, access translations through the appropriate function/section key:
 
-```powershell title="Use translations in report code"
-# Access translations for the main module
-$moduleTranslate = $reportTranslate.InvokeAsBuiltReportVendorTechnology
+In each function, declare a local `$LocalizedData` variable at the top by accessing the matching key from `$reportTranslate`. This scopes translations to the current function and keeps the code readable.
 
-# Access translations for specific functions
-$vmTranslate = $reportTranslate.GetAbrVirtualMachine
-$storageTranslate = $reportTranslate.GetAbrStorageInfo
+**In the main `Invoke-AsBuiltReport` function:**
 
-# Use in section headings
-Section -Name $vmTranslate.Heading -Style Heading1 {
+```powershell title="Declare $LocalizedData in the main function"
+$LocalizedData = $reportTranslate.InvokeAsBuiltReportVendorTechnology
+```
 
-    # Display informational paragraph with formatted string
-    Paragraph ($vmTranslate.ParagraphSummary -f $TargetName)
+**In each private `Get-Abr*` function (in the `begin{}` block):**
 
-    # Table column headers using translations
-    $VMData = foreach ($VM in $VMs) {
-        [PSCustomObject]@{
-            $vmTranslate.Name = $VM.Name
-            $vmTranslate.PowerState = if ($VM.PowerState -eq 'PoweredOn') {
-                $vmTranslate.PoweredOn
-            } else {
-                $vmTranslate.PoweredOff
-            }
-            $vmTranslate.CPUCount = $VM.NumCpu
-            $vmTranslate.MemoryGB = $VM.MemoryGB
-            $vmTranslate.StorageGB = [Math]::Round($VM.ProvisionedSpaceGB, 2)
-            $vmTranslate.GuestOS = $VM.GuestOS
-        }
-    }
-
-    # Translated messages
-    if ($VMData) {
-        $TableParams = @{
-            Name = $vmTranslate.TableHeading
-            List = $false
-            ColumnWidths = 20, 15, 10, 12, 12, 20
-        }
-        $VMData | Sort-Object $vmTranslate.Name | Table @TableParams
-    } else {
-        Paragraph $vmTranslate.None
-    }
+```powershell title="Declare $LocalizedData in private functions"
+begin {
+    $LocalizedData = $reportTranslate.GetAbrVirtualMachine
+    Write-PScriboMessage ($LocalizedData.InfoLevel -f $InfoLevel.VirtualMachine)
+    Write-PScriboMessage $LocalizedData.Collecting
 }
 ```
 
-**Alternative approach for simpler modules:**
+Once declared, use `$LocalizedData` throughout the function for all headings, messages, paragraphs, and table column headers:
 
-For smaller modules with fewer translations, you can use a simpler flat structure:
+```powershell title="Use $LocalizedData in report code"
+process {
+    try {
+        Section -Style Heading2 $LocalizedData.Heading {
 
-```powershell title="Simpler flat language file structure"
-# Simpler language file structure (VendorTechnology.psd1)
-# culture = 'en-US'
-ConvertFrom-StringData @'
-    SectionTitle = Virtual Infrastructure Overview
-    HostSummary = Host Summary
-    VMName = VM Name
-    PoweredOn = Powered On
-    PoweredOff = Powered Off
-'@
+            Paragraph $LocalizedData.SectionInfo
+            Paragraph ($LocalizedData.ParagraphSummary -f $TargetName)
 
-# Usage in code
-Section -Name $reportTranslate.SectionTitle -Style Heading1 {
-    Section -Name $reportTranslate.HostSummary -Style Heading2 {
-        # Direct access to translations
-        Paragraph "Status: $($reportTranslate.PoweredOn)"
+            $VMData = foreach ($VM in $VMs) {
+                [Ordered]@{
+                    $LocalizedData.Name       = $VM.Name
+                    $LocalizedData.PowerState = if ($VM.PowerState -eq 'PoweredOn') {
+                        $LocalizedData.PoweredOn
+                    } else {
+                        $LocalizedData.PoweredOff
+                    }
+                    $LocalizedData.CPUCount   = $VM.NumCpu
+                    $LocalizedData.MemoryGB   = $VM.MemoryGB
+                    $LocalizedData.StorageGB  = [Math]::Round($VM.ProvisionedSpaceGB, 2)
+                    $LocalizedData.GuestOS    = $VM.GuestOS
+                }
+            }
+
+            if ($VMData) {
+                $TableParams = @{
+                    Name         = $LocalizedData.TableHeading
+                    List         = $false
+                    ColumnWidths = 20, 15, 10, 12, 12, 20
+                }
+                if ($Report.ShowTableCaptions) {
+                    $TableParams['Caption'] = "- $($TableParams.Name)"
+                }
+                $VMData | Sort-Object $LocalizedData.Name | Table @TableParams
+            } else {
+                Paragraph $LocalizedData.None
+            }
+        }
+    } catch {
+        Write-PScriboMessage -IsWarning "$($LocalizedData.ErrorMessage) $($_.Exception.Message)"
     }
 }
 ```
@@ -771,7 +983,7 @@ The following language codes are supported with comprehensive fallback mappings:
    VMCount = Found {0} virtual machines
 
    # In code:
-   Paragraph ($reportTranslate.VMCount -f $VMs.Count)
+   Paragraph ($LocalizedData.VMCount -f $VMs.Count)
    ```
 6. **RTL Language Support**: For right-to-left languages (Arabic, Hebrew), ensure your table layouts work correctly
 
@@ -795,7 +1007,7 @@ New-AsBuiltReport -Report Vendor.Technology -Target server01 -Credential $cred -
 Here's a complete example showing language support implementation:
 
 ```powershell title="Complete language implementation example"
-function Invoke-AsBuiltReport.VMware.vSphere {
+function Invoke-AsBuiltReport.Vendor.Technology {
     [CmdletBinding()]
     param (
         [Parameter(Mandatory = $true)]
@@ -805,47 +1017,75 @@ function Invoke-AsBuiltReport.VMware.vSphere {
         [PSCredential] $Credential
     )
 
-    # Access configuration (language support is automatically initialised by Core module)
-    $Report = $ReportConfig.Report
-    $InfoLevel = $ReportConfig.InfoLevel
+    $Report     = $ReportConfig.Report
+    $InfoLevel  = $ReportConfig.InfoLevel
+    $Options    = $ReportConfig.Options
 
-    # Access translations (automatically loaded by Core module)
-    $vmTranslate = $reportTranslate.GetAbrVMwareVSphere
+    # Scope translations for this function from the global $reportTranslate hashtable
+    $LocalizedData = $reportTranslate.InvokeAsBuiltReportVendorTechnology
 
-    foreach ($VIServer in $Target) {
+    foreach ($Target in $Target) {
         try {
-            $vCenter = Connect-VIServer -Server $VIServer -Credential $Credential
+            Write-PScriboMessage ($LocalizedData.Connecting -f $Target)
 
-            # Use translated section title
-            Section -Name $vmTranslate.Heading -Style Heading1 {
-
-                if ($InfoLevel.Infrastructure -ge 1) {
-                    $VMData = Get-VM -Server $vCenter | Select-Object Name, PowerState, NumCpu, MemoryGB
-
-                    # Use translated column headers
-                    $VMInfo = foreach ($VM in $VMData) {
-                        [PSCustomObject]@{
-                            $vmTranslate.Name = $VM.Name
-                            $vmTranslate.PowerState = if ($VM.PowerState -eq 'PoweredOn') { $vmTranslate.PoweredOn } else { $vmTranslate.PoweredOff }
-                            $vmTranslate.CPUCount = $VM.NumCpu
-                            $vmTranslate.MemoryGB = $VM.MemoryGB
-                        }
-                    }
-
-                    if ($VMInfo) {
-                        $VMInfo | Sort-Object $vmTranslate.Name | Table @{
-                            Name = $vmTranslate.TableHeading
-                            List = $false
-                            ColumnWidths = 30, 20, 25, 25
-                        }
-                    } else {
-                        # Use translated message
-                        Paragraph $vmTranslate.None
-                    }
-                }
+            Section -Style Heading1 $LocalizedData.Heading {
+                Get-AbrVTVirtualMachine
             }
         } catch {
-            Write-Warning ($vmTranslate.ConnectionError -f $VIServer, $_.Exception.Message)
+            Write-PScriboMessage -IsWarning ($LocalizedData.ConnectionError -f $Target, $_.Exception.Message)
+        }
+    }
+}
+
+function Get-AbrVTVirtualMachine {
+    [CmdletBinding()]
+    param ()
+
+    begin {
+        # Scope translations for this function
+        $LocalizedData = $reportTranslate.GetAbrVTVirtualMachine
+        Write-PScriboMessage ($LocalizedData.InfoLevel -f $InfoLevel.VirtualMachine)
+        Write-PScriboMessage $LocalizedData.Collecting
+    }
+
+    process {
+        try {
+            $VMs = Get-VTVirtualMachine -ErrorAction Stop
+
+            if ($VMs) {
+                Section -Style Heading2 $LocalizedData.Heading {
+
+                    Paragraph $LocalizedData.SectionInfo
+                    Paragraph ($LocalizedData.ParagraphSummary -f $TargetName)
+
+                    $VMInfo = foreach ($VM in $VMs) {
+                        [Ordered]@{
+                            $LocalizedData.Name       = $VM.Name
+                            $LocalizedData.PowerState = if ($VM.PowerState -eq 'PoweredOn') {
+                                $LocalizedData.PoweredOn
+                            } else {
+                                $LocalizedData.PoweredOff
+                            }
+                            $LocalizedData.CPUCount   = $VM.NumCpu
+                            $LocalizedData.MemoryGB   = $VM.MemoryGB
+                        }
+                    }
+
+                    $TableParams = @{
+                        Name         = $LocalizedData.TableHeading
+                        List         = $false
+                        ColumnWidths = 30, 20, 25, 25
+                    }
+                    if ($Report.ShowTableCaptions) {
+                        $TableParams['Caption'] = "- $($TableParams.Name)"
+                    }
+                    $VMInfo | Sort-Object $LocalizedData.Name | Table @TableParams
+                }
+            } else {
+                Paragraph $LocalizedData.None
+            }
+        } catch {
+            Write-PScriboMessage -IsWarning "$($LocalizedData.ErrorMessage) $($_.Exception.Message)"
         }
     }
 }
@@ -865,8 +1105,8 @@ To add language support to an existing report module:
    - Group translations by function name for better organisation
 
 3. **Replace hardcoded strings**
-   - Replace all hardcoded text with `$reportTranslate.FunctionName.Key` references
-   - For simpler modules, use `$reportTranslate.Key` for flat structure
+   - Declare `$LocalizedData = $reportTranslate.FunctionName` at the top of each function (or in the `begin{}` block)
+   - Replace all hardcoded text with `$LocalizedData.Key` references
 
 4. **Update JSON configuration**
    - Add the `"Language": "en-US"` property to your JSON configuration template
@@ -1146,48 +1386,16 @@ This example demonstrates:
 - **InfoLevel-based content control** (different levels show progressively more detail)
 - **Proper error handling** with informative messages
 - **Consistent table formatting** with appropriate column widths
-    - List tables should have column widths set to `40, 60` whenever possible
-    - Set column widths to avoid excessive text wrapping
 - **Health check integration** with conditional styling
 - **Data transformation** into readable formats
 - **User feedback** during data collection
 - **Graceful degradation** when data isn't available
 
-### Table Formatting Standards
-Use consistent table formatting throughout your module:
-
-```powershell title="Consistent table formatting"
-# Create PSCustomObject for structured data
-$ServerInfo = [PSCustomObject]@{
-    'Server Name' = $Server.Name
-    'Version' = $Server.Version
-    'Build' = $Server.Build
-    'Edition' = $Server.Edition
-}
-
-# Define table parameters with consistent formatting
-$TableParams = @{
-    Name = 'Server Information'
-    List = $true                   # Use List = $true for key-value pairs
-    ColumnWidths = 40, 60          # Always specify column widths
-                                   # Set list table column widths to 40, 60 whenever possible
-                                   # Set column widths to avoid excessive text wrapping
-}
-
-# Include table captions when configured
-if ($Report.ShowTableCaptions) {
-    $TableParams['Caption'] = "- $($TableParams.Name)"
-}
-
-# Output to table with sorting
-$ServerInfo | Table @TableParams
-```
-
 ### Health Check Implementation
 Implement health checks with configurable thresholds:
 
 ```powershell title="Health check implementation"
-if ($ReportConfig.HealthCheck.Infrastructure.CPUUtilization) {
+if ($ReportConfig.HealthCheck.Infrastructure.CPUUtilisation) {
     if ($Server.CPUUsage -gt $ReportConfig.HealthCheck.Infrastructure.CPUThreshold) {
         $ServerInfo | Set-Style -Style Warning -Property 'CPU Usage'
     }
@@ -1211,6 +1419,66 @@ Test your module for:
 - **Functionality**: Core report generation works
 - **Error Handling**: Graceful handling of common error scenarios
 - **Cross-Platform**: Compatibility across PowerShell editions
+
+### Pester Test Structure
+
+All modules must include a `Tests/` directory with Pester v5 tests. The Plaster scaffold creates the initial test files; expand them as new functions are added.
+
+#### Required test files
+
+| File | Purpose |
+|------|---------|
+| `AsBuiltReport.Vendor.Technology.Tests.ps1` | Module manifest validation, directory structure, exported functions, private function inventory, JSON config schema, PSScriptAnalyzer |
+| `LocalizationData.Tests.ps1` | Validates that all language files have identical keys and that no keys are missing from non-en-US files |
+| `Invoke-Tests.ps1` | Test runner — invokes Pester with project-standard settings |
+
+#### Running tests
+
+```powershell title="Run the test suite"
+# From the module root directory
+.\Tests\Invoke-Tests.ps1
+
+# Or invoke Pester directly
+Invoke-Pester -Path .\Tests\ -Output Detailed
+```
+
+#### Key test categories
+
+```powershell title="Test categories to cover"
+Describe 'Module Manifest' {
+    It 'Has a valid module version' { ... }
+    It 'Exports the correct Invoke-AsBuiltReport function' { ... }
+    It 'Declares AsBuiltReport.Core as a required module' { ... }
+}
+
+Describe 'Module Structure' {
+    It 'Has a Src\Public directory' { ... }
+    It 'Has a Src\Private directory' { ... }
+    It 'Has a Language\en-US directory' { ... }
+    It 'Has a Tests directory' { ... }
+}
+
+Describe 'Private Functions' {
+    It 'Has a Get-Abr[VendorAbbr][Resource] function for each resource type' { ... }
+}
+
+Describe 'JSON Configuration' {
+    It 'Has InfoLevel values in the range 0-5' { ... }
+    It 'Has boolean HealthCheck values' { ... }
+}
+
+Describe 'Localization' {
+    It 'en-US language file exists' { ... }
+    It 'All language files have identical keys' { ... }
+}
+
+Describe 'Code Quality' {
+    It 'Passes PSScriptAnalyzer with no errors or warnings' {
+        $Results = Invoke-ScriptAnalyzer -Path .\Src\ -Recurse
+        $Results | Should -BeNullOrEmpty
+    }
+}
+```
 
 ## Documentation Standards
 
@@ -1279,9 +1547,7 @@ Provide comprehensive comment-based help:
 Test your module with:
 
 - Small environments (1-10 objects)
-
 - Medium environments (100-1000 objects)
-
 - Large environments (1000+ objects)
 
 ## Version Control and Maintenance
@@ -1290,9 +1556,7 @@ Test your module with:
 Use semantic versioning (`Major.Minor.Patch`):
 
 - **Major**: Breaking changes
-
 - **Minor**: New features, backwards compatible
-
 - **Patch**: Bug fixes
 
 ### Change Log Maintenance
