@@ -56,13 +56,13 @@ flowchart TD
 
 ### Ways to Contribute
 
-| Contribution Type | Difficulty | Time Commitment | Getting Started |
-|------------------|------------|-----------------|-----------------|
-| **Report Bugs** | Easy | 10-30 minutes | [Report an Issue](#reporting-issues-and-bugs) |
-| **Documentation** | Easy | 30 mins - 2 hours | [Good First Issues](#good-first-issues) |
-| **Bug Fixes** | Medium | 2-8 hours | [Submitting Pull Requests](#how-to-submit-code-contributions) |
-| **New Features** | Medium-Hard | 1-5 days | [Code Contributions](#code-contributions) |
-| **Report Modules** | Hard | 1-4 weeks | [Creating a Report Module](creating-a-report-module.md) |
+| Contribution Type  | Difficulty  | Time Commitment   | Getting Started                                               |
+|--------------------|-------------|-------------------|---------------------------------------------------------------|
+| **Report Bugs**    | Easy        | 10-30 minutes     | [Report an Issue](#reporting-issues-and-bugs)                 |
+| **Documentation**  | Easy        | 30 mins - 2 hours | [Good First Issues](#good-first-issues)                       |
+| **Bug Fixes**      | Medium      | 2-8 hours         | [Submitting Pull Requests](#how-to-submit-code-contributions) |
+| **New Features**   | Medium-Hard | 1-5 days          | [Code Contributions](#code-contributions)                     |
+| **Report Modules** | Hard        | 1-4 weeks         | [Creating a Report Module](creating-a-report-module.md)       |
 
 ## Getting Started with Contributions
 
@@ -285,15 +285,96 @@ Use [PSScriptAnalyzer](https://github.com/PowerShell/PSScriptAnalyzer){:target="
             $myObject | Table @TableParams
         ```
 
-- Set `ColumnWidths` for all tables to improve formatting and readability. Try to maintain a consistent style throughout the report. Cell text will word wrap. List tables should generally use column widths of `40, 60`.
+- Set `ColumnWidths` for all tables to improve formatting and readability. Try to maintain a consistent style throughout the report. Cell text will word wrap. List tables typically use column widths of `40, 60`.
 - Sort primary object properties in alphanumeric order.
-- Try to perform all safe commands (Get-*, Get API call, etc) at the start of a report script so it can easily be seen what data is being collected.
-- Use comments written in English, but don't overdo it. Comments should serve to your reasoning and decision-making, not attempt to explain what a command does.
-- Maintain a change log as per [these guidelines](https://keepachangelog.com/en/1.1.0/){:target="_blank"}. The change log should be named `CHANGELOG.md`.
+- Perform all safe commands (Get-*, API calls) at the start of a function before any PScribo output calls.
+- Use comments in English to explain reasoning, not to describe commands.
+- Maintain a changelog following [Keep a Changelog](https://keepachangelog.com/en/1.1.0/){:target="_blank"} guidelines. The changelog must be named `CHANGELOG.md`.
 
 :octicons-x-circle-fill-16:{ .x-circle-fill } DO NOT
 <!-- - Do not include code within report scripts to install or import PowerShell modules. Dependencies should be documented under the `System Requirements` and `Module Installation` sections of the `README`. -->
 - Do not include functions within report scripts. Individual script files should be created as a private function and be stored in the `\Src\Private` folder.
+- Do not submit unrelated changes in the same pull request.
+- Do not hardcode credentials.
+- Do not create generic table-construction or rendering helpers that hide which data and columns appear in a section's output — keep this logic inline within each function (see Private Function Structure below)
+
+### Private Functions
+
+Private functions in `Src/Private/` serve two distinct purposes:
+
+- **Report section functions** (`Get-AbrVendorSectionName`) — each responsible for collecting data from the target system and rendering it as a PScribo section. Every report section function must have its own `.ps1` file named after the function (e.g. `Get-AbrVendorLocation.ps1`).
+- **Utility helpers** (`ConvertTo-HashToYN`, `ConvertTo-TextYN`, connection helpers, etc.) — reusable functions that support report section functions. These may be grouped into a dedicated helper file.
+
+Every **report section function** must be **self-contained and readable in isolation**. A reviewer must be able to understand what data is collected, what the table will look like, and how it is rendered — without opening any other file.
+
+Follow this standard structure for all report section functions:
+
+```powershell
+function Get-AbrVendorSectionName {
+    <#
+    .SYNOPSIS
+        Used by As Built Report to retrieve <Vendor> <section> information.
+    .DESCRIPTION
+        Documents the configuration of <Vendor> <Technology> in Word/HTML/Text formats using PScribo.
+    .NOTES
+        Version:    0.1.0
+        Author:     Your Name
+    .LINK
+        https://github.com/AsBuiltReport/AsBuiltReport.Vendor.Technology
+    #>
+    [CmdletBinding()]
+    param ()
+
+    begin {
+        Write-PScriboMessage "Collecting <section> information."
+        $LocalizedData = $reportTranslate.GetAbrVendorSectionName
+    }
+
+    process {
+        try {
+            $Data = Get-VendorApiData
+            if ($Data) {
+                Section -Style Heading3 $LocalizedData.Heading {
+                    Paragraph $LocalizedData.Paragraph
+                    BlankLine
+                    $OutObj = @()
+                    foreach ($Item in $Data) {
+                        try {
+                            $inObj = [ordered] @{
+                                $LocalizedData.Name    = $Item.Name
+                                $LocalizedData.Status  = $Item.Status
+                                $LocalizedData.Version = $Item.Version
+                            }
+                            $OutObj += [pscustomobject](ConvertTo-HashToYN $inObj)
+                        } catch {
+                            Write-PScriboMessage -IsWarning "$($Item.Name): $($_.Exception.Message)"
+                        }
+                    }
+                    $TableParams = @{
+                        Name         = $LocalizedData.TableHeading
+                        List         = $false
+                        ColumnWidths = 40, 30, 30
+                    }
+                    if ($Report.ShowTableCaptions) {
+                        $TableParams['Caption'] = "- $($TableParams.Name)"
+                    }
+                    $OutObj | Sort-Object $LocalizedData.Name | Table @TableParams
+                }
+            }
+        } catch {
+            Write-PScriboMessage -IsWarning "<Section>: $($_.Exception.Message)"
+        }
+    }
+    end {}
+}
+```
+
+**Key principles:**
+
+- Build `[ordered]@{}` **inline** within the function — do not delegate this to a generic table-construction helper
+- Call `Table @TableParams` **directly** from within the function body
+- Each function reads top-to-bottom without requiring the reader to open another file
+- Utility helpers (e.g. ConvertTo-HashToYN, ConvertTo-TextYN, connection helpers) are appropriate. Do not create wrappers that hide data shape, column selection, or rendering logic from the function body.
 
 ### Testing Guidelines
 
@@ -378,13 +459,13 @@ For report modules, consider:
 
 We strive to review pull requests in a timely manner, but please be patient as all maintainers are volunteers:
 
-| Review Stage | Typical Timeline | Notes |
-|--------------|------------------|-------|
-| **Initial Response** | 2-5 days | Acknowledgement of your PR |
-| **First Review** | 5-10 days | Initial feedback on approach |
-| **Follow-up Reviews** | 2-5 days | After you address feedback |
-| **Final Approval** | 2-5 days | After all feedback addressed |
-| **Merge** | 2-5 days | After approval |
+| Review Stage          | Typical Timeline | Notes                        |
+|-----------------------|------------------|------------------------------|
+| **Initial Response**  | 2-5 days         | Acknowledgement of your PR   |
+| **First Review**      | 5-10 days        | Initial feedback on approach |
+| **Follow-up Reviews** | 2-5 days         | After you address feedback   |
+| **Final Approval**    | 2-5 days         | After all feedback addressed |
+| **Merge**             | 2-5 days         | After approval               |
 
 !!! info "Factors Affecting Review Time"
     - **PR Size**: Smaller PRs are reviewed faster

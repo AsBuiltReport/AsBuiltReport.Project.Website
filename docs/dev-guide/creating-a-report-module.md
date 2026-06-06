@@ -553,7 +553,7 @@ try {
 
 ## Function Design and Implementation
 
-### Main Function Structure
+### Main Function
 Every module must export a single main function following this pattern:
 
 ```powershell title="Main module function template"
@@ -612,94 +612,95 @@ function Invoke-AsBuiltReport.Vendor.Technology {
 }
 ```
 
-### Private Helper Functions
+### Private Functions
 
-Create focused helper functions in the `Src/Private` directory, one `.ps1` file per resource type or logical grouping:
+Private functions in `Src/Private/` serve two distinct purposes:
 
-- **Naming**: `Get-Abr[VendorAbbr][ResourceType]` — a short, consistent vendor abbreviation followed by the resource type in PascalCase (e.g. `Get-AbrVTResourceName` where `VT` is the vendor abbreviation for your module)
-- **Single responsibility**: One function per resource type. Nested or child resources get their own functions, called from within the parent function.
-- **Comment-based help**: Include `.SYNOPSIS` and `.DESCRIPTION` blocks.
-- **Error handling**: Wrap data collection in `try`/`catch` and emit warnings via `Write-PScriboMessage` for non-critical failures.
+- **Report section functions** (`Get-AbrVendorSectionName`) — each responsible for collecting data from the target system and rendering it as a PScribo section. Every report section function must have its own `.ps1` file named after the function (e.g. `Get-AbrVendorLocation.ps1`).
+- **Utility helpers** (`ConvertTo-HashToYN`, `ConvertTo-TextYN`, connection helpers, etc.) — reusable functions that support report section functions. These may be grouped into a dedicated helper file.
 
-**Example skeleton:**
+#### Functions must be self-contained
 
-```powershell title="Private function skeleton"
-function Get-AbrVTResourceName {
+Every **report section function** must be **readable in isolation**. A reviewer must be able to understand what data is collected, what the table will look like, and how it is rendered — without opening any other file.
+
+Keep the `[ordered]@{}` property list, `$TableParams` definition, and `Table @TableParams` call **inline** within each function body. Do not create generic table-construction or rendering wrappers that accept a data object and produce a table. This pattern hides the data shape and column selection from the function, making sections harder to understand and review independently.
+
+Utility helpers (e.g. `ConvertTo-HashToYN`, `ConvertTo-TextYN`, connection helpers) are appropriate. Do not create wrappers that hide data shape, column selection, or rendering logic from the function body.
+
+#### Private Function Structure
+
+All report section functions should follow this pattern:
+
+```powershell
+function Get-AbrVendorSectionName {
     <#
     .SYNOPSIS
-        Generates the Resource Name section of a Vendor Technology As Built report.
+        Used by As Built Report to retrieve <Vendor> <section> information.
     .DESCRIPTION
-        Collects resource configuration data and outputs a formatted PScribo section.
+        Documents the configuration of <Vendor> <Technology> in Word/HTML/Text formats using PScribo.
+    .NOTES
+        Version:    0.1.0
+        Author:     Your Name
+    .LINK
+        https://github.com/AsBuiltReport/AsBuiltReport.Vendor.Technology
     #>
     [CmdletBinding()]
-    param (
-    )
+    param ()
 
     begin {
-        # Retrieve localized strings for headings, messages, and labels.
-        # This enables multi-language support and keeps text separate from logic.
-        $LocalizedData = $reportTranslate.GetAbrVTResourceName
-
-        # Emit a verbose message indicating that data collection is starting.
-        # This helps with troubleshooting and provides visibility during report generation.
-        Write-PScriboMessage -Plugin 'VendorTechnology' -Message $LocalizedData.Collecting
+        Write-PScriboMessage "Collecting <section> information."
+        $LocalizedData = $reportTranslate.GetAbrVendorSectionName
     }
 
     process {
         try {
-            # Collect resource data from the vendor platform.
-            # -ErrorAction Stop ensures any failure is caught by the catch block.
-            $Resources = Get-VTResource -ErrorAction Stop
-
-            # Only render the section if data was successfully returned.
-            # Avoids creating empty report sections.
-            if ($Resources) {
-
-                # Create a new section in the report using PScribo.
-                # The section name is sourced from localized data for consistency.
-                Section -Name $LocalizedData.Heading -Style Heading2 {
-                    # Prepare table data
-                    # Convert raw resource objects into a clean, report-friendly structure.
-                    # Typically flattened and ordered for readability.
-                    $TableData = $Resources | Select-Object Name, Status, Version
-
-                    # Define table formatting parameters
-                    # Using a hashtable allows conditional additions (e.g. captions)
-                    $TableParams = @{
-                        Name         = $LocalizedData.TableTitle      # Logical name of the table
-                        List         = $true                          # Render as key/value list (good for summaries)
-                        ColumnWidths = 40, 60                         # Adjust layout proportions
+            $Data = Get-VendorApiData
+            if ($Data) {
+                Section -Style Heading3 $LocalizedData.Heading {
+                    Paragraph $LocalizedData.Paragraph
+                    BlankLine
+                    $OutObj = @()
+                    foreach ($Item in $Data) {
+                        try {
+                            $inObj = [ordered] @{
+                                $LocalizedData.Name    = $Item.Name
+                                $LocalizedData.Status  = $Item.Status
+                                $LocalizedData.Version = $Item.Version
+                            }
+                            $OutObj += [pscustomobject](ConvertTo-HashToYN $inObj)
+                        } catch {
+                            Write-PScriboMessage -IsWarning "$($Item.Name): $($_.Exception.Message)"
+                        }
                     }
-
-                    # Optionally include a caption if enabled in report configuration
+                    $TableParams = @{
+                        Name         = $LocalizedData.TableHeading
+                        List         = $false
+                        ColumnWidths = 40, 30, 30
+                    }
                     if ($Report.ShowTableCaptions) {
                         $TableParams['Caption'] = "- $($TableParams.Name)"
                     }
-
-                    # Output table to the report
-                    # PScribo handles rendering based on the provided parameters
-                    $TableData | Table @TableParams
+                    $OutObj | Sort-Object $LocalizedData.Name | Table @TableParams
                 }
-            } else {
-                # Optional: log that no data was returned.
-                # Useful for debugging or confirming expected empty states.
-                Write-PScriboMessage -Plugin 'VendorTechnology' -Message $LocalizedData.NoData
             }
         } catch {
-            # Catch any errors during data collection or processing.
-
-            # Emit a warning rather than terminating execution.
-            # This ensures the report continues generating even if this section fails.
-            Write-PScriboMessage -Plugin 'VendorTechnology' -IsWarning "$($LocalizedData.ErrorMessage) $($_.Exception.Message)"
+            Write-PScriboMessage -IsWarning "<Section>: $($_.Exception.Message)"
         }
     }
-
-    end {
-        # Reserved for any cleanup if required.
-        # Typically unused, but included for completeness and consistency.
-    }
+    end {}
 }
 ```
+
+This example demonstrates:
+
+- **Data collected upfront** (`Get-VendorApiData`) before any PScribo calls, so collection errors are isolated from rendering
+- **`begin/process/end` blocks** — `begin` logs progress and loads translations; `process` contains all data collection and rendering; `end` is used for cleanup such as disconnecting sessions
+- **`[ordered]@{}` built inline** with explicit, named property-to-column mappings visible at a glance
+- **`ConvertTo-HashToYN`** applied once to convert booleans to `Yes`/`No` strings
+- **`$TableParams` defined inline** so column widths and table type are immediately clear
+- **`Table @TableParams` called directly** — no intermediate rendering wrapper
+- **`try/catch` at both levels** — the outer `catch` protects the section as a whole; the inner `catch` protects individual items so one bad record does not abort the entire table
+- **Graceful continuation** — the section renders what it can and logs warnings for failures
 
 ## Language Support Implementation
 
