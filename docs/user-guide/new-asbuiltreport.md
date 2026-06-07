@@ -62,6 +62,7 @@ AsBuiltReport supports multiple authentication methods. Choose the method that s
 | Orientation | String | No | Portrait | Page orientation |
 | StyleFilePath | String | No | - | Custom style script path |
 | OutputFolderPath | String | Yes | - | Report save location |
+| Filename | String | No | - | Custom report filename |
 | AsBuiltConfigFilePath | String | No | - | Core config file path |
 | ReportConfigFilePath | String | No | - | Report config file path |
 | Timestamp | Switch | No | False | Append timestamp to filename |
@@ -89,7 +90,7 @@ Multiple targets may be specified, separated by a comma.
 !!! note
     When specifying multiple targets, all systems must use the same credentials.
 
-This parameter has the following aliases ; `Server`, `Cluster`, `IP`
+This parameter has the following aliases: `Server`, `Cluster`, `IP`
 
 This is a mandatory parameter.
 
@@ -179,6 +180,14 @@ Specifies the folder path to save the report.
 
 This is a mandatory parameter.
 
+### Filename
+
+Specifies a custom filename for the report.
+
+This is an optional parameter.
+
+If not specified, the report filename is automatically generated from the report module name and version.
+
 ### AsBuiltConfigFilePath
 
 Specifies the file path to the AsBuiltReport configuration JSON file.
@@ -205,7 +214,7 @@ This is an optional parameter.
 
 By default, the timestamp string is not added to the report filename.
 
-### EnableHealthcheck
+### EnableHealthCheck
 
 Highlights certain issues within the system report.
 
@@ -286,6 +295,15 @@ This is an optional parameter.
     New-AsBuiltReport -Report Microsoft.Azure -Target 'contoso.onmicrosoft.com' `
     -Token 'your-api-token-here' -TokenParameters @{AccountId='admin@contoso.com'} `
     -Format HTML,Word -OutputFolderPath 'C:\Reports'
+    ```
+
+9. Creates a VMware vSphere report with a custom filename. The `-Filename` parameter overrides the default auto-generated filename, which is useful when generating reports for specific clients or environments where a consistent naming convention is required.
+
+    ```powershell title="Example 9"
+    $Cred = Get-Credential
+    New-AsBuiltReport -Report VMware.vSphere -Target vcenter.example.com `
+    -Credential $Cred -Format HTML,Word -OutputFolderPath 'C:\Reports' `
+    -Filename 'Contoso-vSphere-AsBuiltReport'
     ```
 
 ## See Also

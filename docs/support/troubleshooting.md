@@ -68,7 +68,7 @@ Higher InfoLevels collect more data but take longer to process and may be more p
 1. **Create or locate your report JSON configuration file:**
 
     ```powershell title="Create a report configuration file"
-    New-AsBuiltReportConfig -Report VMware.vSphere -Path C:\Reports
+    New-AsBuiltReportConfig -Report VMware.vSphere -FolderPath C:\Reports
     ```
 
     This creates a JSON file (e.g., `AsBuiltReport.VMware.vSphere.json`) in the specified path.
@@ -230,10 +230,10 @@ Higher InfoLevels collect more data but take longer to process and may be more p
 
     ```powershell
     # Generate a new configuration file (use -Force to overwrite existing file)
-    New-AsBuiltReportConfig -Report VMware.vSphere -Path C:\Reports -Force
+    New-AsBuiltReportConfig -Report VMware.vSphere -FolderPath C:\Reports -Force
 
     # Or save to a different location and merge changes manually
-    New-AsBuiltReportConfig -Report VMware.vSphere -Path C:\Reports\NewConfig
+    New-AsBuiltReportConfig -Report VMware.vSphere -FolderPath C:\Reports\NewConfig
     ```
 
     !!! tip "Preserve Your Customisations"

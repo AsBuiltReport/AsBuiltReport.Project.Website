@@ -56,7 +56,7 @@ Specifies the type of report configuration to create.
 
 This is a mandatory parameter.
 
-### Folderpath
+### FolderPath
 
 Specifies the folder path to create the report JSON configuration file.
 

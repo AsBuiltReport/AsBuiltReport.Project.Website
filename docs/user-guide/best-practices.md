@@ -31,7 +31,7 @@ Update-Module -Name AsBuiltReport.*
 When you update a report module, regenerate the JSON configuration file to ensure you have the latest structure and options:
 
 ```powershell title="Regenerate report configuration file"
-New-AsBuiltReportConfig -Report VMware.vSphere -Path C:\Reports -Force
+New-AsBuiltReportConfig -Report VMware.vSphere -FolderPath C:\Reports -Force
 ```
 
 ## Report Generation

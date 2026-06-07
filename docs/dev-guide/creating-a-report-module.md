@@ -1220,8 +1220,8 @@ Implement comprehensive error handling:
 ```powershell title="Comprehensive error handling"
 try {
     # Validate prerequisites
-    if (-not (Get-Module VMware.PowerCLI -ListAvailable)) {
-        throw "VMware.PowerCLI module is required but not installed"
+    if (-not (Get-Module VCF.PowerCLI -ListAvailable)) {
+        throw "VCF.PowerCLI module is required but not installed"
     }
 
     # Attempt connection

@@ -66,14 +66,16 @@ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 
 ### Module Dependencies
 
-!!! warning "AsBuiltReport.Core Required"
-    All AsBuiltReport report modules require **AsBuiltReport.Core** to be installed first. The Core module provides the framework that all report modules depend on.
+!!! info "AsBuiltReport.Core"
+    All AsBuiltReport report modules depend on **AsBuiltReport.Core** to function.
+
+    **PowerShell Gallery installs** — Core is installed automatically as a dependency. No separate step is required.
+
+    **Manual installs** (GitHub or offline) — Core is not installed automatically. Install it before installing any report modules:
 
     ```powershell title="Install AsBuiltReport.Core"
     Install-Module -Name 'AsBuiltReport.Core' -Scope 'CurrentUser'
     ```
-
-    When installing from the PowerShell Gallery using `Install-Module`, dependencies are automatically installed. For manual installations (GitHub, offline), you must ensure AsBuiltReport.Core is installed first.
 
 ### Third Party PowerShell Modules
 

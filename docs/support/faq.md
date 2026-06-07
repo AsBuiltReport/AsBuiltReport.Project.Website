@@ -47,17 +47,24 @@ Please refer to the [Offline Installation](../user-guide/installation.md#offline
 
 ### How do I generate my first report?
 
-After installing the Core module and a report module, follow these steps:
+After installing the Core module and a report module, run the report command directly. On first run, you will be prompted for author and company information — press Enter to accept the defaults. A default report configuration is created automatically:
 
-1. Create a report configuration file:
-    ```powershell
-    New-AsBuiltReportConfig -Report VMware.vSphere -Path C:\Reports
-    ```
+```powershell
+New-AsBuiltReport -Report VMware.vSphere -Target vcenter.example.com `
+    -Credential (Get-Credential) -Format HTML -OutputFolderPath C:\Reports
+```
 
-2. Generate the report:
-    ```powershell
-    New-AsBuiltReport -Report VMware.vSphere -Target vcenter.example.com -Username admin -Password (ConvertTo-SecureString 'P@ssw0rd' -AsPlainText -Force) -Format HTML -OutputFolderPath C:\Reports
-    ```
+To customise report detail levels before running, pre-create and edit a configuration file, then pass it to the command:
+
+```powershell
+# Create a report configuration file and edit InfoLevel values in the JSON
+New-AsBuiltReportConfig -Report VMware.vSphere -FolderPath C:\Reports
+
+# Generate the report using the configuration file
+New-AsBuiltReport -Report VMware.vSphere -Target vcenter.example.com `
+    -Credential (Get-Credential) -Format HTML -OutputFolderPath C:\Reports `
+    -ReportConfigFilePath C:\Reports\AsBuiltReport.VMware.vSphere.json
+```
 
 For detailed instructions, see the [New-AsBuiltReport](../user-guide/new-asbuiltreport.md) command reference.
 
@@ -97,7 +104,7 @@ Reports use InfoLevel settings to control the depth of information collected. Yo
 
 1. Create a configuration file:
     ```powershell
-    New-AsBuiltReportConfig -Report VMware.vSphere -Path C:\Reports
+    New-AsBuiltReportConfig -Report VMware.vSphere -FolderPath C:\Reports
     ```
 
 2. Edit the JSON file and adjust InfoLevel values (typically 0-3):

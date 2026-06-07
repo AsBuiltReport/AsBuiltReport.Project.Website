@@ -181,6 +181,17 @@ Now generate your first report! Replace the example values with your environment
 
     You can press Enter to accept defaults or customise as needed.
 
+!!! info "How Long Will This Take?"
+    Report generation time depends on your environment size and InfoLevel settings:
+
+    | Environment Size | InfoLevel | Typical Duration |
+    |-----------------|-----------|-----------------|
+    | Small (single host / small domain) | 1–2 | Under 1 minute |
+    | Medium (10–50 hosts / typical domain) | 2–3 | 2–10 minutes |
+    | Large (50+ hosts / complex environment) | 3–5 | 10–60+ minutes |
+
+    During generation, no output is shown by default. If you want to see live progress, add `-Verbose` to your command. If the report appears to hang, it is usually still running — particularly at higher InfoLevels against large environments.
+
 ## Step 4: View Your Report
 
 Once generation completes:
@@ -255,7 +266,7 @@ Avoid these common mistakes:
 
 ```powershell title="Install required dependencies"
 # Example: VMware vSphere requires PowerCLI
-Install-Module -Name VMware.PowerCLI -Scope CurrentUser
+Install-Module -Name VCF.PowerCLI -Scope CurrentUser -AllowClobber -SkipPublisherCheck
 ```
 
 ### Using Insufficient Permissions
@@ -277,14 +288,21 @@ New-AsBuiltReport -Report VMware.vSphere -Target vcenter.example.com `
 
 ### Expecting Instant Results for Large Environments
 
-**Problem**: Report seems to hang
+**Problem**: Report seems to hang with no output
 
-**Solution**: Large environments take time. Start with InfoLevel 1-2 for faster results:
+**Solution**: Reports generate silently by default. Use `-Verbose` to see live progress. For your first run against a large environment, lower the InfoLevel to get faster results:
 
-```powershell title="Create configuration with lower InfoLevels"
-# Create config with lower InfoLevels for testing
+```powershell title="Generate report with verbose output"
+New-AsBuiltReport -Report VMware.vSphere -Target vcenter.example.com `
+    -Credential $Cred -Format HTML -OutputFolderPath C:\Reports -Verbose
+```
+
+```powershell title="Create configuration with lower InfoLevels for faster results"
 New-AsBuiltReportConfig -Report VMware.vSphere -FolderPath C:\Reports
-# Edit the JSON file to set InfoLevel values to 1 or 2
+# Edit the JSON file to set InfoLevel values to 1 or 2, then use it:
+New-AsBuiltReport -Report VMware.vSphere -Target vcenter.example.com `
+    -Credential $Cred -ReportConfigFilePath C:\Reports\AsBuiltReport.VMware.vSphere.json `
+    -Format HTML -OutputFolderPath C:\Reports -Verbose
 ```
 
 ## Getting Help
