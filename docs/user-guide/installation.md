@@ -558,7 +558,7 @@ Unable to resolve package source 'https://www.powershellgallery.com/api/v2'
 
 **Symptoms:**
 - Wrong version is loaded
-- Unexpected behavior after installing new version
+- Unexpected behaviour after installing new version
 
 **Solution:**
 

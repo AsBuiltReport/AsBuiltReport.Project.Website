@@ -18,7 +18,7 @@ This page provides guidance on troubleshooting common issues when generating AsB
     For help with installation, module updates, or uninstallation issues, please see the [Installation Troubleshooting](../user-guide/installation.md#troubleshooting) section.
 
 !!! info "Known Limitations"
-    Some issues are due to platform or framework limitations that cannot be resolved through troubleshooting. Check the [Known Issues](known-issues.md) page for documented limitations (e.g., image support on Linux/macOS, Word TOC behavior).
+    Some issues are due to platform or framework limitations that cannot be resolved through troubleshooting. Check the [Known Issues](known-issues.md) page for documented limitations (e.g., image support on Linux/macOS, Word TOC behaviour).
 
 ## Report Generation Issues
 
@@ -56,8 +56,8 @@ If a report fails or hangs during generation, use the `InfoLevel` settings in th
 
 Each report section has an associated `InfoLevel` setting that controls the depth of information collected:
 
-- **InfoLevel 0**: Minimal information (summary only)
-- **InfoLevel 1**: Basic information
+- **InfoLevel 0**: Disabled (section not included in report)
+- **InfoLevel 1**: Summary information
 - **InfoLevel 2**: Detailed information
 - **InfoLevel 3+**: Comprehensive information (varies by report)
 

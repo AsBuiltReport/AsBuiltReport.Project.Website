@@ -21,7 +21,7 @@ Back in 2017, having worked on designing and implementing VMware solutions for a
 
 At the time, I was designing and implementing 2-3 VMware solutions per month. Each solution would be designed using numerous technology partners, each with their own range of compute, storage, networking and backup technologies.
 
-My methods to create as-built documentation was arduous, time consuming and error prone. It often involved extracting information using a combination of vendor supplied tools and community developed scripts, and manually transposing information from the vCenter console into a Word document. It was tedious and often resulted in a poorly constructed and formatted document.
+My methods to create as-built documentation were arduous, time consuming and error prone. It often involved extracting information using a combination of vendor supplied tools and community developed scripts, and manually transposing information from the vCenter console into a Word document. It was tedious and often resulted in a poorly constructed and formatted document.
 
 It was also around this time that I realised I had a strong desire to learn PowerShell after seeing many of my co-workers starting to write scripts to automate simple, repeatable tasks. Until this moment, I had never taken the time to completely understand the fundamentals of PowerShell, nor had I worked to develop and expand my knowledge in any form of scripting or automation.
 

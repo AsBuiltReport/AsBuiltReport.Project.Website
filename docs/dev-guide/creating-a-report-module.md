@@ -61,7 +61,7 @@ AsBuiltReport.Vendor.Technology/                       # Repository root
 │   │   └── <language>-<REGION>/                       # Additional language support folders
 │   │       └── VendorTechnology.psd1
 │   └── Src/
-│       ├── Private/                                   # Private helper functions
+│       ├── Private/                                   # Private functions
 │       │   └── Get-Abr[VendorAbbr][Resource].ps1      # One file per resource type
 │       └── Public/                                    # Exported functions
 │           └── Invoke-AsBuiltReport.Vendor.Technology.ps1
@@ -130,7 +130,7 @@ Plaster will prompt for the following:
 
 After `Invoke-Plaster` completes, the module directory is ready for development. The key files to work on are:
 
-1. **Rename and populate** `Src\Private\Get-AbrVendorProductExample.ps1` — add your data collection functions following the [private helper functions](#private-helper-functions) standards
+1. **Rename and populate** `Src\Private\Get-AbrVendorProductExample.ps1` — add your data collection functions following the [private functions](#private-functions) standards
 2. **Update** `Src\Public\Invoke-AsBuiltReport.Vendor.Product.ps1` — wire up your private functions inside the `foreach ($System in $Target)` loop
 3. **Expand** `AsBuiltReport.Vendor.Product.json` — add your sections under `InfoLevel` and `HealthCheck`
 4. **Update** `Language\en-US\VendorProduct.psd1` — add your translation strings following the [language support](#language-support-implementation) standards
@@ -621,11 +621,11 @@ Private functions in `Src/Private/` serve two distinct purposes:
 
 #### Functions must be self-contained
 
-Every **report section function** must be **readable in isolation**. A reviewer must be able to understand what data is collected, what the table will look like, and how it is rendered — without opening any other file.
+Every **report section function** must be **readable in isolation**. A reviewer should be able to understand what data is collected, what the table will look like, and how it is rendered, without opening any other file.
 
-Keep the `[ordered]@{}` property list, `$TableParams` definition, and `Table @TableParams` call **inline** within each function body. Do not create generic table-construction or rendering wrappers that accept a data object and produce a table. This pattern hides the data shape and column selection from the function, making sections harder to understand and review independently.
+Keep the `[ordered]@{}` property list, `$TableParams` definition, and `Table @TableParams` call **inline** within each function body. Do not delegate these to generic table-construction or rendering wrappers. These abstractions hide which data and columns appear in the output, making the function harder to follow during review.
 
-Utility helpers (e.g. `ConvertTo-HashToYN`, `ConvertTo-TextYN`, connection helpers) are appropriate. Do not create wrappers that hide data shape, column selection, or rendering logic from the function body.
+Utility helpers like `ConvertTo-HashToYN` and `ConvertTo-TextYN` are fine. They transform individual values without hiding the overall data shape or column selection. Avoid wrappers that accept a data object and produce a table, as the structure of the output is no longer visible in the function body.
 
 #### Private Function Structure
 
@@ -1025,7 +1025,7 @@ function Invoke-AsBuiltReport.Vendor.Technology {
     # Scope translations for this function from the global $reportTranslate hashtable
     $LocalizedData = $reportTranslate.InvokeAsBuiltReportVendorTechnology
 
-    foreach ($Target in $Target) {
+    foreach ($System in $Target) {
         try {
             Write-PScriboMessage ($LocalizedData.Connecting -f $Target)
 
@@ -1120,14 +1120,14 @@ To add language support to an existing report module:
 6. **Add additional languages**
    - Create language folders for other languages (es-ES, fr-FR, etc.)
    - Translate all strings while maintaining the same structure and keys
-   - Test fallback behavior
+   - Test fallback behaviour
 
 7. **Update documentation**
    - Update your module's README with supported languages
    - Document any language-specific considerations
    - Include example usage with `-ReportLanguage` parameter
 
-!!! Note
+!!! note
     The AsBuiltReport.Core module automatically handles language initialisation - you don't need to call `Initialize-LocalizedData` in your report module.
 
 ## PowerShell Best Practices

@@ -12,7 +12,7 @@ tags:
 
 # Creating a Report Style
 
-When generating an AsBuiltReport, its formatting and style is defined using a PowerShell (.ps1) script which utilises a set of [PScribo](../support/faq.md#what-is-pscribo) cmdlets.
+When generating an AsBuiltReport, its formatting and style are defined using a PowerShell (.ps1) script which utilises a set of [PScribo](../support/faq.md#what-is-pscribo) cmdlets.
 
 This guide can be used to create custom style scripts which match your individual and/or corporate identities.
 
@@ -26,7 +26,7 @@ This guide can be used to create custom style scripts which match your individua
 
     Use the [default style script](https://github.com/AsBuiltReport/AsBuiltReport.Core/blob/master/AsBuiltReport.Core/AsBuiltReport.Core.Style.ps1){:target="_blank"} as a reference for creating a new style script.
 
-### Language Support
+## Language Support
 
 To support report language translations in AsBuiltReport v1.5.0 or higher, ensure the following code is added to the top of your style scripts.
 
@@ -55,7 +55,7 @@ try {
 }
 ```
 
-### Global Document Options
+## Global Document Options
 
 The `DocumentOption` cmdlet is used to set global document options, including default font, page size, margins and orientation.
 
@@ -72,7 +72,7 @@ The `DocumentOption` cmdlet is used to set global document options, including de
 `Orientation` sets the document's default page orientation. It is highly recommended that you do not modify the `$Orientation` parameter value.
 
 ```powershell title="Additional information about DocumentOption"
-get-help about_PScriboDocument
+Get-Help about_PScriboDocument
 ```
 
 ```powershell title="DocumentOption examples"
@@ -85,15 +85,15 @@ DocumentOption -PageSize 'Letter' -DefaultFont 'Tahoma' -MarginLeftAndRight 74 -
 ```
 
 
-### Styles
+## Styles
 The `Style` cmdlet defines a custom formatting style which can be applied to section headings, paragraphs and within table styles. Styles need to be defined before any formatting can be applied within a document (with the exception of paragraphs). Each style permits the setting of the font to use, the font size and colour.
 
 ```powershell title="Additional information about Styles"
-get-help about_PScriboStyles
+Get-Help about_PScriboStyles
 ```
 
 
-#### Default Styles
+### Default Styles
 A style script uses a standard set of styles for a report. These styles are defined below and must be included in every style script.
 
 ```text title="Default style names and descriptions"
@@ -133,7 +133,7 @@ Info                - Table row/cell highlight style for informational alerts
 OK                  - Table row/cell highlight style for known good alerts
 ```
 
-#### Custom Styles
+### Custom Styles
 
 Using the default style names, these styles can be customised to suit your individual requirements.
 
@@ -180,7 +180,7 @@ Style -Name 'OK' -Size 10 -Color '565656' -BackgroundColor 'DFF0D0'
 Style -Name 'Caption' -Size 10 -Color '072E58' -Italic -Align Left
 ```
 
-### Table Styles
+## Table Styles
 The `TableStyle` cmdlet defines a custom formatting style for tables that is comprised of a heading, row and alternate row styles.
 
 Table styles are a combination of individual styles with some additional formatting options specific to tables, i.e. borders and padding. A table style can specify a style for the heading row, a default row style and an optional alternating row style. The individual styles used by within a table style must first be defined with the `Style` cmdlet before they can be used within `TableStyle`.
@@ -210,7 +210,7 @@ TableStyle @TableDefaultProperties -Default
 TableStyle -Id 'Borderless' -HeaderStyle Normal -RowStyle Normal -BorderWidth 0
 ```
 
-#### Table of Contents
+### Table of Contents
 The `TOC` cmdlet creates a 'Table of Contents' from the document's section headings.
 
 Each report will include a JSON configuration file which provides an option to enable/disable the Table of Contents.
@@ -241,7 +241,7 @@ if ($ReportConfig.Report.ShowTableOfContents) {
 }
 ```
 
-#### Table Captions
+### Table Captions
 
 Each report will include a JSON configuration file which provides an option to enable/disable table captions.
 
@@ -279,7 +279,7 @@ $TableDefaultProperties = @{
 }
 ```
 
-### Headers and Footers
+## Headers and Footers
 The `Header` and `Footer` cmdlets define the document header and footer on the first and/or all pages of the document.
 
 Each report will include a JSON configuration file which provides an option to enable/disable document headers and footers.
@@ -298,7 +298,7 @@ Each report will include a JSON configuration file which provides an option to e
 }
 ```
 
-The following code should be included in your style script to utilise the report configration option. The highlighted lines can be modified to suit your requirements.
+The following code should be included in your style script to utilise the report configuration option. The highlighted lines can be modified to suit your requirements.
 
 ```powershell title="Add header and footer to style script" hl_lines="3 4 7 8"
 # Set Header & Footer, if enabled in report JSON configuration
@@ -314,11 +314,11 @@ if ($ReportConfig.Report.ShowHeaderFooter) {
 ```
 
 ```powershell title="Additional information about Headers and Footers"
-get-help Header -Detailed
-get-help Footer -Detailed
+Get-Help Header -Detailed
+Get-Help Footer -Detailed
 ```
 
-### Images
+## Images
 
 !!! failure "Images are not supported when using Linux & macOS"
 
@@ -331,9 +331,9 @@ Images can be converted to a Base64 string using an online image converter such 
 `Align` and `Percent` values can be adjusted to horizontally position and size the image.
 
 ```powershell title="Additional information about Images"
-get-help Image -Detailed
+Get-Help Image -Detailed
 ```
-#### Cover Page
+### Cover Page
 
 The code below should be included in a style script to set a cover image or logo. The highlighted line can be modified to suit your requirements.
 

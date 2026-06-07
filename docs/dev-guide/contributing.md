@@ -296,85 +296,7 @@ Use [PSScriptAnalyzer](https://github.com/PowerShell/PSScriptAnalyzer){:target="
 - Do not include functions within report scripts. Individual script files should be created as a private function and be stored in the `\Src\Private` folder.
 - Do not submit unrelated changes in the same pull request.
 - Do not hardcode credentials.
-- Do not create generic table-construction or rendering helpers that hide which data and columns appear in a section's output — keep this logic inline within each function (see Private Function Structure below)
-
-### Private Functions
-
-Private functions in `Src/Private/` serve two distinct purposes:
-
-- **Report section functions** (`Get-AbrVendorSectionName`) — each responsible for collecting data from the target system and rendering it as a PScribo section. Every report section function must have its own `.ps1` file named after the function (e.g. `Get-AbrVendorLocation.ps1`).
-- **Utility helpers** (`ConvertTo-HashToYN`, `ConvertTo-TextYN`, connection helpers, etc.) — reusable functions that support report section functions. These may be grouped into a dedicated helper file.
-
-Every **report section function** must be **self-contained and readable in isolation**. A reviewer must be able to understand what data is collected, what the table will look like, and how it is rendered — without opening any other file.
-
-Follow this standard structure for all report section functions:
-
-```powershell
-function Get-AbrVendorSectionName {
-    <#
-    .SYNOPSIS
-        Used by As Built Report to retrieve <Vendor> <section> information.
-    .DESCRIPTION
-        Documents the configuration of <Vendor> <Technology> in Word/HTML/Text formats using PScribo.
-    .NOTES
-        Version:    0.1.0
-        Author:     Your Name
-    .LINK
-        https://github.com/AsBuiltReport/AsBuiltReport.Vendor.Technology
-    #>
-    [CmdletBinding()]
-    param ()
-
-    begin {
-        Write-PScriboMessage "Collecting <section> information."
-        $LocalizedData = $reportTranslate.GetAbrVendorSectionName
-    }
-
-    process {
-        try {
-            $Data = Get-VendorApiData
-            if ($Data) {
-                Section -Style Heading3 $LocalizedData.Heading {
-                    Paragraph $LocalizedData.Paragraph
-                    BlankLine
-                    $OutObj = @()
-                    foreach ($Item in $Data) {
-                        try {
-                            $inObj = [ordered] @{
-                                $LocalizedData.Name    = $Item.Name
-                                $LocalizedData.Status  = $Item.Status
-                                $LocalizedData.Version = $Item.Version
-                            }
-                            $OutObj += [pscustomobject](ConvertTo-HashToYN $inObj)
-                        } catch {
-                            Write-PScriboMessage -IsWarning "$($Item.Name): $($_.Exception.Message)"
-                        }
-                    }
-                    $TableParams = @{
-                        Name         = $LocalizedData.TableHeading
-                        List         = $false
-                        ColumnWidths = 40, 30, 30
-                    }
-                    if ($Report.ShowTableCaptions) {
-                        $TableParams['Caption'] = "- $($TableParams.Name)"
-                    }
-                    $OutObj | Sort-Object $LocalizedData.Name | Table @TableParams
-                }
-            }
-        } catch {
-            Write-PScriboMessage -IsWarning "<Section>: $($_.Exception.Message)"
-        }
-    }
-    end {}
-}
-```
-
-**Key principles:**
-
-- Build `[ordered]@{}` **inline** within the function — do not delegate this to a generic table-construction helper
-- Call `Table @TableParams` **directly** from within the function body
-- Each function reads top-to-bottom without requiring the reader to open another file
-- Utility helpers (e.g. ConvertTo-HashToYN, ConvertTo-TextYN, connection helpers) are appropriate. Do not create wrappers that hide data shape, column selection, or rendering logic from the function body.
+- Do not create generic table-construction or rendering helpers that hide which data and columns appear in a section's output. Keep this logic inline within each function (see [Private Function Structure](creating-a-report-module.md#private-function-structure))
 
 ### Testing Guidelines
 
@@ -452,6 +374,29 @@ For report modules, consider:
       }
     }
     ```
+
+## Report Module Contributions
+
+Report module contributions fall into two categories: adding or amending sections within an existing module, or developing an entirely new one. Both follow the same structural conventions.
+
+### Report Section Structure
+
+Whether contributing to an existing report module or developing a new one, all report sections are implemented as private functions in the module's `Src/Private/` folder.
+
+Private functions serve two distinct purposes:
+
+- **Report section functions** (`Get-AbrVendorSectionName`): each responsible for collecting data from the target system and rendering it as a PScribo section. Every report section function must have its own `.ps1` file named after the function (e.g. `Get-AbrVendorLocation.ps1`).
+- **Utility helpers** (`ConvertTo-HashToYN`, `ConvertTo-TextYN`, connection helpers, etc.): reusable functions that support report section functions. These may be grouped into a dedicated helper file.
+
+Every **report section function** must be **self-contained and readable in isolation**. A reviewer should be able to understand what data is collected, what the table will look like, and how it is rendered, without opening any other file.
+
+For the complete function template, key principles, and annotated examples, see [Private Functions](creating-a-report-module.md#private-functions) in the Creating a Report Module guide.
+
+### Creating a New Report Module
+
+Building a new report module from scratch involves additional steps beyond code structure: repository setup, scaffolding with the Plaster template, configuration files, and language support. The [Creating a Report Module](creating-a-report-module.md) guide covers all of these in detail.
+
+Before beginning development, [discuss your plans](creating-a-report-module.md#getting-started) with the project team to ensure there is no duplication of effort and to get your repository set up under the AsBuiltReport organisation.
 
 ## Pull Request Review Process
 
