@@ -39,6 +39,9 @@ Install-Module -Name AsBuiltReport.Core -Scope CurrentUser
 Install-Module -Name AsBuiltReport.VMware.vSphere -Scope CurrentUser
 ```
 
+!!! info "AsBuiltReport.Core Dependency"
+    The report module installation will automatically install AsBuiltReport.Core if it's not already present. You'll see both modules being installed.
+
 For detailed installation instructions, including offline installation and alternative methods, see the [Installation Guide](../user-guide/installation.md).
 
 ### How do I install AsBuiltReport if I do not have access to PowerShell Gallery?

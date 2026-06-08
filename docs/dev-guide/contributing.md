@@ -385,8 +385,8 @@ Whether contributing to an existing report module or developing a new one, all r
 
 Private functions serve two distinct purposes:
 
-- **Report section functions** (`Get-AbrVendorSectionName`): each responsible for collecting data from the target system and rendering it as a PScribo section. Every report section function must have its own `.ps1` file named after the function (e.g. `Get-AbrVendorLocation.ps1`).
-- **Utility helpers** (`ConvertTo-HashToYN`, `ConvertTo-TextYN`, connection helpers, etc.): reusable functions that support report section functions. These may be grouped into a dedicated helper file.
+- **Report section functions** (`Get-Abr[VendorAbbr|Technology][Resource]`): each responsible for collecting data from the target system and rendering it as a PScribo section. Every report section function must have its own `.ps1` file named after the function (e.g. `Get-AbrVendorLocation.ps1`).
+- **Utility helpers** (`ConvertTo-HashToYN`, `ConvertTo-TextYN`, connection helpers, etc.): reusable functions that support report section functions. These may be grouped into a dedicated helper file (`Src/Private/Helpers.ps1`).
 
 Every **report section function** must be **self-contained and readable in isolation**. A reviewer should be able to understand what data is collected, what the table will look like, and how it is rendered, without opening any other file.
 

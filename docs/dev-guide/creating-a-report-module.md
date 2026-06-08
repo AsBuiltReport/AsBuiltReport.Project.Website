@@ -733,7 +733,7 @@ function Invoke-AsBuiltReport.Vendor.Technology {
 Private functions in `Src/Private/` serve two distinct purposes:
 
 - **Report section functions** (`Get-Abr[VendorAbbr|Technology][Resource]`) — each responsible for collecting data from the target system and rendering it as a PScribo section. Every report section function must have its own `.ps1` file named after the function (e.g. `Get-AbrVendorLocation.ps1`). Following PowerShell naming conventions, the resource noun must be **singular** (e.g. `Get-AbrVbrBackupJob`, not `Get-AbrvSphereVMHost`).
-- **Utility helpers** (`ConvertTo-HashToYN`, `ConvertTo-TextYN`, connection helpers, etc.) — reusable functions that support report section functions. These may be grouped into a dedicated helper file.
+- **Utility helpers** (`ConvertTo-HashToYN`, `ConvertTo-TextYN`, connection helpers, etc.) — reusable functions that support report section functions. These may be grouped into a dedicated helper file (`Src/Private/Helpers.ps1`).
 
 #### Functions must be self-contained
 
@@ -751,7 +751,7 @@ All report section functions should follow this pattern:
 function Get-Abr[VendorAbbr|Technology][Resource] {
     <#
     .SYNOPSIS
-        Used by As Built Report to retrieve <Vendor> <section> information.
+        Used by As Built Report to retrieve <Vendor> <Technology> section information.
     .DESCRIPTION
         Documents the configuration of <Vendor> <Technology> in Word/HTML/Text formats using PScribo.
     .NOTES
