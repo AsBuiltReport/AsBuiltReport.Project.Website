@@ -166,8 +166,12 @@ nav:
         - VMware vSphere: https://github.com/AsBuiltReport/AsBuiltReport.VMware.vSphere#readme
   - Developer Guide:
     - dev-guide/contributing.md
-    - Creating a report module: dev-guide/creating-a-report-module.md
-    - Creating a report style: dev-guide/creating-a-report-style.md
+    - Report Modules:
+        - Creating a report module: dev-guide/creating-a-report-module.md
+        #- Adding charts to a report module: dev-guide/adding-charts-to-a-report-module.md
+        #- Adding diagrams to a report module: dev-guide/adding-diagrams-to-a-report-module.md
+    - Report Styles:
+        - Creating a report style: dev-guide/creating-a-report-style.md
   - Support:
     - FAQ: support/faq.md
     - Troubleshooting: support/troubleshooting.md

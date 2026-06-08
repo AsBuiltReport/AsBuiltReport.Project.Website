@@ -1,0 +1,1 @@
+Instructions for adding charts to report modules is coming soon.

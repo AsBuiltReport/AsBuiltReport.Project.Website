@@ -1,0 +1,1 @@
+Instructions for adding diagrams to report modules is coming soon.
