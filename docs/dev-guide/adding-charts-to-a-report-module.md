@@ -34,7 +34,7 @@ Add `AsBuiltReport.Chart` to the `RequiredModules` array in your module manifest
 RequiredModules = @(
     @{
         ModuleName    = 'AsBuiltReport.Core'
-        ModuleVersion = '1.6.1'
+        ModuleVersion = '1.6.4'
     }
     @{
         ModuleName    = 'AsBuiltReport.Chart'
@@ -108,6 +108,38 @@ $chartFileItem = New-PieChart `
     -TitleFontBold `
     -TitleFontSize 16
 ```
+##### Pie Chart example output:
+![alt text](../assets/images/charts/piechart.png)
+
+### Donut Chart
+
+Use `New-DonutChart` for the same use cases as a pie chart when you want to emphasise completion. Donut charts can also be used to show progress towards a goal — for example, patch compliance percentage or licence consumption.
+
+```powershell title="Donut chart — VM power state distribution"
+$sampleData = [ordered]@{
+    'Compliant'  = ($ComputersPatched | Measure-Object).Count
+    'Non-Compliant'   = ($ComputersNotPatched | Measure-Object).Count
+}
+
+$chartLabels = [string[]]$sampleData.Keys
+$chartValues = [double[]]$sampleData.Values
+
+$chartFileItem = New-DonutChart `
+    -Values $chartValues `
+    -Labels $chartLabels `
+    -EnableCustomColorPalette `
+    -CustomColorPalette @('#DFF0D0', '#FECDD1') `
+    -Width 600 -Height 400 `
+    -Format base64 `
+    -EnableLegend `
+    -LegendOrientation Horizontal `
+    -LegendAlignment LowerCenter `
+    -TitleFontBold `
+    -TitleFontSize 16
+```
+##### Donut Chart example output:
+![alt text](../assets/images/charts/donutchart.png)
+
 
 ### Bar Chart
 
@@ -141,6 +173,9 @@ $chartFileItem = New-BarChart `
     -TitleFontBold `
     -TitleFontSize 16
 ```
+
+##### Bar Chart example output:
+![alt text](../assets/images/charts/barchart.png)
 
 ### Stacked Bar Chart
 
@@ -182,6 +217,9 @@ $chartFileItem = New-StackedBarChart `
     -TitleFontSize 16
 ```
 
+##### Stacked Bar Chart example output:
+![alt text](../assets/images/charts/stackedbarchart.png)
+
 ### Single Stacked Bar Chart
 
 Use `New-SingleStackedBarChart` to show a single bar divided into labelled segments — useful for illustrating licence consumption or a single capacity resource.
@@ -207,6 +245,9 @@ $chartFileItem = New-SingleStackedBarChart `
     -TitleFontSize 16
 ```
 
+##### Single Stacked Bar Chart example output:
+![alt text](../assets/images/charts/singlestackedbarchart.png)
+
 ### Signal Chart
 
 Use `New-SignalChart` for time-series or trend data — for example, CPU utilisation over time or throughput metrics. The `-Values` parameter expects an array of arrays, where each inner array represents one line.
@@ -223,6 +264,9 @@ $chartFileItem = New-SignalChart `
     -TitleFontBold `
     -TitleFontSize 16
 ```
+
+##### Signal Chart example output:
+![alt text](../assets/images/charts/signalchart.png)
 
 ```powershell title="Signal chart — multi-line throughput trend"
 $readThroughput  = [double[]]@(120, 145, 132, 160, 155)
@@ -242,6 +286,9 @@ $chartFileItem = New-SignalChart `
     -TitleFontBold `
     -TitleFontSize 16
 ```
+
+##### Multi-line Signal Chart example output:
+![alt text](../assets/images/charts/signaladvchart.png)
 
 ## Safety Guards
 

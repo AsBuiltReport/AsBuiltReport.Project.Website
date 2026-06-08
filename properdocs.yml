@@ -168,8 +168,8 @@ nav:
     - dev-guide/contributing.md
     - Report Modules:
         - Creating a report module: dev-guide/creating-a-report-module.md
-        #- Adding charts to a report module: dev-guide/adding-charts-to-a-report-module.md
-        #- Adding diagrams to a report module: dev-guide/adding-diagrams-to-a-report-module.md
+        - Adding charts to a report module: dev-guide/adding-charts-to-a-report-module.md
+        # - Adding diagrams to a report module: dev-guide/adding-diagrams-to-a-report-module.md
     - Report Styles:
         - Creating a report style: dev-guide/creating-a-report-style.md
   - Support:
