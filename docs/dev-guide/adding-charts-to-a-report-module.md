@@ -1,6 +1,6 @@
 ---
 title: Adding Charts to a Report Module
-description: How to integrate AsBuiltReport.Chart into report modules to add pie, bar, stacked bar, and signal chart visualisations
+description: How to integrate AsBuiltReport.Chart into report modules to add pie, donut, bar, stacked bar, and signal chart visualisations
 tags:
   - development
   - report-modules
@@ -11,7 +11,7 @@ tags:
 
 # Adding Charts to a Report Module
 
-AsBuiltReport.Chart is an optional PowerShell module that adds chart generation capabilities to AsBuiltReport report modules. It provides five chart types — pie, bar, stacked bar, single stacked bar, and signal — and integrates directly with the PScribo document framework used by AsBuiltReport.
+AsBuiltReport.Chart is an optional PowerShell module that adds chart generation capabilities to AsBuiltReport report modules. It provides six chart types — pie, donut, bar, stacked bar, single stacked bar, and signal — and integrates directly with the PScribo document framework used by AsBuiltReport.
 
 Charts are generated in memory as base64-encoded images and embedded directly into the report output using PScribo's `Image` cmdlet. No intermediate files are written to disk.
 
@@ -510,7 +510,7 @@ process {
 
 ## Common Parameters Reference
 
-The following parameters are available on all five chart cmdlets:
+The following parameters are available on all chart cmdlets:
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
