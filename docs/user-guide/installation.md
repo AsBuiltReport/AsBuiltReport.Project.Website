@@ -109,8 +109,16 @@ Save the required modules to a specified folder.
 # Find AsBuiltReport modules published in the PowerShell Gallery
 Find-Module -Name 'AsBuiltReport.*' -Repository 'PSGallery'
 
-# Save AsBuiltReport module example
+# Save dependencies first — none of these are installed automatically in a manual offline install
+Save-Module -Name 'PScribo' -Path 'C:\Path\To\Specified\Folder'
+Save-Module -Name 'AsBuiltReport.Core' -Path 'C:\Path\To\Specified\Folder'
+
+# Save the report module
 Save-Module -Name 'AsBuiltReport.VMware.vSphere' -Path 'C:\Path\To\Specified\Folder'
+
+# Save any vendor modules required by the report module (check the module README for requirements)
+# Example: VMware vSphere requires VCF.PowerCLI
+Save-Module -Name 'VCF.PowerCLI' -Path 'C:\Path\To\Specified\Folder'
 ```
 
 Copy the downloaded PowerShell module folders to a location that can be made accessible to the offline system.

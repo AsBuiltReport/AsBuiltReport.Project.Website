@@ -16,13 +16,16 @@ This guide provides comprehensive standards and guidelines for developing AsBuil
 
 ## Getting Started
 
-Before beginning development of a new report module, you should first discuss your plans with the project contributors. This ensures there's no duplication of effort, allows for guidance on implementation approach, and helps coordinate with the broader project roadmap. You can initiate this discussion by:
+Before beginning development of a new report module, you should first discuss your plans with the project contributors. This ensures there's no duplication of effort, allows for guidance on implementation approach, and helps coordinate with the broader project roadmap. You can initiate this discussion by creating an issue in the [AsBuiltReport Discussions board](https://github.com/orgs/AsBuiltReport/discussions) or by contacting the [maintainers](../about/contributors.md) directly. A good proposal includes:
 
-- Creating an issue in the [main AsBuiltReport repository](https://github.com/AsBuiltReport/AsBuiltReport.Core)
-- Reaching out via the project's [discussion board](https://github.com/orgs/AsBuiltReport/discussions) or [social channels](../about/contact.md)
-- Contacting the [maintainers](../about/contributors.md) directly
+- The technology or product you want to document and the vendor name
+- The PowerShell module or API you plan to use for data collection
+- The PowerShell editions and platforms you intend to support (Windows PowerShell 5.1, PowerShell 7+, or both)
+- A rough outline of the report sections you have in mind
 
 Once your module proposal is approved, a new GitHub repository will be created under the AsBuiltReport organisation following the standard naming convention. Review the naming standards and repository structure below, then use the AsBuiltReport Plaster template to scaffold the module locally before beginning development.
+
+The naming convention is not just cosmetic — it is how AsBuiltReport.Core locates your module at runtime. When you run `New-AsBuiltReport -Report 'Vendor.Technology'`, the framework constructs the module name `AsBuiltReport.Vendor.Technology` and the function name `Invoke-AsBuiltReport.Vendor.Technology` from that string, imports the module, and calls the function directly. No registration step is required beyond following the naming convention.
 
 !!! failure "Do Not Publish AsBuiltReport Modules to the PowerShell Gallery Using Your Personal Account"
     Never publish an `AsBuiltReport.*` module to the PowerShell Gallery under your own account. Once a package name is registered on the PowerShell Gallery, it is permanently claimed — no other account can ever use that name. Publishing under a personal account would prevent the AsBuiltReport project from officially releasing that module, and is a violation of the project guidelines.
@@ -48,35 +51,48 @@ AsBuiltReport.Vendor.Technology
 Organise your module repository with the following standard structure:
 
 ```text title="Repository folder structure"
-AsBuiltReport.Vendor.Technology/                       # Repository root
-├── .github/                                           # GitHub workflows and templates
-├── .vscode/                                           # VS Code configuration
-├── AsBuiltReport.Vendor.Technology/                   # PowerShell module directory
-│   ├── AsBuiltReport.Vendor.Technology.json           # Report configuration file
-│   ├── AsBuiltReport.Vendor.Technology.psd1           # PowerShell manifest
-│   ├── AsBuiltReport.Vendor.Technology.psm1           # PowerShell module script
-│   ├── Language/                                      # Language support folders
+AsBuiltReport.Vendor.Technology/                                # Repository root
+├── .github/                                                    # GitHub workflows and templates
+├── .vscode/                                                    # VS Code configuration
+├── AsBuiltReport.Vendor.Technology/                            # PowerShell module directory
+│   ├── AsBuiltReport.Vendor.Technology.json                    # Report configuration file
+│   ├── AsBuiltReport.Vendor.Technology.psd1                    # PowerShell manifest
+│   ├── AsBuiltReport.Vendor.Technology.psm1                    # PowerShell module script
+│   ├── Language/                                               # Language support folders
 │   │   ├── en-US/
-│   │   │   └── VendorTechnology.psd1                  # en-US language translation file
-│   │   └── <language>-<REGION>/                       # Additional language support folders
+│   │   │   └── VendorTechnology.psd1                           # en-US language translation file
+│   │   └── <language>-<REGION>/                                # Additional language support folders
 │   │       └── VendorTechnology.psd1
 │   └── Src/
-│       ├── Private/                                   # Private functions
-│       │   └── Get-Abr[VendorAbbr][Resource].ps1      # One file per resource type
-│       └── Public/                                    # Exported functions
+│       ├── Private/                                            # Private functions
+│       │   └── Get-Abr[VendorAbbr|Technology][Resource].ps1       # One file per resource type
+│       └── Public/                                             # Exported functions
 │           └── Invoke-AsBuiltReport.Vendor.Technology.ps1
-├── Samples/                                           # Sample report outputs
-├── Tests/                                             # Pester test suite
-│   ├── AsBuiltReport.Vendor.Technology.Tests.ps1      # Module manifest and structure tests
-│   ├── LocalizationData.Tests.ps1                     # Localization key validation tests
-│   └── Invoke-Tests.ps1                               # Test runner
-├── README.md                                          # Module documentation
-├── CHANGELOG.md                                       # Version history
-├── CODE_OF_CONDUCT.md                                 # Code of Conduct policy
-├── CONTRIBUTING.md                                    # Contributing guidelines
-├── SECURITY.md                                        # Security policy
-└── LICENSE                                            # MIT License
+├── Samples/                                                    # Sample report outputs in Word, HTML, and Text formats generated against a real target environment
+├── Tests/                                                      # Pester test suite
+│   ├── AsBuiltReport.Vendor.Technology.Tests.ps1               # Module manifest and structure tests
+│   ├── LocalizationData.Tests.ps1                              # Localization key validation tests
+│   └── Invoke-Tests.ps1                                        # Test runner
+├── README.md                                                   # Module documentation
+├── CHANGELOG.md                                                # Version history
+├── CODE_OF_CONDUCT.md                                          # Code of Conduct policy
+├── CONTRIBUTING.md                                             # Contributing guidelines
+├── SECURITY.md                                                 # Security policy
+└── LICENSE                                                     # MIT License
 ```
+
+### GitHub Actions Workflows
+
+The `.github/workflows/` folder scaffolded by Plaster contains four pre-configured workflows:
+
+| Workflow | Trigger | Purpose |
+|----------|---------|---------|
+| `PSScriptAnalyzer.yml` | Push, pull request | Lints all PowerShell code; fails the build on errors |
+| `Pester.yml` | Push/PR to `dev`, `master`, `main` | Runs the Pester test suite across Windows, Linux, and macOS on both Windows PowerShell 5.1 and PowerShell 7+ |
+| `Release.yml` | GitHub release published | Publishes the module to the PowerShell Gallery and posts release announcements |
+| `Stale.yml` | Daily schedule | Marks issues and PRs stale after 90 days of inactivity and closes them after a further 7 days |
+
+The PSScriptAnalyzer and Stale workflows require no configuration and work immediately. The Pester workflow requires no configuration but will upload code coverage results to Codecov if a `CODECOV_TOKEN` secret is set. The Release workflow is managed by the project maintainers and requires PowerShell Gallery and social media secrets to be configured in the repository settings — you do not need to set these up yourself.
 
 ## Scaffolding Your Module with Plaster
 
@@ -86,6 +102,10 @@ The AsBuiltReport project provides a [Plaster](https://github.com/PowerShellOrg/
 
 - PowerShell 5.1 or 7+
 - [Plaster](https://www.powershellgallery.com/packages/Plaster) module
+- [AsBuiltReport.Core](https://www.powershellgallery.com/packages/AsBuiltReport.Core) module (required to test report generation locally)
+- Git (required to initialise the repository and push to GitHub)
+- The vendor PowerShell module for the technology you are documenting (e.g. VCF.PowerCLI, Az)
+- A test environment running the target technology to collect data against
 
 ```powershell title="Install Plaster"
 Install-Module -Name Plaster -Scope CurrentUser
@@ -130,11 +150,43 @@ Plaster will prompt for the following:
 
 After `Invoke-Plaster` completes, the module directory is ready for development. The key files to work on are:
 
-1. **Rename and populate** `Src\Private\Get-AbrVendorProductExample.ps1` — add your data collection functions following the [private functions](#private-functions) standards
-2. **Update** `Src\Public\Invoke-AsBuiltReport.Vendor.Product.ps1` — wire up your private functions inside the `foreach ($System in $Target)` loop
-3. **Expand** `AsBuiltReport.Vendor.Product.json` — add your sections under `InfoLevel` and `HealthCheck`
-4. **Update** `Language\en-US\VendorProduct.psd1` — add your translation strings following the [language support](#language-support-implementation) standards
-5. **Initialise git** — run `git init`, add the remote repository URL provided by the maintainers, and push
+1. **Rename and populate** `Src\Private\Get-AbrVendorTechnologyExample.ps1` — add your data collection functions following the [private functions](#private-functions) standards
+2. **Update** `Src\Public\Invoke-AsBuiltReport.Vendor.Technology.ps1` — wire up your private functions inside the `foreach ($System in $Target)` loop
+3. **Expand** `AsBuiltReport.Vendor.Technology.json` — add your sections under `InfoLevel` and `HealthCheck`
+4. **Update** `Language\en-US\VendorTechnology.psd1` — add your translation strings following the [language support](#language-support-implementation) standards
+5. **Initialise git** — run `git init` and commit your scaffolded files locally. You can develop and commit locally before the organisation repository is provisioned. Once the maintainers provide the remote URL, add it and push: `git remote add origin <url> && git push -u origin dev`
+
+#### 4. Testing your module locally
+
+Before pushing to the organisation repository, you can import and test your module entirely from a local path. This inner development loop does not require the GitHub repository to be set up yet.
+
+**1. Install AsBuiltReport.Core**
+
+```powershell title="Install AsBuiltReport.Core"
+Install-Module -Name AsBuiltReport.Core -Scope CurrentUser
+```
+
+**2. Import your local module**
+
+```powershell title="Import the local module"
+Import-Module 'C:\Development\AsBuiltReport.Vendor.Technology\AsBuiltReport.Vendor.Technology.psd1' -Force
+```
+
+**3. Generate a report configuration file**
+
+Use `New-AsBuiltReportConfig` to generate a copy of your module's JSON configuration file at a writable path. This is the file you edit to set InfoLevel and HealthCheck values for each test run.
+
+```powershell title="Generate a report configuration file"
+New-AsBuiltReportConfig -Report 'Vendor.Technology' -FolderPath 'C:\Reports' -Filename 'VendorTechnology.json'
+```
+
+**4. Run a test report**
+
+```powershell title="Run a test report"
+New-AsBuiltReport -Report 'Vendor.Technology' -Target '192.168.1.100' -Credential (Get-Credential) -Format HTML -OutputFolderPath 'C:\Reports' -ReportConfigFilePath 'C:\Reports\VendorTechnology.json'
+```
+
+Add `-Verbose` to see `Write-PScriboMessage` output during report generation, which helps confirm your data collection functions are running and catching errors correctly.
 
 ## PowerShell Manifest (.psd1) Requirements
 
@@ -260,6 +312,41 @@ The `Language` property in the `Report` section specifies the default language f
 | **zh-Hans** | Chinese (Simplified) | **zh-Hant** | Chinese (Traditional) |
 
 For comprehensive language mapping and fallback chains, see the [Language Support Implementation](#language-support-implementation) section below.
+
+The following example shows a populated configuration for a module with three report sections and health checks enabled for two of them:
+
+```json title="Report configuration JSON example (populated)"
+{
+  "Report": {
+    "Name": "Vendor Technology As Built Report",
+    "Version": "1.0",
+    "Status": "Released",
+    "Language": "en-US",
+    "ShowCoverPageImage": true,
+    "ShowTableOfContents": true,
+    "ShowHeaderFooter": true,
+    "ShowTableCaptions": true
+  },
+  "Options": {},
+  "InfoLevel": {
+    "_comment_": "0 = Disabled, 1 = Enabled / Summary, 2 = Adv Summary, 3 = Detailed, 4 = Adv Detailed, 5 = Comprehensive",
+    "Infrastructure": 1,
+    "Storage": 2,
+    "Network": 3
+  },
+  "HealthCheck": {
+    "Infrastructure": {
+      "CPUUtilisation": true,
+      "MemoryUtilisation": true
+    },
+    "Storage": {
+      "StorageUtilisation": true
+    }
+  }
+}
+```
+
+The keys under `InfoLevel` and `HealthCheck` are defined by you and must match the keys your module reads from `$ReportConfig.InfoLevel` and `$ReportConfig.HealthCheck` in code.
 
 ### InfoLevel Standards
 Implement consistent information levels across all sections. Use the appropriate number of InfoLevel values based on the granular detail levels your report module requires:
@@ -427,7 +514,14 @@ if ($ReportConfig.HealthCheck.Infrastructure.CPUUtilisation) {
 
 ### Configuration Management
 
-AsBuiltReport modules automatically receive configuration data through the `$ReportConfig` variable:
+AsBuiltReport.Core acts as the orchestrator: it reads your module's JSON configuration file and language files, then injects pre-populated variables into your module's scope before calling your `Invoke-AsBuiltReport.*` function. You do not declare or populate these variables yourself — they are always present when your function runs.
+
+| Variable | Source | Contents |
+|---|---|---|
+| `$ReportConfig` | Your module's `.json` configuration file | Parsed JSON as a PowerShell object |
+| `$reportTranslate` | Your module's language `.psd1` file | Parsed translation hashtable |
+
+Both variables are set in the script scope by AsBuiltReport.Core immediately before your module's main function is called. This means they are readable anywhere in your module — including inside private functions — without needing to be passed as parameters.
 
 ```powershell title="Access report configuration"
 # Access configuration sections in your module
@@ -456,7 +550,8 @@ Write-ReportModuleInfo -ModuleName "Vendor.Technology"
 Include version checking for prerequisite PowerShell modules by using `Get-RequiredModule`
 
 ```powershell title="Check prerequisite module versions"
-# Check for prerequisite PowerShell module versions
+# Throws a terminating error if the module is not installed or the installed version is below the minimum.
+# On success, prints the module name and installed version.
 Get-RequiredModule -Name 'Az' -Version '14.4.0'
 ```
 
@@ -589,7 +684,7 @@ function Invoke-AsBuiltReport.Vendor.Technology {
         [PSCredential] $Credential
     )
 
-    # Display report module information using Core function
+    # Displays the module name and version number at the start of report generation
     Write-ReportModuleInfo -ModuleName 'Vendor.Technology'
 
     # Import Report Configuration
@@ -598,17 +693,38 @@ function Invoke-AsBuiltReport.Vendor.Technology {
     $Options = $ReportConfig.Options
     $LocalizedData = $reportTranslate.InvokeAsBuiltReportVendorTechnology
 
-    # Used to set values to TitleCase where required
+    # Used to convert strings to TitleCase where required, e.g. $TextInfo.ToTitleCase('powered on') returns 'Powered On'
     $TextInfo = (Get-Culture).TextInfo
-
-	# Update/rename the $System variable and build out your code within the ForEach loop. The ForEach loop enables AsBuiltReport to generate an as built configuration against multiple defined targets.
 
     #region foreach loop
     foreach ($System in $Target) {
+        try {
+            Write-PScriboMessage ($LocalizedData.Connecting -f $System)
 
+            # Establish a connection to the target system.
+            # Replace this with the appropriate connection cmdlet for your technology.
+            # Store the connection object so it can be used by private functions and
+            # closed in the end{} block.
+            $script:Connection = Connect-VendorSystem -Server $System -Credential $Credential -ErrorAction Stop  # script: scope makes this readable by all Get-Abr* private functions without passing it as a parameter
 
-	}
-	#endregion foreach loop
+            Section -Style Heading1 $System {
+                # Call private functions here, one per report section.
+                # Each function collects data from $script:Connection and renders a PScribo section.
+                Get-Abr[VendorAbbr|Technology][Resource]
+            }
+
+        } catch {
+            Write-PScriboMessage -IsWarning ($LocalizedData.ConnectionError -f $System, $_.Exception.Message)
+        }
+    }
+    #endregion foreach loop
+
+    end {
+        # Disconnect from the target system and clean up any open sessions.
+        if ($script:Connection) {
+            Disconnect-VendorSystem -Connection $script:Connection -Confirm:$false -ErrorAction SilentlyContinue
+        }
+    }
 }
 ```
 
@@ -616,7 +732,7 @@ function Invoke-AsBuiltReport.Vendor.Technology {
 
 Private functions in `Src/Private/` serve two distinct purposes:
 
-- **Report section functions** (`Get-AbrVendorSectionName`) — each responsible for collecting data from the target system and rendering it as a PScribo section. Every report section function must have its own `.ps1` file named after the function (e.g. `Get-AbrVendorLocation.ps1`).
+- **Report section functions** (`Get-Abr[VendorAbbr|Technology][Resource]`) — each responsible for collecting data from the target system and rendering it as a PScribo section. Every report section function must have its own `.ps1` file named after the function (e.g. `Get-AbrVendorLocation.ps1`). Following PowerShell naming conventions, the resource noun must be **singular** (e.g. `Get-AbrVbrBackupJob`, not `Get-AbrvSphereVMHost`).
 - **Utility helpers** (`ConvertTo-HashToYN`, `ConvertTo-TextYN`, connection helpers, etc.) — reusable functions that support report section functions. These may be grouped into a dedicated helper file.
 
 #### Functions must be self-contained
@@ -632,7 +748,7 @@ Utility helpers like `ConvertTo-HashToYN` and `ConvertTo-TextYN` are fine. They 
 All report section functions should follow this pattern:
 
 ```powershell
-function Get-AbrVendorSectionName {
+function Get-Abr[VendorAbbr|Technology][Resource] {
     <#
     .SYNOPSIS
         Used by As Built Report to retrieve <Vendor> <section> information.
@@ -667,7 +783,7 @@ function Get-AbrVendorSectionName {
                                 $LocalizedData.Status  = $Item.Status
                                 $LocalizedData.Version = $Item.Version
                             }
-                            $OutObj += [pscustomobject](ConvertTo-HashToYN $inObj)
+                            $OutObj += [pscustomobject]$inObj
                         } catch {
                             Write-PScriboMessage -IsWarning "$($Item.Name): $($_.Exception.Message)"
                         }
@@ -696,7 +812,6 @@ This example demonstrates:
 - **Data collected upfront** (`Get-VendorApiData`) before any PScribo calls, so collection errors are isolated from rendering
 - **`begin/process/end` blocks** — `begin` logs progress and loads translations; `process` contains all data collection and rendering; `end` is used for cleanup such as disconnecting sessions
 - **`[ordered]@{}` built inline** with explicit, named property-to-column mappings visible at a glance
-- **`ConvertTo-HashToYN`** applied once to convert booleans to `Yes`/`No` strings
 - **`$TableParams` defined inline** so column widths and table type are immediately clear
 - **`Table @TableParams` called directly** — no intermediate rendering wrapper
 - **`try/catch` at both levels** — the outer `catch` protects the section as a whole; the inner `catch` protects individual items so one bad record does not abort the entire table
@@ -900,7 +1015,7 @@ process {
         Section -Style Heading2 $LocalizedData.Heading {
 
             Paragraph $LocalizedData.SectionInfo
-            Paragraph ($LocalizedData.ParagraphSummary -f $TargetName)
+            Paragraph ($LocalizedData.ParagraphSummary -f $System)
 
             $VMData = foreach ($VM in $VMs) {
                 [Ordered]@{
@@ -1057,7 +1172,7 @@ function Get-AbrVTVirtualMachine {
                 Section -Style Heading2 $LocalizedData.Heading {
 
                     Paragraph $LocalizedData.SectionInfo
-                    Paragraph ($LocalizedData.ParagraphSummary -f $TargetName)
+                    Paragraph ($LocalizedData.ParagraphSummary -f $System)
 
                     $VMInfo = foreach ($VM in $VMs) {
                         [Ordered]@{
@@ -1460,7 +1575,7 @@ Describe 'Module Structure' {
 }
 
 Describe 'Private Functions' {
-    It 'Has a Get-Abr[VendorAbbr][Resource] function for each resource type' { ... }
+    It 'Has a Get-Abr[VendorAbbr|Technology][Resource] function for each resource type' { ... }
 }
 
 Describe 'JSON Configuration' {
@@ -1504,7 +1619,7 @@ Sample configuration with explanations
 Basic usage scenarios with sample commands
 
 ## Sample Reports
-Links to sample output documents
+Links to sample output documents. Generate samples by running the completed module against a real target environment using the `-Format Word,HTML,Text` parameter and placing the output files in the `Samples/` directory.
 ```
 
 ### Inline Documentation

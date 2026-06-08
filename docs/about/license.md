@@ -12,7 +12,7 @@ tags:
 
 **MIT License**
 
-Copyright (c) 2016-2025 Tim Carman
+Copyright (c) 2016-2026 Tim Carman
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to

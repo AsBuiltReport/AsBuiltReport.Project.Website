@@ -72,6 +72,35 @@ AsBuiltReport is an open source configuration document framework which utilises 
 
 </div>
 
+## **Use Cases**
+<div class="grid cards" markdown>
+
+-   :octicons-checklist-16: **Compliance Audits**
+
+    ---
+
+    Generate point-in-time infrastructure documentation for ISO 27001, SOC 2, PCI-DSS, and other compliance frameworks.
+
+-   :octicons-git-pull-request-16: **Change Management**
+
+    ---
+
+    Produce before-and-after documentation for change advisory board (CAB) submissions and post-change verification.
+
+-   :octicons-people-16: **Environment Handover**
+
+    ---
+
+    Accelerate onboarding and handover with comprehensive, consistent infrastructure documentation generated on demand.
+
+-   :octicons-shield-check-16: **Disaster Recovery**
+
+    ---
+
+    Maintain accurate as-built records of your infrastructure to support disaster recovery planning and runbook validation.
+
+</div>
+
 ## **Components**
 <div class="grid cards" markdown>
 
@@ -129,3 +158,21 @@ Click each vendor logo to view [available report modules](user-guide/report-modu
         <td align="center" valign="middle" width="50%"><a href="https://github.com/orgs/AsBuiltReport/repositories?q=Rubrik&type=all&language=&sort=" target="_blank"><img src="../assets/images/logos/Rubrik.png" alt="Rubrik Report Modules" width="75%" height="75%" /></a></td>
     </tr>
 </table>
+
+## **Get Started**
+
+<div class="grid cards" markdown>
+
+-   :octicons-rocket-16: **New to AsBuiltReport?**
+
+    ---
+
+    Follow the [Quickstart Guide](user-guide/quickstart.md) to generate your first report in minutes.
+
+-   :octicons-plug-16: **Looking for a specific module?**
+
+    ---
+
+    Browse all available [Report Modules](user-guide/report-modules/overview.md) by vendor and technology.
+
+</div>

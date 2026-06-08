@@ -176,8 +176,8 @@ Now generate your first report! Replace the example values with your environment
 !!! note "First Run Experience"
     On your first run, you'll be prompted to create configuration files:
 
-    - **AsBuiltReport configuration**: Author name, company info, email settings (optional)
-    - **Report configuration**: Automatically created with default settings
+    - **AsBuiltReport configuration**: Author name, company info, email settings (optional). Saved to `$env:USERPROFILE\AsBuiltReport\AsBuiltReport.json`.
+    - **Report configuration**: If not specified, the default configuration bundled with the report module is used. To create a customisable copy, run `New-AsBuiltReportConfig -Report VMware.vSphere -FolderPath C:\Reports` — the file is saved to the path specified by `-FolderPath`, or to the current directory if `-FolderPath` is omitted.
 
     You can press Enter to accept defaults or customise as needed.
 
@@ -212,7 +212,7 @@ Adjust the level of detail in your reports using InfoLevel settings:
 # Generate a configuration file
 New-AsBuiltReportConfig -Report VMware.vSphere -FolderPath C:\Reports
 
-# Edit the JSON file to adjust InfoLevel values (0-3)
+# Edit the JSON file to adjust InfoLevel values (0-5)
 # Then use it when generating reports
 New-AsBuiltReport -Report VMware.vSphere -Target vcenter.example.com `
     -Credential $Cred -ReportConfigFilePath C:\Reports\AsBuiltReport.VMware.vSphere.json
@@ -314,12 +314,3 @@ If you run into issues:
 3. **Search GitHub Issues** - Check if others have encountered similar issues
 4. **Ask the community** - [GitHub Discussions](https://github.com/orgs/AsBuiltReport/discussions)
 
-## Next Steps
-
-Now that you've generated your first report, explore these guides:
-
-- **[Best Practices](best-practices.md)** - Learn recommended approaches for report generation
-- **[New-AsBuiltReport](new-asbuiltreport.md)** - Detailed command reference
-- **[New-AsBuiltReportConfig](new-asbuiltreportconfig.md)** - Customise report detail levels
-- **[Report Modules](report-modules/overview.md)** - Explore all available reports
-- **[FAQ](../support/faq.md)** - Common questions answered

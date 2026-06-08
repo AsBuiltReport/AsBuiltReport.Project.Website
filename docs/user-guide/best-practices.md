@@ -178,6 +178,13 @@ git add *.json
 git commit -m "Initial commit of report configurations"
 ```
 
+```powershell title="Create a .gitignore to exclude credential files"
+# Exclude encrypted credential files from version control
+Add-Content -Path C:\Reports\Config\.gitignore -Value "*.xml"
+```
+
+This prevents encrypted credential files created by `Export-Clixml` from being accidentally committed alongside your configuration files.
+
 ## Testing and Validation
 
 ### Validate Report Content

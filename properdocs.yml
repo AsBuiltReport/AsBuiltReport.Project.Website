@@ -172,6 +172,7 @@ nav:
     - FAQ: support/faq.md
     - Troubleshooting: support/troubleshooting.md
     - Known Issues: support/known-issues.md
+    - Core Release Notes: https://github.com/AsBuiltReport/AsBuiltReport.Core/blob/master/CHANGELOG.md
     - Discussion Board: https://github.com/orgs/AsBuiltReport/discussions
     - Donate: support/donate.md
   - Blog:

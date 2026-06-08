@@ -107,7 +107,7 @@ Reports use InfoLevel settings to control the depth of information collected. Yo
     New-AsBuiltReportConfig -Report VMware.vSphere -FolderPath C:\Reports
     ```
 
-2. Edit the JSON file and adjust InfoLevel values (typically 0-3):
+2. Edit the JSON file and adjust InfoLevel values (0-5):
     ```json
     {
       "InfoLevel": {
@@ -179,20 +179,9 @@ PScribo provides a set of functions that make it easy to create a document-like 
 
 ### Which vendors and technologies are supported?
 
-AsBuiltReport supports a wide range of vendors and technologies, including:
+AsBuiltReport supports a wide range of vendors and technologies through its modular architecture. Report modules are developed and maintained by the community, so the list of supported technologies continues to grow over time.
 
-- **VMware** (vSphere, ESXi, Site Recovery Manager)
-- **Microsoft** (Active Directory, Azure, DHCP, SCVMM, Windows Server)
-- **Veeam** (Backup & Replication, Backup for Microsoft 365)
-- **NetApp** (ONTAP)
-- **Pure Storage** (FlashArray)
-- **Nutanix** (Prism Element)
-- **Dell EMC** (VxRail)
-- **Rubrik** (CDM)
-- **Fortinet** (FortiGate)
-- **Aruba** (ClearPass)
-
-For a complete list, see the [Report Modules](../user-guide/report-modules/overview.md) page.
+For the current list of available report modules, including version and activity status, see the [Report Modules Overview](../user-guide/report-modules/overview.md#activity-status) page.
 
 ### Can AsBuiltReport run on Linux or macOS?
 
@@ -264,6 +253,14 @@ There are several ways to get help:
 - **Discussion Board** - [GitHub Discussions](https://github.com/orgs/AsBuiltReport/discussions) for questions and community support
 - **Known Issues** - [Known Issues](known-issues.md) page for documented limitations
 - **Contact** - [Contact page](../about/contact.md) for direct enquiries
+
+### What licence does AsBuiltReport use?
+
+AsBuiltReport is open source software released under the [MIT License](../about/license.md). You are free to use, modify, and distribute it for any purpose, including commercial use, with no licensing fees.
+
+### Is enterprise support available?
+
+AsBuiltReport is a community-maintained open source project. There is no commercial support or SLA. Support is provided on a best-effort basis by volunteer maintainers and community contributors via [GitHub Discussions](https://github.com/orgs/AsBuiltReport/discussions) and GitHub Issues.
 
 ### How can I donate to the project?
 

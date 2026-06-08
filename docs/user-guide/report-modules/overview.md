@@ -79,7 +79,7 @@ There are multiple ways to discover and access report modules:
 
 === "VMware"
 
-    VMware report modules require VMware PowerCLI:
+    VMware report modules require VCF PowerCLI:
 
     ```powershell title="Install VMware modules"
     # Install VCF PowerCLI

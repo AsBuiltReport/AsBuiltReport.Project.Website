@@ -40,6 +40,13 @@ The verbose output will show:
 - Any warnings or errors encountered
 - Performance timing information
 
+To capture verbose output to a log file for later review, redirect all output streams:
+
+```powershell title="Capture verbose output to a log file"
+New-AsBuiltReport -Report VMware.vSphere -Target vcenter.example.com `
+    -Credential (Get-Credential) -Format HTML -Verbose *> C:\Reports\Logs\report.log
+```
+
 !!! example "Analyzing Verbose Output"
     Look for error messages or warnings in the verbose output. Common patterns include:
 
@@ -120,7 +127,7 @@ Higher InfoLevels collect more data but take longer to process and may be more p
 4. **Run the report with the modified configuration:**
 
     ```powershell title="Run report with InfoLevel 0 configuration"
-    New-AsBuiltReport -Report VMware.vSphere -Target vcenter.example.com -Username admin -Password (ConvertTo-SecureString 'P@ssw0rd' -AsPlainText -Force) -AsBuiltConfigFilePath C:\Reports\AsBuiltReport.VMware.vSphere.json -Format HTML -Verbose
+    New-AsBuiltReport -Report VMware.vSphere -Target vcenter.example.com -Credential (Get-Credential) -ReportConfigFilePath C:\Reports\AsBuiltReport.VMware.vSphere.json -Format HTML -Verbose
     ```
 
 5. **If the report succeeds with InfoLevel 0, gradually increase levels:**

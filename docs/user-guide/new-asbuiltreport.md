@@ -226,7 +226,7 @@ If the parameter is not specified, health checks are not enabled.
 
 ### SendEmail
 
-Sends report to specified recipients as email attachments.
+Sends the generated report to one or more recipients as email attachments. Email recipients, SMTP server, and sender address are configured in the AsBuiltReport core configuration file (`AsBuiltConfig.json`), which is created by [`New-AsBuiltConfig`](new-asbuiltconfig.md). Configure email settings before using this parameter.
 
 This is an optional parameter.
 
