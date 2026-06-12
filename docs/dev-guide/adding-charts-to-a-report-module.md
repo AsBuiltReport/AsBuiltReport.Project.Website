@@ -1,6 +1,6 @@
 ---
 title: Adding Charts to a Report Module
-description: How to integrate AsBuiltReport.Chart into report modules to add pie, donut, bar, stacked bar, and signal chart visualisations
+description: How to integrate AsBuiltReport.Chart into report modules to add pie, donut, bar, stacked bar, radar, and signal chart visualisations
 tags:
   - development
   - report-modules
@@ -11,7 +11,7 @@ tags:
 
 # Adding Charts to a Report Module
 
-AsBuiltReport.Chart is an optional PowerShell module that adds chart generation capabilities to AsBuiltReport report modules. It provides six chart types — pie, donut, bar, stacked bar, single stacked bar, and signal — and integrates directly with the PScribo document framework used by AsBuiltReport.
+AsBuiltReport.Chart is an optional PowerShell module that adds chart generation capabilities to AsBuiltReport report modules. It provides seven chart types — pie, donut, bar, stacked bar, single stacked bar, radar, and signal — and integrates directly with the PScribo document framework used by AsBuiltReport.
 
 Charts are generated in memory as base64-encoded images and embedded directly into the report output using PScribo's `Image` cmdlet. No intermediate files are written to disk.
 
@@ -109,7 +109,7 @@ $chartFileItem = New-PieChart `
     -TitleFontSize 16
 ```
 ##### Pie Chart example output:
-![alt text](../assets/images/charts/piechart.png)
+![Pie Chart](../assets/images/charts/piechart.png)
 
 ### Donut Chart
 
@@ -138,7 +138,7 @@ $chartFileItem = New-DonutChart `
     -TitleFontSize 16
 ```
 ##### Donut Chart example output:
-![alt text](../assets/images/charts/donutchart.png)
+![Donut Chart](../assets/images/charts/donutchart.png)
 
 
 ### Bar Chart
@@ -175,7 +175,7 @@ $chartFileItem = New-BarChart `
 ```
 
 ##### Bar Chart example output:
-![alt text](../assets/images/charts/barchart.png)
+![Bar Chart](../assets/images/charts/barchart.png)
 
 ### Stacked Bar Chart
 
@@ -218,7 +218,7 @@ $chartFileItem = New-StackedBarChart `
 ```
 
 ##### Stacked Bar Chart example output:
-![alt text](../assets/images/charts/stackedbarchart.png)
+![Stacked Bar Chart](../assets/images/charts/stackedbarchart.png)
 
 ### Single Stacked Bar Chart
 
@@ -246,7 +246,7 @@ $chartFileItem = New-SingleStackedBarChart `
 ```
 
 ##### Single Stacked Bar Chart example output:
-![alt text](../assets/images/charts/singlestackedbarchart.png)
+![Single Stacked Bar Chart](../assets/images/charts/singlestackedbarchart.png)
 
 ### Signal Chart
 
@@ -266,7 +266,7 @@ $chartFileItem = New-SignalChart `
 ```
 
 ##### Signal Chart example output:
-![alt text](../assets/images/charts/signalchart.png)
+![Signal Chart](../assets/images/charts/signalchart.png)
 
 ```powershell title="Signal chart — multi-line throughput trend"
 $readThroughput  = [double[]]@(120, 145, 132, 160, 155)
@@ -288,7 +288,66 @@ $chartFileItem = New-SignalChart `
 ```
 
 ##### Multi-line Signal Chart example output:
-![alt text](../assets/images/charts/signaladvchart.png)
+![Multi-line Signal Chart](../assets/images/charts/signaladvchart.png)
+
+### Radar Chart
+
+Use `New-RadarChart` to compare multiple categories across datasets — for example, security posture scores across different data centres, or feature compatibility across product versions. The radar chart is ideal for multi-dimensional performance metrics or assessment matrices where each "spoke" represents a discrete category.
+
+**Basic example** — single dataset:
+
+```powershell title="Radar chart — single data centre security posture"
+# For a single dataset, wrap the values array with a comma operator
+$chartValues = ,@([double[]]@(3, 5, 4, 2))
+$chartLabels = @('USA DataCenter')
+
+$chartFileItem = New-RadarChart `
+    -Title 'Security Posture Assessment' `
+    -Values $chartValues `
+    -LegendLabels $chartLabels `
+    -Format base64 `
+    -Width 600 -Height 400 `
+    -ColorPalette Category20 `
+    -EnableLegend `
+    -TitleFontBold `
+    -TitleFontSize 16
+```
+
+**Advanced example** — multiple datasets with spoke labels:
+
+```powershell title="Radar chart — multi-site security posture comparison"
+# Multiple datasets: array of arrays, one per dataset
+$chartValues = @(
+    @([double[]]@(1, 2, 5, 8)),      # USA DataCenter scores
+    @([double[]]@(3, 5, 4, 2))       # UK DataCenter scores
+)
+
+$chartLabels = @('USA DataCenter', 'UK DataCenter')
+$spokes = @('Network Security', 'Endpoint Security', 'Identity Management', 'Data Protection')
+
+$chartFileItem = New-RadarChart `
+    -Title 'Security Posture Assessment' `
+    -Values $chartValues `
+    -LegendLabels $chartLabels `
+    -SpokeLabels $spokes `
+    -SpokesLength 9 `
+    -Format base64 `
+    -Width 600 -Height 400 `
+    -ColorPalette Aurora `
+    -EnableLegend `
+    -TitleFontBold `
+    -TitleFontSize 16
+```
+
+##### Radar Chart example output:
+![Radar Chart](../assets/images/charts/radarchart.png)
+
+**Key parameters:**
+
+- `-Values` — Array or array of arrays of numeric values (one value per spoke, one array per dataset)
+- `-LegendLabels` — Labels for each dataset (one label per array in `-Values`)
+- `-SpokeLabels` — Optional labels for each spoke/axis on the radar
+- `-SpokesLength` — Length of the spokes (axes); omit or set to 0 for auto-scaling
 
 ## Safety Guards
 
@@ -334,6 +393,83 @@ New-PieChart -Title 'Distribution' -Values $chartValues -Labels $chartLabels `
 ```
 
 **Available palettes:** Amber, Category10, Category20, Aurora, Building, ColorblindFriendly, ColorblindFriendlyDark, Dark, DarkPastel, Frost, LightOcean, LightSpectrum, Microcharts, Nero, Nord, Normal, OneHalf, OneHalfDark, PastelWheel, Penumbra, PolarNight, Redness, SnowStorm, SummerSplash, Tsitsulin
+
+## Watermarks
+
+All chart types support an optional watermark that overlays semi-transparent text in the center of the chart. Watermarks are **disabled by default** and are activated only when the `-EnableWatermark` switch is supplied. This is useful for marking sensitive reports with classifications like "CONFIDENTIAL" or "DRAFT".
+
+### Watermark Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `-EnableWatermark` | Switch | (off) | Enables the watermark overlay |
+| `-WatermarkText` | String | `Confidential` | Text to display as the watermark |
+| `-WatermarkFontName` | String | `Arial` | Font family for the watermark text |
+| `-WatermarkFontSize` | Int | `24` | Font size (points) for the watermark text |
+| `-WatermarkColor` | BasicColors | `Gray` | Color of the watermark text |
+| `-WatermarkOpacity` | Double | `0.3` | Opacity (0.0–1.0) of the watermark; lower values are more transparent |
+
+### Watermark Examples
+
+**Default watermark** — gray "Confidential" at 30% opacity:
+
+```powershell title="Pie chart with default watermark"
+$chartFileItem = New-PieChart `
+    -Title 'Sales' `
+    -Values @(10, 20, 30) `
+    -Labels @('A', 'B', 'C') `
+    -Format base64 `
+    -EnableWatermark `
+    -Width 600 -Height 400
+```
+
+**Custom watermark text and color** — red "CONFIDENTIAL" at 20% opacity:
+
+```powershell title="Bar chart with custom watermark"
+$chartFileItem = New-BarChart `
+    -Title 'Revenue' `
+    -Values @(100, 200, 150) `
+    -Labels @('Q1', 'Q2', 'Q3') `
+    -Format base64 `
+    -EnableWatermark `
+    -WatermarkText 'CONFIDENTIAL' `
+    -WatermarkColor Red `
+    -WatermarkOpacity 0.2 `
+    -Width 600 -Height 400
+```
+
+**Larger watermark font** — "DRAFT" at default opacity:
+
+```powershell title="Stacked bar chart with draft watermark"
+$chartFileItem = New-StackedBarChart `
+    -Title 'Budget' `
+    -Values @(@(1, 2), @(3, 4)) `
+    -Labels @('A', 'B') `
+    -LegendCategories @('X', 'Y') `
+    -Format base64 `
+    -EnableWatermark `
+    -WatermarkFontSize 36 `
+    -WatermarkText 'DRAFT' `
+    -Width 600 -Height 400
+```
+
+**Custom font and higher opacity** — better visibility for sensitive data:
+
+```powershell title="Signal chart with custom font watermark"
+$chartFileItem = New-SignalChart `
+    -Title 'Throughput' `
+    -Values @(,[double[]]@(1, 2, 3, 4, 5)) `
+    -Format base64 `
+    -EnableWatermark `
+    -WatermarkFontName 'Arial' `
+    -WatermarkFontSize 28 `
+    -WatermarkText 'SENSITIVE' `
+    -WatermarkOpacity 0.5 `
+    -Width 600 -Height 400
+```
+
+##### Example output with watermarks:
+![Watermarks](../assets/images/charts/watermark.png)
 
 ## Placing Charts in a Report
 
