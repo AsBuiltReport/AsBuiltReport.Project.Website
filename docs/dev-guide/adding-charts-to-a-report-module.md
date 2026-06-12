@@ -109,7 +109,7 @@ $chartFileItem = New-PieChart `
     -TitleFontSize 16
 ```
 ##### Pie Chart example output:
-![alt text](../assets/images/charts/piechart.png)
+![Pie Chart](../assets/images/charts/piechart.png)
 
 ### Donut Chart
 
@@ -138,7 +138,7 @@ $chartFileItem = New-DonutChart `
     -TitleFontSize 16
 ```
 ##### Donut Chart example output:
-![alt text](../assets/images/charts/donutchart.png)
+![Donut Chart](../assets/images/charts/donutchart.png)
 
 
 ### Bar Chart
@@ -175,7 +175,7 @@ $chartFileItem = New-BarChart `
 ```
 
 ##### Bar Chart example output:
-![alt text](../assets/images/charts/barchart.png)
+![Bar Chart](../assets/images/charts/barchart.png)
 
 ### Stacked Bar Chart
 
@@ -218,7 +218,7 @@ $chartFileItem = New-StackedBarChart `
 ```
 
 ##### Stacked Bar Chart example output:
-![alt text](../assets/images/charts/stackedbarchart.png)
+![Stacked Bar Chart](../assets/images/charts/stackedbarchart.png)
 
 ### Single Stacked Bar Chart
 
@@ -246,7 +246,7 @@ $chartFileItem = New-SingleStackedBarChart `
 ```
 
 ##### Single Stacked Bar Chart example output:
-![alt text](../assets/images/charts/singlestackedbarchart.png)
+![Single Stacked Bar Chart](../assets/images/charts/singlestackedbarchart.png)
 
 ### Signal Chart
 
@@ -266,7 +266,7 @@ $chartFileItem = New-SignalChart `
 ```
 
 ##### Signal Chart example output:
-![alt text](../assets/images/charts/signalchart.png)
+![Signal Chart](../assets/images/charts/signalchart.png)
 
 ```powershell title="Signal chart — multi-line throughput trend"
 $readThroughput  = [double[]]@(120, 145, 132, 160, 155)
@@ -288,7 +288,7 @@ $chartFileItem = New-SignalChart `
 ```
 
 ##### Multi-line Signal Chart example output:
-![alt text](../assets/images/charts/signaladvchart.png)
+![Multi-line Signal Chart](../assets/images/charts/signaladvchart.png)
 
 ### Radar Chart
 
@@ -340,7 +340,7 @@ $chartFileItem = New-RadarChart `
 ```
 
 ##### Radar Chart example output:
-![alt text](../assets/images/charts/radarchart.png)
+![Radar Chart](../assets/images/charts/radarchart.png)
 
 **Key parameters:**
 
@@ -393,6 +393,83 @@ New-PieChart -Title 'Distribution' -Values $chartValues -Labels $chartLabels `
 ```
 
 **Available palettes:** Amber, Category10, Category20, Aurora, Building, ColorblindFriendly, ColorblindFriendlyDark, Dark, DarkPastel, Frost, LightOcean, LightSpectrum, Microcharts, Nero, Nord, Normal, OneHalf, OneHalfDark, PastelWheel, Penumbra, PolarNight, Redness, SnowStorm, SummerSplash, Tsitsulin
+
+## Watermarks
+
+All chart types support an optional watermark that overlays semi-transparent text in the center of the chart. Watermarks are **disabled by default** and are activated only when the `-EnableWatermark` switch is supplied. This is useful for marking sensitive reports with classifications like "CONFIDENTIAL" or "DRAFT".
+
+### Watermark Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `-EnableWatermark` | Switch | (off) | Enables the watermark overlay |
+| `-WatermarkText` | String | `Confidential` | Text to display as the watermark |
+| `-WatermarkFontName` | String | `Arial` | Font family for the watermark text |
+| `-WatermarkFontSize` | Int | `24` | Font size (points) for the watermark text |
+| `-WatermarkColor` | BasicColors | `Gray` | Color of the watermark text |
+| `-WatermarkOpacity` | Double | `0.3` | Opacity (0.0–1.0) of the watermark; lower values are more transparent |
+
+### Watermark Examples
+
+**Default watermark** — gray "Confidential" at 30% opacity:
+
+```powershell title="Pie chart with default watermark"
+$chartFileItem = New-PieChart `
+    -Title 'Sales' `
+    -Values @(10, 20, 30) `
+    -Labels @('A', 'B', 'C') `
+    -Format base64 `
+    -EnableWatermark `
+    -Width 600 -Height 400
+```
+
+**Custom watermark text and color** — red "CONFIDENTIAL" at 20% opacity:
+
+```powershell title="Bar chart with custom watermark"
+$chartFileItem = New-BarChart `
+    -Title 'Revenue' `
+    -Values @(100, 200, 150) `
+    -Labels @('Q1', 'Q2', 'Q3') `
+    -Format base64 `
+    -EnableWatermark `
+    -WatermarkText 'CONFIDENTIAL' `
+    -WatermarkColor Red `
+    -WatermarkOpacity 0.2 `
+    -Width 600 -Height 400
+```
+
+**Larger watermark font** — "DRAFT" at default opacity:
+
+```powershell title="Stacked bar chart with draft watermark"
+$chartFileItem = New-StackedBarChart `
+    -Title 'Budget' `
+    -Values @(@(1, 2), @(3, 4)) `
+    -Labels @('A', 'B') `
+    -LegendCategories @('X', 'Y') `
+    -Format base64 `
+    -EnableWatermark `
+    -WatermarkFontSize 36 `
+    -WatermarkText 'DRAFT' `
+    -Width 600 -Height 400
+```
+
+**Custom font and higher opacity** — better visibility for sensitive data:
+
+```powershell title="Signal chart with custom font watermark"
+$chartFileItem = New-SignalChart `
+    -Title 'Throughput' `
+    -Values @(,[double[]]@(1, 2, 3, 4, 5)) `
+    -Format base64 `
+    -EnableWatermark `
+    -WatermarkFontName 'Arial' `
+    -WatermarkFontSize 28 `
+    -WatermarkText 'SENSITIVE' `
+    -WatermarkOpacity 0.5 `
+    -Width 600 -Height 400
+```
+
+##### Example output with watermarks:
+![Watermarks](../assets/images/charts/watermark.png)
 
 ## Placing Charts in a Report
 
