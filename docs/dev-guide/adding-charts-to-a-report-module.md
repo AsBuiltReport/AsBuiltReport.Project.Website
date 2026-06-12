@@ -1,6 +1,6 @@
 ---
 title: Adding Charts to a Report Module
-description: How to integrate AsBuiltReport.Chart into report modules to add pie, donut, bar, stacked bar, and signal chart visualisations
+description: How to integrate AsBuiltReport.Chart into report modules to add pie, donut, bar, stacked bar, radar, and signal chart visualisations
 tags:
   - development
   - report-modules
@@ -11,7 +11,7 @@ tags:
 
 # Adding Charts to a Report Module
 
-AsBuiltReport.Chart is an optional PowerShell module that adds chart generation capabilities to AsBuiltReport report modules. It provides six chart types — pie, donut, bar, stacked bar, single stacked bar, and signal — and integrates directly with the PScribo document framework used by AsBuiltReport.
+AsBuiltReport.Chart is an optional PowerShell module that adds chart generation capabilities to AsBuiltReport report modules. It provides seven chart types — pie, donut, bar, stacked bar, single stacked bar, radar, and signal — and integrates directly with the PScribo document framework used by AsBuiltReport.
 
 Charts are generated in memory as base64-encoded images and embedded directly into the report output using PScribo's `Image` cmdlet. No intermediate files are written to disk.
 
@@ -289,6 +289,65 @@ $chartFileItem = New-SignalChart `
 
 ##### Multi-line Signal Chart example output:
 ![alt text](../assets/images/charts/signaladvchart.png)
+
+### Radar Chart
+
+Use `New-RadarChart` to compare multiple categories across datasets — for example, security posture scores across different data centres, or feature compatibility across product versions. The radar chart is ideal for multi-dimensional performance metrics or assessment matrices where each "spoke" represents a discrete category.
+
+**Basic example** — single dataset:
+
+```powershell title="Radar chart — single data centre security posture"
+# For a single dataset, wrap the values array with a comma operator
+$chartValues = ,@([double[]]@(3, 5, 4, 2))
+$chartLabels = @('USA DataCenter')
+
+$chartFileItem = New-RadarChart `
+    -Title 'Security Posture Assessment' `
+    -Values $chartValues `
+    -LegendLabels $chartLabels `
+    -Format base64 `
+    -Width 600 -Height 400 `
+    -ColorPalette Category20 `
+    -EnableLegend `
+    -TitleFontBold `
+    -TitleFontSize 16
+```
+
+**Advanced example** — multiple datasets with spoke labels:
+
+```powershell title="Radar chart — multi-site security posture comparison"
+# Multiple datasets: array of arrays, one per dataset
+$chartValues = @(
+    @([double[]]@(1, 2, 5, 8)),      # USA DataCenter scores
+    @([double[]]@(3, 5, 4, 2))       # UK DataCenter scores
+)
+
+$chartLabels = @('USA DataCenter', 'UK DataCenter')
+$spokes = @('Network Security', 'Endpoint Security', 'Identity Management', 'Data Protection')
+
+$chartFileItem = New-RadarChart `
+    -Title 'Security Posture Assessment' `
+    -Values $chartValues `
+    -LegendLabels $chartLabels `
+    -SpokeLabels $spokes `
+    -SpokesLength 9 `
+    -Format base64 `
+    -Width 600 -Height 400 `
+    -ColorPalette Aurora `
+    -EnableLegend `
+    -TitleFontBold `
+    -TitleFontSize 16
+```
+
+##### Radar Chart example output:
+![alt text](../assets/images/charts/radarchart.png)
+
+**Key parameters:**
+
+- `-Values` — Array or array of arrays of numeric values (one value per spoke, one array per dataset)
+- `-LegendLabels` — Labels for each dataset (one label per array in `-Values`)
+- `-SpokeLabels` — Optional labels for each spoke/axis on the radar
+- `-SpokesLength` — Length of the spokes (axes); omit or set to 0 for auto-scaling
 
 ## Safety Guards
 
