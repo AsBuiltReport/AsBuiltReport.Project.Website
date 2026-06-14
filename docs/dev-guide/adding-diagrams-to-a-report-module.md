@@ -29,6 +29,12 @@ Diagrams are generated in memory as base64-encoded images and embedded into the 
 
 ## Prerequisites
 
+### System Requirements
+
+- **PowerShell** 5.1 or later (Windows) or PowerShell 7+ (Linux/macOS)
+- **PSGraph** module (installs automatically with AsBuiltReport.Diagram)
+- **Graphviz** (pre-installed on Windows, requires separate installation on Linux/macOS)
+
 ### PSGraph
 
 AsBuiltReport.Diagram requires the PSGraph module. Install it from the PowerShell Gallery:
@@ -39,7 +45,7 @@ Install-Module -Name PSGraph -Scope CurrentUser
 
 ### Graphviz
 
-On **Windows**, Graphviz is bundled with PSGraph and requires no separate installation. On **Linux** and **macOS**, install Graphviz using your package manager:
+On **Windows**, Graphviz is bundled with AsBuiltReport.Diagram and requires no separate installation. On **Linux** and **macOS**, install Graphviz using your package manager:
 
 === "Debian / Ubuntu"
     ```bash
@@ -61,10 +67,6 @@ On **Windows**, Graphviz is bundled with PSGraph and requires no separate instal
     sudo port install graphviz
     ```
 
-### Icons
-
-Diagrams typically use PNG icons to represent infrastructure components (servers, switches, storage, etc.). Icons are referenced by a hashtable that maps semantic names to filenames, and resolved from a directory you specify at diagram generation time. Icon images should be 100×150 pixels for consistent rendering.
-
 ## Installation
 
 Install AsBuiltReport.Diagram from the PowerShell Gallery:
@@ -72,7 +74,6 @@ Install AsBuiltReport.Diagram from the PowerShell Gallery:
 ```powershell title="Install AsBuiltReport.Diagram"
 Install-Module -Name AsBuiltReport.Diagram -Scope CurrentUser
 ```
-
 ## Declaring the Dependency
 
 Add `AsBuiltReport.Diagram` to the `RequiredModules` array in your module manifest (`.psd1`):
@@ -133,7 +134,7 @@ Diagrams are controlled by `Options` keys in the report JSON configuration file 
 
 ## How Diagrams Are Embedded
 
-Diagrams are generated with `-Format base64`, which returns the diagram as a base64-encoded string rather than writing a file to disk. This string is embedded into the report using PScribo's `Image` cmdlet. When `-ExportDiagrams` is enabled, the diagram is also saved to disk in the requested format(s) **before** the base64 pass.
+Diagrams are generated in `base64` format, which returns the diagram as a base64-encoded string rather than writing a file to disk. This string is embedded into the report using PScribo's `Image` cmdlet. When `ExportDiagrams` is enabled, the diagram is also saved to disk in the requested format(s) **before** the base64 pass.
 
 The `Get-BestImageAspectRatio` function (provided by AsBuiltReport.Diagram) calculates the optimal width and height to fit the diagram within your target bounds while preserving the original aspect ratio.
 
@@ -148,8 +149,7 @@ The diagram generation follows this sequence:
 
 ```powershell title="Core diagram embedding pattern"
 try {
-    $DiagramObject = Get-AbrInfrastructureDiagram -Format base64 -Direction $Options.DiagramDirection -DraftMode:$Options.EnableDiagramDebug
-    $Graph = $DiagramObject
+    $DiagramObj = Get-AbrInfrastructureDiagram -Format base64 -Direction $Options.DiagramDirection -DraftMode:$Options.EnableDiagramDebug
     $Diagram = New-AbrDiagram @DiagramParams -InputObject $Graph
     if ($Diagram) {
         $BestAspectRatio = Get-BestImageAspectRatio -GraphObj $Diagram -MaxWidth 600 -MaxHeight 600
@@ -187,47 +187,10 @@ AsBuiltReport.Vendor.Technology/
 
 ### Separation of Concerns
 
-- **`Get-AbrVendorDiagram.ps1`** — Builds the PSGraph structure (`SubGraph`, nodes, edges). Returns the graph object.
+- **`Get-AbrVendorDiagram.ps1`** — Builds the PSGraph structure (`SubGraph`, `nodes`, `edges`). Returns the graph object.
 - **`Export-AbrDiagram.ps1`** — Orchestration function. Takes the graph object, applies theme/formatting, handles file export, and returns base64 for embedding.
 
-This separation allows each function to have a single responsibility: the diagram builder focuses on data collection and graph topology, while the export function handles rendering configuration and output formats.
-
-### Reference Implementation
-
-The [AsBuiltReport.System.Resources](https://github.com/AsBuiltReport/AsBuiltReport.System.Resources) repository provides a complete, production-ready reference implementation. You can study these files to understand how to implement the two-function pattern:
-
-**Diagram Builder Function:**
-- **File:** `Src/Private/Diagram/Get-AbrProcessDiagram.ps1`
-- **Responsibility:** Collects process data, assembles the PSGraph structure
-- **Returns:** Graphviz graph object
-- **Demonstrates:** Theme color application, SubGraph grouping, node/edge creation
-
-**Orchestration Function:**
-- **File:** `Src/Private/Diagram/Export-AbrDiagram.ps1`
-- **Responsibility:** Applies rendering configuration, handles theme colors, manages file export
-- **Returns:** Base64-encoded diagram for embedding in reports
-- **Demonstrates:** Dual-pass rendering, format handling, error handling patterns
-
-**Project Structure:**
-```
-AsBuiltReport.System.Resources/
-├── Icons/
-│   ├── Process.png
-│   ├── Server.png
-│   └── ...
-├── Src/Private/
-│   ├── Diagram/
-│   │   ├── Export-AbrDiagram.ps1
-│   │   └── Get-AbrProcessDiagram.ps1
-│   └── ...
-└── ...
-```
-
-!!! tip "Learning Path"
-    1. Clone [AsBuiltReport.System.Resources](https://github.com/AsBuiltReport/AsBuiltReport.System.Resources)
-    2. Study `Get-AbrProcessDiagram.ps1` to understand diagram assembly
-    3. Study `Export-AbrDiagram.ps1` to understand orchestration and export
-    4. Apply the patterns to your own module
+This separation allows each function to have a single responsibility: the diagram builder focuses on data collection and graph topology, while the export function handles rendering configuration and output formats. See the [AsBuiltReport.System.Resources repository](https://github.com/AsBuiltReport/AsBuiltReport.System.Resources) for a complete production-ready reference.
 
 ## Building a Diagram
 
@@ -301,7 +264,7 @@ $DiagramGraph = Graph -Name 'VendorTechnology' -Attributes @{
 
 ### Adding Individual Nodes
 
-Use `Add-NodeIcon` to create a node with an icon and optional metadata table beneath it. The returned label is then assigned to a PSGraph `Node` using `shape = 'plain'`.
+Use `Add-NodeIcon` to create a node with an icon and optional metadata table beneath it.
 
 ```powershell title="Adding a node with an icon"
 $ServerInfo = [PSCustomObject][ordered]@{
@@ -311,7 +274,7 @@ $ServerInfo = [PSCustomObject][ordered]@{
     'Role'    = 'Application Server'
 }
 
-$ServerLabel = Add-NodeIcon `
+Add-NodeIcon `
     -Name 'App-Server-01' `
     -IconType 'Server' `
     -AditionalInfo $ServerInfo `
@@ -319,22 +282,16 @@ $ServerLabel = Add-NodeIcon `
     -Align 'Center' `
     -FontSize 16 `
     -DraftMode:$DraftMode
-
-Node -Name AppServer01 -Attributes @{
-    Label     = $ServerLabel
-    shape     = 'plain'
-    fillColor = 'transparent'
-    fontsize  = 14
-}
+    -NodeObject
 ```
 ##### Example of a Node with an Icon
-![alt text](../assets/images/diagrams/addnodeicon.png)
+![Node](../assets/images/diagrams/addnodeicon.png)
 
 
 The `-DraftMode` switch renders placeholder boxes instead of real icons during development, making it faster to iterate on layout without needing all icon files in place.
     
 ##### Example of a Node in Draft Mode
-![alt text](../assets/images/diagrams/addnodeicondraftmode.png)
+![NodeDraftMode](../assets/images/diagrams/addnodeicondraftmode.png)
 
 ### Adding Server Farms and Collections
 
@@ -380,6 +337,8 @@ Add-HtmlNodeTable `
     -DraftMode:$DraftMode `
     -NodeObject
 ```
+##### Example of a Server Farm Node
+![Server Farm](../assets/images/diagrams/addhtmlnodetable.png)
 
 ### Connecting Nodes
 
@@ -394,6 +353,8 @@ Add-NodeEdge `
     -EdgeLabelFontSize 12 `
     -EdgeLabelFontColor '#565656'
 ```
+##### Example of Connected Nodes
+![Connected Nodes](../assets/images/diagrams/addnodeedge.png)
 
 ### Controlling Layout
 
@@ -406,23 +367,72 @@ Rank 'proxy-01.example.com', 'proxy-02.example.com', 'proxy-03.example.com'
 
 ### Grouping with SubGraph
 
-Use `SubGraph` to draw a labelled border around a logical group of nodes:
+Use `Add-HtmlSubGraph` group related nodes together under a shared border and label. This is ideal for server farms, application tiers, or any logical grouping of components. The subgraph acts as a container that visually separates its child nodes from the rest of the diagram.
 
-```powershell title="Grouping nodes in a SubGraph"
-SubGraph 'DataTier' -Attributes @{
-    Label    = 'Database Tier'
-    fontsize = 18
-    penwidth = 1.5
-    labelloc = 't'
-    style    = 'dashed,rounded'
-    color    = '#71797E'
-} {
-    # Nodes inside this group
-    Node -Name DbPrimary -Attributes @{ Label = $DbPrimaryLabel; shape = 'plain' }
-    Node -Name DbReplica -Attributes @{ Label = $DbReplicaLabel; shape = 'plain' }
-    Rank 'DbPrimary', 'DbReplica'
-}
+```powershell title="Grouping nodes in a Add-HtmlSubGraph"
+$WebServerFarm = @(
+    @{
+        Name = 'Web-Server-01';
+        AdditionalInfo = [PSCustomObject][ordered]@{
+            'OS' = 'Redhat Linux'
+            'Version' = '10'
+            'Build' = '10.1'
+        }
+        IconType = 'ServerRedhat'
+    },
+    @{
+        Name = 'Web-Server-02';
+        AdditionalInfo = [PSCustomObject][ordered]@{
+            'OS' = 'Redhat Linux'
+            'Version' = '10'
+            'Build' = '10.1'
+        }
+        IconType = 'ServerRedhat'
+    },
+    @{
+        Name = 'Web-Server-03';
+        AdditionalInfo = [PSCustomObject][ordered]@{
+            'OS' = 'Redhat Linux'
+            'Version' = '10'
+            'Build' = '10.1'
+        }
+        IconType = 'ServerRedhat'
+    },
+    @{
+        Name = 'Web-Server-04';
+        AdditionalInfo = [PSCustomObject][ordered]@{
+            'OS' = 'Redhat Linux'
+            'Version' = '10'
+            'Build' = '10.1'
+        }
+        IconType = 'ServerRedhat'
+    }, @{
+        Name = 'Web-Server-05';
+        AdditionalInfo = [PSCustomObject][ordered]@{
+            'OS' = 'Redhat Linux'
+            'Version' = '10'
+            'Build' = '10.1'
+        }
+        IconType = 'ServerRedhat'
+    },
+    @{
+        Name = 'Web-Server-06';
+        AdditionalInfo = [PSCustomObject][ordered]@{
+            'OS' = 'Redhat Linux'
+            'Version' = '10'
+            'Build' = '10.1'
+        }
+        IconType = 'ServerRedhat'
+    }
+)
+
+$WebLabel = Add-HtmlNodeTable -Name 'WebLabel' -ImagesObj $Images -inputObject $WebServerFarm.Name -iconType $WebServerFarm.IconType -ColumnSize 3 -AditionalInfo $WebServerFarm.AdditionalInfo -MultiIcon -DraftMode:$DraftMode -FontSize 18 -TableBackgroundColor '#a8c3b8ff' -CellBackgroundColor '#a8c3b8ff'
+
+Add-HtmlSubGraph -Name 'USA-WebServers' -ImagesObj $Images -TableArray $WebLabel -Align 'Center' -Label 'AsBuiltReport.Diagram SubGraph' -LabelPos 'top' -TableStyle 'dashed,rounded' -TableBorderColor 'darkgray' -TableBorder '1' -ColumnSize 1 -FontSize 22 -DraftMode:$DraftMode -TableBackgroundColor '#a8c3b8ff' -IconType 'Server' -NodeObject
+
 ```
+###### Example of a SubGraph Grouping Multiple Nodes
+![Subgraph](../assets/images/diagrams/addhtmlsubgraph.png)
 
 ## Generating the Diagram
 
@@ -457,6 +467,9 @@ New-AbrDiagram `
     -ImagesObj $script:Images `
     -LogoName 'Main_Logo'
 ```
+
+##### Example of a Generated Diagram
+![Diagram](../assets/images/diagrams/finaldiagram.png)
 
 ## Diagram Themes
 
@@ -511,11 +524,11 @@ switch ($Options.DiagramTheme) {
 
 ### Theme Details
 
-| Theme | Background | Font Color | Edge Color | Use Case |
-|-------|-----------|-----------|-----------|----------|
-| **White** | White | Dark grey (#565656) | Dark grey (#71797E) | Default; works well in printed documents |
-| **Black** | Black | White | White | Dark mode; suitable for presentations |
-| **Neon** | Dark grey (grey14) | Gold (gold2) | Gold (gold2) | High contrast; good for visibility |
+| Theme     | Background         | Font Color          | Edge Color          | Use Case                                 |
+| --------- | ------------------ | ------------------- | ------------------- | ---------------------------------------- |
+| **White** | White              | Dark grey (#565656) | Dark grey (#71797E) | Default; works well in printed documents |
+| **Black** | Black              | White               | White               | Dark mode; suitable for presentations    |
+| **Neon**  | Dark grey (grey14) | Gold (gold2)        | Gold (gold2)        | High contrast; good for visibility       |
 
 ## Watermarks and Signatures
 
@@ -690,18 +703,18 @@ Key responsibilities:
 
 The orchestration function reads these `$Options` keys:
 
-| Option | Type | Purpose |
-|--------|------|---------|
-| `EnableDiagrams` | Boolean | Master switch; when false, function exits immediately |
-| `DiagramTheme` | String | 'White', 'Black', or 'Neon' for color scheme |
-| `ExportDiagrams` | Boolean | Save diagram files to disk |
-| `ExportDiagramsFormat` | Array | Formats to export: `['png']`, `['pdf', 'svg']`, etc. |
-| `EnableDiagramDebug` | Boolean | Render with debug styling (red borders, visible edges) |
-| `EnableDiagramSignature` | Boolean | Add author/company footer |
-| `SignatureAuthorName` | String | Author name for signature |
-| `SignatureCompanyName` | String | Company name for signature |
-| `EnableDiagramMainLogo` | Boolean | Show main logo in diagram |
-| `DiagramWaterMark` | String | Text watermark to overlay |
+| Option                   | Type    | Purpose                                                |
+| ------------------------ | ------- | ------------------------------------------------------ |
+| `EnableDiagrams`         | Boolean | Master switch; when false, function exits immediately  |
+| `DiagramTheme`           | String  | 'White', 'Black', or 'Neon' for color scheme           |
+| `ExportDiagrams`         | Boolean | Save diagram files to disk                             |
+| `ExportDiagramsFormat`   | Array   | Formats to export: `['png']`, `['pdf', 'svg']`, etc.   |
+| `EnableDiagramDebug`     | Boolean | Render with debug styling (red borders, visible edges) |
+| `EnableDiagramSignature` | Boolean | Add author/company footer                              |
+| `SignatureAuthorName`    | String  | Author name for signature                              |
+| `SignatureCompanyName`   | String  | Company name for signature                             |
+| `EnableDiagramMainLogo`  | Boolean | Show main logo in diagram                              |
+| `DiagramWaterMark`       | String  | Text watermark to overlay                              |
 
 **Export Flow with Format Handling:**
 
@@ -761,40 +774,6 @@ try {
     - **Efficiency**: Graphviz rendering is only done once per format
     - **Flexibility**: Users can export standalone files *and* embed in reports simultaneously
 
-### Icon Path Resolution
-
-Icons must be resolved relative to your module's installation directory. The typical pattern is:
-
-```powershell title="Resolving the Icons directory from within a diagram function"
-# Get the module root (one level up from Private/)
-$RootPath = Split-Path (Split-Path $PSScriptRoot -Parent) -Parent
-[System.IO.FileInfo]$IconPath = Join-Path -Path $RootPath -ChildPath 'Icons'
-
-# Verify the Icons directory exists
-if (-not (Test-Path $IconPath)) {
-    Write-PScriboMessage -IsWarning "Icons directory not found at $IconPath"
-}
-```
-
-Your module should include an `Icons/` directory with PNG files (100×150 pixels recommended):
-
-```text
-AsBuiltReport.Vendor.Technology/
-├── Icons/
-│   ├── Process.png
-│   ├── Server.png
-│   ├── AsBuiltReport_Logo.png
-│   └── AsBuiltReport_Signature.png
-├── Src/
-│   ├── Private/
-│   │   ├── Diagram/
-│   │   │   ├── Export-AbrDiagram.ps1
-│   │   │   └── Get-AbrProcessDiagram.ps1
-│   │   └── Get-AbrProcessInfo.ps1
-│   └── Public/
-└── AsBuiltReport.Vendor.Technology.psd1
-```
-
 ### Integrating with Report Section Functions
 
 Diagram builder functions are called from report section functions (e.g., `Get-AbrProcessInfo`). The report section function calls `Export-AbrDiagram` to handle rendering:
@@ -851,14 +830,14 @@ foreach ($System in $Target) {
 
 Diagram builder functions read from script-scoped variables set by the AsBuiltReport framework and report section functions. These variables must be set before calling the diagram builder:
 
-| Variable | Type | Set By | Purpose |
-|----------|------|--------|---------|
-| `$script:Options` | PSCustomObject | Report config | Diagram configuration (themes, export, debug, etc.) |
-| `$script:OutputFolderPath` | String | Main function | Directory for file exports |
-| `$script:Images` | Hashtable | Module initialization | Maps semantic icon names to filenames |
-| `$script:reportTranslate` | PSCustomObject | Framework | Localized strings |
-| `$script:Connection` | Object | Main function | Connection to target system |
-| `$script:InfoLevel` | PSCustomObject | Framework | Detail level for each section |
+| Variable                   | Type           | Set By                | Purpose                                             |
+| -------------------------- | -------------- | --------------------- | --------------------------------------------------- |
+| `$script:Options`          | PSCustomObject | Report config         | Diagram configuration (themes, export, debug, etc.) |
+| `$script:OutputFolderPath` | String         | Main function         | Directory for file exports                          |
+| `$script:Images`           | Hashtable      | Module initialization | Maps semantic icon names to filenames               |
+| `$script:reportTranslate`  | PSCustomObject | Framework             | Localized strings                                   |
+| `$script:Connection`       | Object         | Main function         | Connection to target system                         |
+| `$script:InfoLevel`        | PSCustomObject | Framework             | Detail level for each section                       |
 
 **Example: Setting script-scoped variables in the main function**
 
@@ -890,127 +869,6 @@ function Invoke-AsBuiltReportVendorTechnology {
 }
 ```
 
-## Standalone Diagram Export
-
-For users who want to export diagrams without running a full report, provide a public `Export-AsBuiltReport[Vendor]Diagram` function. This function builds the minimal context needed for diagram functions to run and generates standalone diagram files.
-
-```powershell title="Src/Public/Export-AsBuiltReportVTDiagram.ps1"
-function Export-AsBuiltReportVTDiagram {
-    <#
-    .SYNOPSIS
-        Exports Vendor Technology diagrams without generating a full report.
-    .DESCRIPTION
-        Generates and exports infrastructure diagrams as standalone files.
-        Useful for users who only want diagrams, not full reports.
-    .PARAMETER Target
-        Target system to diagram.
-    .PARAMETER Credential
-        Credentials for authentication.
-    .PARAMETER DiagramType
-        Type of diagram: 'Process', 'Infrastructure', or 'Network'.
-    .PARAMETER Format
-        Export formats: pdf, svg, png, jpg.
-    .PARAMETER OutputFolderPath
-        Directory for exported files.
-    .PARAMETER DiagramTheme
-        Color theme: 'White', 'Black', or 'Neon'.
-    .EXAMPLE
-        Export-AsBuiltReportVTDiagram -Target 'server01' -Credential $cred `
-            -DiagramType 'Process' -Format 'pdf','svg' -OutputFolderPath 'C:\Diagrams'
-    #>
-    [CmdletBinding()]
-    param (
-        [Parameter(Mandatory = $true)]
-        [String[]] $Target,
-
-        [Parameter(Mandatory = $true)]
-        [PSCredential] $Credential,
-
-        [ValidateSet('Process', 'Infrastructure', 'Network')]
-        [String[]] $DiagramType = 'Process',
-
-        [ValidateSet('pdf', 'svg', 'png', 'jpg')]
-        [String[]] $Format = @('pdf', 'png'),
-
-        [String] $OutputFolderPath = (Get-Location).Path,
-
-        [ValidateSet('White', 'Black', 'Neon')]
-        [String] $DiagramTheme = 'White',
-
-        [Switch] $Signature,
-        [String] $AuthorName,
-        [String] $CompanyName
-    )
-
-    # Initialize script-scoped context
-    $script:Images = @{
-        'AsBuiltReport_LOGO' = 'AsBuiltReport_Logo.png'
-        'AsBuiltReport_Signature' = 'AsBuiltReport_Signature.png'
-        'Process' = 'Process.png'
-        'Server' = 'Server.png'
-    }
-    
-    $script:OutputFolderPath = $OutputFolderPath
-
-    foreach ($System in $Target) {
-        try {
-            # Connect to target
-            $script:Connection = Connect-VendorSystem -Server $System -Credential $Credential -ErrorAction Stop
-
-            # Build a minimal $Options object for diagram functions
-            $script:Options = [PSCustomObject]@{
-                EnableDiagrams           = $true
-                ExportDiagrams           = $true
-                ExportDiagramsFormat     = $Format
-                DiagramTheme             = $DiagramTheme
-                DiagramWaterMark         = ""
-                EnableDiagramDebug       = $false
-                EnableDiagramSignature   = $Signature
-                SignatureAuthorName      = $AuthorName
-                SignatureCompanyName     = $CompanyName
-                EnableDiagramMainLogo    = $false
-            }
-
-            # Generate the requested diagrams
-            foreach ($Type in $DiagramType) {
-                switch ($Type) {
-                    'Process' { 
-                        $diagram = Get-AbrProcessDiagram
-                        Export-AbrDiagram -DiagramObject $diagram `
-                                          -MainDiagramLabel 'Process Hierarchy' `
-                                          -FileName "ProcessHierarchy-$System" 
-                    }
-                    'Infrastructure' { 
-                        $diagram = Get-AbrInfrastructureDiagram
-                        Export-AbrDiagram -DiagramObject $diagram `
-                                          -MainDiagramLabel 'Infrastructure' `
-                                          -FileName "Infrastructure-$System"
-                    }
-                    'Network' { 
-                        $diagram = Get-AbrNetworkDiagram
-                        Export-AbrDiagram -DiagramObject $diagram `
-                                          -MainDiagramLabel 'Network' `
-                                          -FileName "Network-$System"
-                    }
-                }
-            }
-        } catch {
-            Write-Error "Failed to export diagrams for $System : $($_.Exception.Message)"
-        } finally {
-            if ($script:Connection) {
-                Disconnect-VendorSystem -Connection $script:Connection -Confirm:$false -ErrorAction SilentlyContinue
-            }
-        }
-    }
-}
-```
-
-!!! tip "Standalone Export Benefits"
-    - **Separates concerns**: Diagrams don't require full report generation
-    - **User friendly**: Direct command without report configuration
-    - **Scriptable**: Can be scheduled or integrated into automation workflows
-    - **Flexible**: Users choose formats and themes independently
-
 ## Localising Diagram Section Titles
 
 Store diagram section headings and `Image` alt-text in your module's language file alongside other translated strings:
@@ -1038,6 +896,12 @@ if ($Options.EnableDiagrams -and $Graph) {
     }
 }
 ```
+
+## What is provided by New-AbrDiagram
+
+The `New-AbrDiagram` handles the Main logo, label, watermark and signature rendering, as well as applying theme colors and exporting to multiple formats. This allows your diagram builder function to focus solely on assembling the PSGraph structure (nodes, edges, subgraphs) without needing to manage rendering details.
+
+![New-AbrDiagram](../assets/images/diagrams/draftmodediagram.png)
 
 ## Reference Implementations
 
@@ -1212,3 +1076,217 @@ Returns a hashtable with `Width` and `Height` keys containing the optimal dimens
 - **Localise section titles and alt-text** — store diagram heading strings and `Image` alt-text in your language file alongside other translatable strings.
 - **Provide a standalone export function** — if your module has multiple diagram types, offer a public `Export-AsBuiltReport[Vendor]Diagram` function for users who only want diagrams.
 - **Test with DraftMode first** — during development, use `-DraftMode:$true` to quickly iterate on layout without needing all icon files in place, then switch to real icons.
+
+## Troubleshooting
+
+### Graphviz Not Found
+
+**Error:** `The term 'dot.exe' (or 'dot') is not recognized as an internal or external command`
+
+**Solution:**
+- On **Windows**, ensure PSGraph is installed. Graphviz is bundled. Try uninstalling and reinstalling PSGraph:
+  ```powershell
+  Uninstall-Module PSGraph -Force
+  Install-Module PSGraph -Scope CurrentUser
+  ```
+- On **Linux/macOS**, install Graphviz with your package manager (see Prerequisites section)
+- Verify installation:
+  ```bash
+  # Linux/macOS
+  which dot
+  
+  # Windows (in PowerShell)
+  Get-Command dot.exe
+  ```
+
+### Icons Not Found
+
+**Error:** `The icon file 'Server.png' could not be found at path ...`
+
+**Causes & Solutions:**
+- Icon files are not in the specified `-IconPath` directory — verify icons exist and the path is correct:
+  ```powershell
+  Test-Path 'C:\Path\To\Icons\Server.png'
+  Get-ChildItem 'C:\Path\To\Icons\'
+  ```
+- Icon name in hashtable doesn't match filename — ensure `-ImagesObj` key matches the filename exactly (case-sensitive on Linux/macOS):
+  ```powershell
+  # Incorrect: filename is "Server.png", but hashtable key is "server"
+  $Images = @{ 'server' = 'Server.png' }  # Won't work on Linux
+  
+  # Correct:
+  $Images = @{ 'Server' = 'Server.png' }
+  ```
+- Icon path is relative but working directory is incorrect — use absolute paths or resolve relative to module root:
+  ```powershell
+  # Resolve from module root
+  $ModuleRoot = Split-Path (Split-Path $PSScriptRoot -Parent) -Parent
+  $IconPath = Join-Path -Path $ModuleRoot -ChildPath 'Icons'
+  ```
+
+### Diagram Won't Render or Appears Blank
+
+**Causes & Solutions:**
+- No nodes or edges defined — verify the PSGraph object is not empty:
+  ```powershell
+  # Debug: write the graph object to understand its structure
+  $DiagramGraph | Format-List
+  ```
+- Invalid node or edge names — Graphviz requires valid identifiers. Sanitise all node names:
+  ```powershell
+  $NodeName = 'My Server (prod)' -replace '[^a-zA-Z0-9_]', ''  # Result: 'MyServerprod'
+  Add-NodeIcon -Name $NodeName ...
+  ```
+- Format not supported — verify the requested format is supported:
+  ```powershell
+  # Valid formats
+  -Format @('pdf', 'png', 'svg', 'jpg', 'dot', 'base64')
+  ```
+- `New-AbrDiagram` failed silently — always check the return value and examine Graphviz error log:
+  ```powershell
+  try {
+      $Diagram = New-AbrDiagram -InputObject $DiagramGraph -Format 'base64' -ErrorAction Stop
+      if (-not $Diagram) {
+          Write-Warning "Diagram generation returned empty result"
+      }
+  } catch {
+      Write-Error "Diagram generation failed: $($_.Exception.Message)"
+  }
+  ```
+
+### Diagram Takes Too Long to Generate
+
+**Cause:** Large graphs with many nodes/edges or complex layout calculations
+
+**Solutions:**
+- Use **draft mode** during development to skip icon rendering:
+  ```powershell
+  -DraftMode:$true
+  ```
+- Simplify the graph — reduce the number of nodes or use simpler layouts:
+  ```powershell
+  # Use left-to-right instead of top-to-bottom for complex hierarchies
+  -Direction 'left-to-right'
+  ```
+- Disable diagram generation during testing — add `-EnableDiagrams $false` to your test JSON config
+
+### Report Embedding Issues (HTML/Word Output)
+
+**Diagram appears too small or distorted:**
+
+**Solution:** Use `Get-BestImageAspectRatio` to calculate optimal dimensions:
+```powershell
+$BestAspectRatio = Get-BestImageAspectRatio -GraphObj $Diagram -MaxWidth 800 -MaxHeight 600
+Image -Base64 $Diagram -Width $BestAspectRatio.Width -Height $BestAspectRatio.Height
+```
+
+**Diagram layout breaks across pages in Word:**
+
+**Solution:** Add `PageBreak` before the diagram section:
+```powershell
+PageBreak
+Section -Style Heading3 'Infrastructure Diagram' {
+    Image -Base64 $Diagram -Width $Width -Height $Height
+}
+```
+
+### Special Characters in Labels or Metadata
+
+**Error:** Diagram fails when node labels contain special characters (`<`, `>`, `"`, `&`, etc.)
+
+**Solution:** Escape HTML special characters or use quoted labels:
+```powershell
+# Escape special characters
+$Label = 'Server & Storage' -replace '&', '&amp;'
+$Label = 'Cost: $500' -replace '\$', '\$'
+
+# Or use HTML encoding in metadata tables
+$AdditionalInfo = @{
+    'Cost' = '&dollar;500'
+    'Status' = 'Active &amp; Ready'
+}
+```
+
+### Theme Colors Not Applied
+
+**Cause:** Theme variables are not propagated to all graph elements
+
+**Solution:**
+- Ensure theme colors are set **before** building the graph:
+  ```powershell
+  # In the diagram builder function's begin{} block
+  if ($Options.DiagramTheme -eq 'Black') {
+      $Edgecolor = 'White'
+      $Fontcolor = 'White'
+  }
+  
+  # Then use the variables in graph construction
+  Edge @{ color = $Edgecolor }
+  ```
+- Verify the orchestration function applies theme to `New-AbrDiagram`:
+  ```powershell
+  $DiagramParams = @{
+      MainGraphBGColor = 'Black'
+      Fontcolor = 'White'
+      # ... other params
+  }
+  New-AbrDiagram @DiagramParams -InputObject $DiagramGraph
+  ```
+
+### Performance Issues with Export Diagrams
+
+**Dual-pass rendering (export + base64) is slow:**
+
+**Optimization:**
+- Only export when explicitly requested:
+  ```powershell
+  if ($Options.ExportDiagrams) {
+      # First pass: export to disk
+      New-AbrDiagram -InputObject $Graph -Format $Options.ExportDiagramsFormat ...
+  }
+  
+  # Second pass: always base64 for embedding
+  $Diagram = New-AbrDiagram -InputObject $Graph -Format 'base64' ...
+  ```
+- Consider caching the Graphviz output if running multiple diagrams
+
+### Diagram Functions Not Found
+
+**Error:** `The term 'Add-NodeIcon' is not recognized`
+
+**Solution:**
+- Ensure AsBuiltReport.Diagram module is imported:
+  ```powershell
+  Import-Module AsBuiltReport.Diagram
+  Get-Command -Module AsBuiltReport.Diagram | Select-Object -First 5
+  ```
+- Verify the module is listed in `RequiredModules` in your module manifest (`.psd1`)
+- Check that the function name is correct — AsBuiltReport.Diagram uses `Add-NodeIcon` (not `New-NodeIcon`)
+
+### Still Stuck?
+
+If you encounter issues not covered here:
+
+1. **Enable debug output:**
+   ```powershell
+   $DebugPreference = 'Continue'
+   # Run diagram function
+   ```
+
+2. **Use DraftMode to isolate layout issues:**
+   ```powershell
+   -DraftMode:$true
+   ```
+
+3. **Examine the Graphviz DOT output:**
+   ```powershell
+   -Format 'dot'  # Export the intermediate DOT representation
+   ```
+
+4. **Consult the reference implementation:**
+   - [AsBuiltReport.System.Resources](https://github.com/AsBuiltReport/AsBuiltReport.System.Resources)
+   - [Diagrammer.Core Documentation](https://diagrammer.techmyth.blog/)
+
+5. **Open an issue on GitHub:**
+   - [AsBuiltReport.Diagram Issues](https://github.com/AsBuiltReport/AsBuiltReport.Diagram/issues)
+   - Include your diagram builder function, the error message, and the input data that triggers the issue
