@@ -374,7 +374,7 @@ try {
 }
 ```
 
-## Color Palettes
+## Colour Palettes
 
 AsBuiltReport.Chart supports 25 built-in colour palettes via the `-ColorPalette` parameter, or a custom palette via `-EnableCustomColorPalette` and `-CustomColorPalette`.
 
@@ -406,7 +406,7 @@ All chart types support an optional watermark that overlays semi-transparent tex
 | `-WatermarkText` | String | `Confidential` | Text to display as the watermark |
 | `-WatermarkFontName` | String | `Arial` | Font family for the watermark text |
 | `-WatermarkFontSize` | Int | `24` | Font size (points) for the watermark text |
-| `-WatermarkColor` | BasicColors | `Gray` | Color of the watermark text |
+| `-WatermarkColor` | BasicColors | `Gray` | Colour of the watermark text |
 | `-WatermarkOpacity` | Double | `0.3` | Opacity (0.0–1.0) of the watermark; lower values are more transparent |
 
 ### Watermark Examples
