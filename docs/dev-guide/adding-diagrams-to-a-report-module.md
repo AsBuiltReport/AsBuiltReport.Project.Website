@@ -897,7 +897,7 @@ if ($Options.EnableDiagrams -and $Graph) {
 }
 ```
 
-## What is provided by New-AbrDiagram
+## What is handles by New-AbrDiagram
 
 The `New-AbrDiagram` handles the Main logo, label, watermark and signature rendering, as well as applying theme colors and exporting to multiple formats. This allows your diagram builder function to focus solely on assembling the PSGraph structure (nodes, edges, subgraphs) without needing to manage rendering details.
 
