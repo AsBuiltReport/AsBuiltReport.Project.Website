@@ -14,7 +14,7 @@ tags:
 
 ### Tim Carman <img align=left src='../../assets/images/contributors/tim-carman.jpg' alt='Tim Carman profile photo' width='30%' height='30%' style='vertical-align:middle' />
 
-<h4>Project Creator & Lead Developer</h4>
+<h4>Project Creator & Co-Developer</h4>
 
 :fontawesome-brands-square-x-twitter:{ .X } X - [@tpcarman](https://x.com/tpcarman){:target='_blank'}
 
