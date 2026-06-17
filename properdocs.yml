@@ -166,6 +166,7 @@ nav:
         - VMware vSphere: https://github.com/AsBuiltReport/AsBuiltReport.VMware.vSphere#readme
   - Developer Guide:
     - dev-guide/contributing.md
+    - AI Use Policy: dev-guide/ai-use-policy.md
     - Report Modules:
         - Creating a report module: dev-guide/creating-a-report-module.md
         - Adding charts to a report module: dev-guide/adding-charts-to-a-report-module.md

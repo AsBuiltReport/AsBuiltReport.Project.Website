@@ -244,6 +244,11 @@ Great issue and bug reports tend to have:
 
 ## Code Contributions
 
+!!! info "AI-Assisted Development"
+    If you use AI tools (GitHub Copilot, ChatGPT, Claude, etc.) as part of
+    your workflow, please read the [AI Use Policy](ai-use-policy.md) before
+    submitting a pull request.
+
 ### Code Editor
 
 We highly encourage you use the multi-platform code editor [Visual Studio Code (VS Code)](https://code.visualstudio.com/docs){:target="_blank"} when developing code for AsBuiltReport.
