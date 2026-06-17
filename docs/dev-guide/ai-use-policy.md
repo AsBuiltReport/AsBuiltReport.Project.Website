@@ -48,6 +48,31 @@ or what data a table renders — do not submit it. AI-generated code you cannot
 explain is a maintenance liability for the project team. Maintainers will ask
 questions during review; "the AI wrote it" is not an acceptable answer.
 
+## Grounding Your AI Tool in Project Standards
+
+Before generating any code or documentation, provide your AI tool with the
+relevant project guidelines as context. This significantly reduces the amount
+of correction needed after generation and produces output that is much closer
+to the project's conventions from the outset.
+
+The following pages should be shared with your AI tool depending on the task:
+
+| Task | Reference |
+|---|---|
+| Any contribution | [Contributing Guide](contributing.md) |
+| Building or extending a report module | [Creating a Report Module](creating-a-report-module.md) |
+| Adding charts | [Adding Charts to a Report Module](adding-charts-to-a-report-module.md) |
+| Adding diagrams | [Adding Diagrams to a Report Module](adding-diagrams-to-a-report-module.md) |
+| Creating a report style | [Creating a Report Style](creating-a-report-style.md) |
+
+!!! tip "How to share context with your AI tool"
+    Most AI coding assistants allow you to attach files or paste content
+    directly into the chat. Copy the relevant documentation page(s) into your
+    session before asking the tool to generate or review code. Some tools
+    (such as GitHub Copilot Workspace or Claude Projects) support persistent
+    context — upload the relevant pages there so the standards apply
+    automatically across your entire session.
+
 ## Acceptable Uses
 
 The following uses of AI assistance are consistent with project standards:
