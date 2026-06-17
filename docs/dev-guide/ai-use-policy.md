@@ -8,15 +8,23 @@ tags:
   - guidelines
 ---
 
-The AsBuiltReport project welcomes contributors who use AI-assisted tools
-(such as GitHub Copilot, ChatGPT, Claude, or similar) as part of their
-development workflow. This page sets out the expectations that apply when
-AI tools are used to produce contributions.
+The AsBuiltReport project encourages contributors to develop code by hand,
+drawing on the project's Plaster template, developer documentation, and
+existing report modules as their primary references. This hands-on approach
+builds genuine understanding of the codebase and produces contributions that
+are easier to review, maintain, and extend.
+
+AI-assisted tools (such as GitHub Copilot, ChatGPT, Claude, or similar) are
+permitted where they help or enhance that process — for example, to clarify
+a vendor API, suggest a table structure, or refine documentation. This page
+sets out how AI tools fit into that workflow and the expectations that apply
+when they are used.
 
 !!! info "Summary"
-    AI tools are permitted. You are responsible for everything you submit.
-    Quality, testing, and coding standards apply equally to all contributions
-    regardless of how they were produced.
+    Hand-developed code is encouraged. AI tools are permitted as a supplement
+    — to assist and enhance, not to replace the hands-on development process.
+    You are responsible for everything you submit, regardless of how it was
+    produced.
 
 ## Core Principles
 
@@ -48,14 +56,17 @@ or what data a table renders — do not submit it. AI-generated code you cannot
 explain is a maintenance liability for the project team. Maintainers will ask
 questions during review; "the AI wrote it" is not an acceptable answer.
 
-## Grounding Your AI Tool in Project Standards
+## Using the Project's Resources
 
-Before generating any code or documentation, provide your AI tool with the
-relevant project guidelines as context. This significantly reduces the amount
-of correction needed after generation and produces output that is much closer
-to the project's conventions from the outset.
+The project provides everything needed to develop a contribution by hand.
+Establishing these foundations first — before writing any code or involving
+an AI tool — produces better results and reduces the amount of correction
+required later.
 
-The following pages should be shared with your AI tool depending on the task:
+**1. Read the developer documentation**
+
+Read the relevant Developer Guide sections before starting work. These define
+the conventions, structure, and patterns the project expects:
 
 | Task | Reference |
 |---|---|
@@ -65,10 +76,28 @@ The following pages should be shared with your AI tool depending on the task:
 | Adding diagrams | [Adding Diagrams to a Report Module](adding-diagrams-to-a-report-module.md) |
 | Creating a report style | [Creating a Report Style](creating-a-report-style.md) |
 
-!!! tip "How to share context with your AI tool"
-    Most AI coding assistants allow you to attach files or paste content
-    directly into the chat. Copy the relevant documentation page(s) into your
-    session before asking the tool to generate or review code. Some tools
+**2. Scaffold with the Plaster template**
+
+New report modules should always be created using the
+[AsBuiltReport Plaster template](creating-a-report-module.md#scaffolding-your-module-with-plaster).
+This generates the correct repository layout, module manifest, configuration
+file, and script stubs. Do not ask an AI tool to create this structure
+manually — the template is the authoritative starting point.
+
+**3. Study existing report modules**
+
+The [AsBuiltReport GitHub organisation](https://github.com/AsBuiltReport){:target="_blank"}
+contains many published report modules. Before writing a new section or
+module, review how similar sections are implemented in an existing module.
+
+These same resources are just as useful when working with an AI tool. Sharing
+them as context means the tool's output is more likely to follow project
+conventions from the start, with less manual correction needed afterwards.
+
+!!! tip "Using project resources with your AI tool"
+    Paste the relevant documentation pages into your AI tool's session before
+    asking it to generate or review code. Paste an example function from an
+    existing module to give the tool a concrete pattern to follow. Some tools
     (such as GitHub Copilot Workspace or Claude Projects) support persistent
     context — upload the relevant pages there so the standards apply
     automatically across your entire session.
@@ -127,10 +156,13 @@ All accepted contributions are licensed under the
 
 ## In Summary
 
-AI tools are a legitimate part of modern development. The project does not
-prohibit their use. What we do require is that every contribution meets the
-same bar: tested against a real environment, compliant with our coding
-standards, and understood by the person submitting it.
+The project's Plaster template, developer documentation, and existing report
+modules give you everything you need to develop a contribution by hand. AI
+tools have a role to play alongside those resources — helping you understand
+a vendor API, drafting repetitive structures, or refining documentation —
+but they work best as a supplement to hands-on development, not a
+replacement for it. Every contribution must still be understood, tested
+against a real environment, and ready to be defended in review.
 
 If you have questions about whether a particular use of AI assistance is
 appropriate, raise it in the
