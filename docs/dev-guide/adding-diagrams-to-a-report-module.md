@@ -216,7 +216,7 @@ Using `$script:` scope makes the hashtable available to all private diagram func
 PSGraph uses scriptblocks to define the diagram hierarchy. Node and edge default attributes — shape, font, colour — are declared once at the top of the `Graph {}` block and inherited by all nodes and edges unless overridden.
 
 !!! note
-    `New-AbrDiagram` handles the Graph section internally, so you only need to build the inner structure (nodes, edges, subgraphs) in your diagram builder function. The orchestration function will pass the resulting graph object to `New-AbrDiagram` for rendering. This setion is for demonstration purposes to show how to set graph-level defaults.
+    `New-AbrDiagram` handles the Graph section internally, so you only need to build the inner structure (nodes, edges, subgraphs) in your diagram builder function. The orchestration function will pass the resulting graph object to `New-AbrDiagram` for rendering. This section is for demonstration purposes to show how to set graph-level defaults.
 
 ```powershell title="Graph with node and edge defaults"
 $DiagramGraph = Graph -Name 'VendorTechnology' -Attributes @{
