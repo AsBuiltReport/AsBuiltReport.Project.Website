@@ -526,7 +526,7 @@ switch ($Options.DiagramTheme) {
 
 ### Theme Details
 
-| Theme     | Background         | Font Color          | Edge Color          | Use Case                                 |
+| Theme     | Background         | Font Colour          | Edge Colour          | Use Case                                 |
 | --------- | ------------------ | ------------------- | ------------------- | ---------------------------------------- |
 | **White** | White              | Dark grey (#565656) | Dark grey (#71797E) | Default; works well in printed documents |
 | **Black** | Black              | White               | White               | Dark mode; suitable for presentations    |
