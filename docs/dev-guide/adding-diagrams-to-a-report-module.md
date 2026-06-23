@@ -479,7 +479,7 @@ AsBuiltReport.Diagram supports three built-in colour themes. Themes control the 
 
 ### Theme Application
 
-Define theme colors in the `begin` block of your diagram builder function, then use those variables throughout the graph assembly. This ensures theme changes propagate consistently:
+Define theme colours in the `begin` block of your diagram builder function, then use those variables throughout the graph assembly. This ensures theme changes propagate consistently:
 
 ```powershell title="Applying a diagram theme in the diagram builder"
 if ($Options.DiagramTheme -eq 'Black') {
@@ -502,7 +502,7 @@ if ($Options.DiagramTheme -eq 'Black') {
 
 The orchestration function (`Export-AbrDiagram`) applies additional theme-specific parameters to `New-AbrDiagram`:
 
-```powershell title="Applying theme colors in the orchestration function"
+```powershell title="Applying theme colours in the orchestration function"
 switch ($Options.DiagramTheme) {
     'Black' {
         $DiagramParams.add('MainGraphBGColor', 'Black')
@@ -569,7 +569,7 @@ The diagram builder function collects infrastructure data and assembles the PSGr
 Key responsibilities:
 
 * Collect data from the target system
-* Apply theme-specific colors
+* Apply theme-specific colours
 * Build nodes and edges
 * Handle debug styling
 * Return the PSGraph object
@@ -699,7 +699,7 @@ The orchestration function handles rendering configuration, theme application, f
 
 Key responsibilities:
 
-* Apply theme-specific colors and styles
+* Apply theme-specific colours and styles
 * Configure icon path resolution
 * Handle file export when enabled
 * Generate base64 for report embedding
@@ -725,7 +725,7 @@ The orchestration function reads these `$Options` keys:
 
 When `ExportDiagrams` is true:
 
-1. Build the `$DiagramParams` hashtable with theme colors
+1. Build the `$DiagramParams` hashtable with theme colours
 2. Add the requested export formats to `$DiagramParams['Format']`
 3. Call `New-AbrDiagram` to export files to `$OutputFolderPath`
 4. Remove the format from `$DiagramParams` and set it to `'base64'`
@@ -905,7 +905,7 @@ if ($Options.EnableDiagrams -and $Graph) {
 
 ## What is handled by New-AbrDiagram
 
-The `New-AbrDiagram` handles the Main logo, label, watermark and signature rendering, as well as applying theme colors and exporting to multiple formats. This allows your diagram builder function to focus solely on assembling the PSGraph structure (nodes, edges, subgraphs) without needing to manage rendering details.
+The `New-AbrDiagram` handles the Main logo, label, watermark and signature rendering, as well as applying theme colours and exporting to multiple formats. This allows your diagram builder function to focus solely on assembling the PSGraph structure (nodes, edges, subgraphs) without needing to manage rendering details.
 
 ![New-AbrDiagram](../assets/images/diagrams/draftmodediagram.png)
 
@@ -1078,7 +1078,7 @@ Returns a hashtable with `Width` and `Height` keys containing the optimal dimens
 - **Separate diagram code from report code** — place diagram functions in `Src/Private/Diagram/` so they are easy to locate and test independently.
 - **Use the two-function pattern** — separate the diagram builder (data collection + graph assembly) from the orchestration function (rendering + export). This ensures each function has a single responsibility.
 - **Guard with `$Options.EnableDiagrams`** — diagrams depend on Graphviz and are slow to generate; always make them opt-in and exit early if disabled.
-- **Configure theme colors once in `begin{}`** — read `$Options.DiagramTheme` once and store the resolved colours in variables, then use those throughout the graph assembly for consistency.
+- **Configure theme colours once in `begin{}`** — read `$Options.DiagramTheme` once and store the resolved colours in variables, then use those throughout the graph assembly for consistency.
 - **Enable debug mode during development** — use `-EnableDiagramDebug` to render red-bordered placeholder boxes instead of real icons during layout iteration.
 - **Use the two-pass render pattern** — when `ExportDiagrams` is enabled, call `New-AbrDiagram` first with file formats, then again with `-Format base64` for embedding.
 - **Resolve icons relative to module root** — use `Split-Path (Split-Path $PSScriptRoot -Parent) -Parent` to find your module's root, then join to `Icons/` subdirectory.
@@ -1232,7 +1232,7 @@ $AdditionalInfo = @{
 
 **Solution:**
 
-- Ensure theme colors are set **before** building the graph:
+- Ensure theme colours are set **before** building the graph:
   ```powershell
   # In the diagram builder function's begin{} block
   if ($Options.DiagramTheme -eq 'Black') {
