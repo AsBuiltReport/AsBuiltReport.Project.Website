@@ -25,7 +25,7 @@ Diagrams are generated in memory as base64-encoded images and embedded into the 
 
     - `Src/Private/Diagram/Export-AbrDiagram.ps1` — Orchestration function
     - `Src/Private/Diagram/Get-AbrProcessDiagram.ps1` — Diagram builder function
-    - `Icons/` directory with 100×150 PNG icon files
+    - `Icons/` — directory with 100×150 PNG icon files
     
     This reference implementation demonstrates all patterns discussed in this guide.
 
@@ -526,7 +526,7 @@ switch ($Options.DiagramTheme) {
 
 ### Theme Details
 
-| Theme     | Background         | Font Colour          | Edge Colour          | Use Case                                 |
+| Theme     | Background         | Font Colour         | Edge Colour         | Use Case                                 |
 | --------- | ------------------ | ------------------- | ------------------- | ---------------------------------------- |
 | **White** | White              | Dark grey (#565656) | Dark grey (#71797E) | Default; works well in printed documents |
 | **Black** | Black              | White               | White               | Dark mode; suitable for presentations    |
@@ -1226,7 +1226,7 @@ $AdditionalInfo = @{
 }
 ```
 
-### Theme Colors Not Applied
+### Theme Colour Not Applied
 
 **Cause:** Theme variables are not propagated to all graph elements
 
@@ -1257,7 +1257,7 @@ $AdditionalInfo = @{
 
 **Dual-pass rendering (export + base64) is slow:**
 
-**Optimization:**
+**Optimisation:**
 
 - Only export when explicitly requested:
   ```powershell
