@@ -9,3 +9,6 @@ __pycache__/
 # Claude AI
 .claude/
 claude.md
+
+# Copilot AI
+copilot-instructions.md

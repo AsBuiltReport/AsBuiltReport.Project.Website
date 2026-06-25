@@ -20,10 +20,12 @@ Diagrams are generated in memory as base64-encoded images and embedded into the 
     This guide assumes you are already familiar with creating AsBuiltReport report modules. If not, read the [Creating a Report Module](creating-a-report-module.md) guide first.
 
 !!! tip "Reference Implementation"
-    For a complete, production-ready example of diagram implementation, see the [AsBuiltReport.System.Resources](https://github.com/AsBuiltReport/AsBuiltReport.System.Resources) repository. This project includes:
+    For a complete, production-ready example of diagram implementation, see the [AsBuiltReport.System.Resources](https://github.com/AsBuiltReport/AsBuiltReport.System.Resources) repository. 
+    This project includes:
+
     - `Src/Private/Diagram/Export-AbrDiagram.ps1` — Orchestration function
     - `Src/Private/Diagram/Get-AbrProcessDiagram.ps1` — Diagram builder function
-    - `Icons/` directory with 100×150 PNG icon files
+    - `Icons/` — directory with 100×150 PNG icon files
     
     This reference implementation demonstrates all patterns discussed in this guide.
 
@@ -556,6 +558,7 @@ New-AbrDiagram `
 The example functions below are from the [AsBuiltReport.System.Resources](https://github.com/AsBuiltReport/AsBuiltReport.System.Resources) repository. These are production-ready implementations that demonstrate all the patterns and best practices discussed in this guide.
 
 **View the full source code:**
+
 - [Export-AbrDiagram.ps1](https://github.com/AsBuiltReport/AsBuiltReport.System.Resources/blob/dev/AsBuiltReport.System.Resources/Src/Private/Export-AbrDiagram.ps1)
 - [Get-AbrProcessDiagram.ps1](https://github.com/AsBuiltReport/AsBuiltReport.System.Resources/blob/dev/AsBuiltReport.System.Resources/Src/Private/Diagram/Get-AbrProcessDiagram.ps1)
 
@@ -564,11 +567,12 @@ The example functions below are from the [AsBuiltReport.System.Resources](https:
 The diagram builder function collects infrastructure data and assembles the PSGraph structure. It reads from script-scoped variables (`$Options`, `$reportTranslate`, `$Images`) set by the AsBuiltReport framework.
 
 Key responsibilities:
-- Collect data from the target system
-- Apply theme-specific colours
-- Build nodes and edges
-- Handle debug styling
-- Return the PSGraph object
+
+* Collect data from the target system
+* Apply theme-specific colours
+* Build nodes and edges
+* Handle debug styling
+* Return the PSGraph object
 
 ```powershell title="Src/Private/Diagram/Get-AbrProcessDiagram.ps1"
 function Get-AbrProcessDiagram {
@@ -694,19 +698,20 @@ function Get-AbrProcessDiagram {
 The orchestration function handles rendering configuration, theme application, file export, and report embedding. This function acts as the integration point between the diagram builder and the report generation framework.
 
 Key responsibilities:
-- Apply theme-specific colours and styles
-- Configure icon path resolution
-- Handle file export when enabled
-- Generate base64 for report embedding
-- Manage watermarks and signatures
-- Provide error handling and logging
+
+* Apply theme-specific colours and styles
+* Configure icon path resolution
+* Handle file export when enabled
+* Generate base64 for report embedding
+* Manage watermarks and signatures
+* Provide error handling and logging
 
 The orchestration function reads these `$Options` keys:
 
 | Option                   | Type    | Purpose                                                |
 | ------------------------ | ------- | ------------------------------------------------------ |
 | `EnableDiagrams`         | Boolean | Master switch; when false, function exits immediately  |
-| `DiagramTheme`           | String  | 'White', 'Black', or 'Neon' for colour scheme          |
+| `DiagramTheme`           | String  | 'White', 'Black', or 'Neon' for color scheme           |
 | `ExportDiagrams`         | Boolean | Save diagram files to disk                             |
 | `ExportDiagramsFormat`   | Array   | Formats to export: `['png']`, `['pdf', 'svg']`, etc.   |
 | `EnableDiagramDebug`     | Boolean | Render with debug styling (red borders, visible edges) |
@@ -770,6 +775,7 @@ try {
 
 !!! important "Two-Pass Rendering Pattern"
     This dual-pass approach (export first, then base64) ensures:
+
     - **Consistency**: Same rendering engine for both outputs
     - **Efficiency**: Graphviz rendering is only done once per format
     - **Flexibility**: Users can export standalone files *and* embed in reports simultaneously
@@ -899,7 +905,7 @@ if ($Options.EnableDiagrams -and $Graph) {
 
 ## What is handled by New-AbrDiagram
 
-The `New-AbrDiagram` handles the Main logo, label, watermark and signature rendering, as well as applying theme colors and exporting to multiple formats. This allows your diagram builder function to focus solely on assembling the PSGraph structure (nodes, edges, subgraphs) without needing to manage rendering details.
+The `New-AbrDiagram` handles the Main logo, label, watermark and signature rendering, as well as applying theme colours and exporting to multiple formats. This allows your diagram builder function to focus solely on assembling the PSGraph structure (nodes, edges, subgraphs) without needing to manage rendering details.
 
 ![New-AbrDiagram](../assets/images/diagrams/draftmodediagram.png)
 
@@ -912,19 +918,23 @@ For additional guidance and working examples, refer to the following production-
 The [AsBuiltReport.System.Resources](https://github.com/AsBuiltReport/AsBuiltReport.System.Resources) repository is the primary reference implementation for diagram functionality.
 
 **Key Files:**
-- [`Src/Private/Diagram/Export-AbrDiagram.ps1`](https://github.com/AsBuiltReport/AsBuiltReport.System.Resources/blob/dev/AsBuiltReport.System.Resources/Src/Private/Export-AbrDiagram.ps1) (255 lines)
-  - Complete orchestration function
-  - Dual-pass rendering implementation
-  - Theme application pattern
-  - File export handling
 
-- [`Src/Private/Diagram/Get-AbrProcessDiagram.ps1`](https://github.com/AsBuiltReport/AsBuiltReport.System.Resources/blob/dev/AsBuiltReport.System.Resources/Src/Private/Diagram/Get-AbrProcessDiagram.ps1) (105 lines)
-  - Diagram builder function
-  - Data collection and assembly
-  - Theme color handling
-  - Debug mode styling
+1. [`Src/Private/Diagram/Export-AbrDiagram.ps1`](https://github.com/AsBuiltReport/AsBuiltReport.System.Resources/blob/dev/AsBuiltReport.System.Resources/Src/Private/Export-AbrDiagram.ps1)
+
+     - Complete orchestration function
+     - Dual-pass rendering implementation
+     - Theme application pattern
+     - File export handling
+
+2. [`Src/Private/Diagram/Get-AbrProcessDiagram.ps1`](https://github.com/AsBuiltReport/AsBuiltReport.System.Resources/blob/dev/AsBuiltReport.System.Resources/Src/Private/Diagram/Get-AbrProcessDiagram.ps1)
+  
+     - Diagram builder function
+     - Data collection and assembly
+     - Theme color handling
+     - Debug mode styling
 
 **What to Study:**
+
 - How themes are applied at both the builder and orchestration layers
 - Icon path resolution from module root
 - Two-pass rendering for export + embedding
@@ -961,24 +971,28 @@ AsBuiltReport.System.Resources/
    ```
 
 2. **Study the diagram functions:**
-   - Open `Src/Private/Diagram/Get-AbrProcessDiagram.ps1` to understand diagram assembly
-   - Open `Src/Private/Diagram/Export-AbrDiagram.ps1` to understand orchestration
-   - Compare against the examples in this guide
+   
+      - Open `Src/Private/Diagram/Get-AbrProcessDiagram.ps1` to understand diagram assembly
+      - Open `Src/Private/Diagram/Export-AbrDiagram.ps1` to understand orchestration
+      - Compare against the examples in this guide
 
 3. **Review the Icons directory:**
-   - Examine icon sizes and formats
-   - Note the naming convention for icon files
-   - See how the `$Images` hashtable maps names to filenames
+
+      - Examine icon sizes and formats
+      - Note the naming convention for icon files
+      - See how the `$Images` hashtable maps names to filenames
 
 4. **Trace the calling pattern:**
-   - Find where `Get-AbrProcessDiagram` is called
-   - Follow how `Export-AbrDiagram` is invoked
-   - Understand how `$script:` variables are initialized
+
+      - Find where `Get-AbrProcessDiagram` is called
+      - Follow how `Export-AbrDiagram` is invoked
+      - Understand how `$script:` variables are initialized
 
 5. **Adapt the patterns to your module:**
-   - Create your own `Get-AbrYourModuleDiagram.ps1` function
-   - Adapt `Export-AbrDiagram.ps1` for your specific needs
-   - Collect your own icons or use the same set
+
+      - Create your own `Get-AbrYourModuleDiagram.ps1` function
+      - Adapt `Export-AbrDiagram.ps1` for your specific needs
+      - Collect your own icons or use the same set
 
 ## Common Parameters Reference
 
@@ -1084,6 +1098,7 @@ Returns a hashtable with `Width` and `Height` keys containing the optimal dimens
 **Error:** `The term 'dot.exe' (or 'dot') is not recognized as an internal or external command`
 
 **Solution:**
+
 - On **Windows**, ensure PSGraph is installed. Graphviz is bundled. Try uninstalling and reinstalling PSGraph:
   ```powershell
   Uninstall-Module PSGraph -Force
@@ -1104,6 +1119,7 @@ Returns a hashtable with `Width` and `Height` keys containing the optimal dimens
 **Error:** `The icon file 'Server.png' could not be found at path ...`
 
 **Causes & Solutions:**
+
 - Icon files are not in the specified `-IconPath` directory — verify icons exist and the path is correct:
   ```powershell
   Test-Path 'C:\Path\To\Icons\Server.png'
@@ -1127,6 +1143,7 @@ Returns a hashtable with `Width` and `Height` keys containing the optimal dimens
 ### Diagram Won't Render or Appears Blank
 
 **Causes & Solutions:**
+
 - No nodes or edges defined — verify the PSGraph object is not empty:
   ```powershell
   # Debug: write the graph object to understand its structure
@@ -1159,6 +1176,7 @@ Returns a hashtable with `Width` and `Height` keys containing the optimal dimens
 **Cause:** Large graphs with many nodes/edges or complex layout calculations
 
 **Solutions:**
+
 - Use **draft mode** during development to skip icon rendering:
   ```powershell
   -DraftMode:$true
@@ -1175,6 +1193,7 @@ Returns a hashtable with `Width` and `Height` keys containing the optimal dimens
 **Diagram appears too small or distorted:**
 
 **Solution:** Use `Get-BestImageAspectRatio` to calculate optimal dimensions:
+
 ```powershell
 $BestAspectRatio = Get-BestImageAspectRatio -GraphObj $Diagram -MaxWidth 800 -MaxHeight 600
 Image -Base64 $Diagram -Width $BestAspectRatio.Width -Height $BestAspectRatio.Height
@@ -1207,11 +1226,12 @@ $AdditionalInfo = @{
 }
 ```
 
-### Theme Colours Not Applied
+### Theme Colour Not Applied
 
 **Cause:** Theme variables are not propagated to all graph elements
 
 **Solution:**
+
 - Ensure theme colours are set **before** building the graph:
   ```powershell
   # In the diagram builder function's begin{} block
@@ -1238,6 +1258,7 @@ $AdditionalInfo = @{
 **Dual-pass rendering (export + base64) is slow:**
 
 **Optimisation:**
+
 - Only export when explicitly requested:
   ```powershell
   if ($Options.ExportDiagrams) {
@@ -1255,6 +1276,7 @@ $AdditionalInfo = @{
 **Error:** `The term 'Add-NodeIcon' is not recognized`
 
 **Solution:**
+
 - Ensure AsBuiltReport.Diagram module is imported:
   ```powershell
   Import-Module AsBuiltReport.Diagram
@@ -1284,9 +1306,11 @@ If you encounter issues not covered here:
    ```
 
 4. **Consult the reference implementation:**
-   - [AsBuiltReport.System.Resources](https://github.com/AsBuiltReport/AsBuiltReport.System.Resources)
-   - [Diagrammer.Core Documentation](https://diagrammer.techmyth.blog/)
+   
+     - [AsBuiltReport.System.Resources](https://github.com/AsBuiltReport/AsBuiltReport.System.Resources)
+     - [Diagrammer.Core Documentation](https://diagrammer.techmyth.blog/)
 
 5. **Open an issue on GitHub:**
-   - [AsBuiltReport.Diagram Issues](https://github.com/AsBuiltReport/AsBuiltReport.Diagram/issues)
-   - Include your diagram builder function, the error message, and the input data that triggers the issue
+   
+      - [AsBuiltReport.Diagram Issues](https://github.com/AsBuiltReport/AsBuiltReport.Diagram/issues)
+      - Include your diagram builder function, the error message, and the input data that triggers the issue
