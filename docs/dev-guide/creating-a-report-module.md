@@ -19,11 +19,17 @@ This guide provides comprehensive standards and guidelines for developing AsBuil
 Before beginning development of a new report module, you should first discuss your plans with the project contributors. This ensures there's no duplication of effort, allows for guidance on implementation approach, and helps coordinate with the broader project roadmap. You can initiate this discussion by creating an issue in the [AsBuiltReport Discussions board](https://github.com/orgs/AsBuiltReport/discussions) or by contacting the [maintainers](../about/contributors.md) directly. A good proposal includes:
 
 - The technology or product you want to document and the vendor name
+- The proposed module name, following the [naming convention](#naming-convention) (e.g. `AsBuiltReport.Vendor.Technology`)
 - The PowerShell module or API you plan to use for data collection
 - The PowerShell editions and platforms you intend to support (Windows PowerShell 5.1, PowerShell 7+, or both)
 - A rough outline of the report sections you have in mind
 
-Once your module proposal is approved, a new GitHub repository will be created under the AsBuiltReport organisation following the standard naming convention. Review the naming standards and repository structure below, then use the AsBuiltReport Plaster template to scaffold the module locally before beginning development.
+Once your module proposal and module name have been approved, create a new GitHub repository under your own account using the approved name. Do not create the repository until the name has been approved, so it does not need to be renamed later. Review the naming standards and repository structure below, then use the AsBuiltReport Plaster template to scaffold the module before beginning development.
+
+When your module is ready for review, it will be transferred into the AsBuiltReport organisation. See [Transferring your repository](#5-transferring-your-repository-to-the-asbuiltreport-organisation) for details.
+
+!!! warning "Seek Approval Before Proceeding"
+    Do not create a repository or begin development until both your module proposal and module name have been approved by the project maintainers. Modules developed without prior approval may not be accepted into the AsBuiltReport organisation, and repositories created under an unapproved name may need to be renamed or recreated.
 
 The naming convention is not just cosmetic — it is how AsBuiltReport.Core locates your module at runtime. When you run `New-AsBuiltReport -Report 'Vendor.Technology'`, the framework constructs the module name `AsBuiltReport.Vendor.Technology` and the function name `Invoke-AsBuiltReport.Vendor.Technology` from that string, imports the module, and calls the function directly. No registration step is required beyond following the naming convention.
 
@@ -154,11 +160,11 @@ After `Invoke-Plaster` completes, the module directory is ready for development.
 2. **Update** `Src\Public\Invoke-AsBuiltReport.Vendor.Technology.ps1` — wire up your private functions inside the `foreach ($System in $Target)` loop
 3. **Expand** `AsBuiltReport.Vendor.Technology.json` — add your sections under `InfoLevel` and `HealthCheck`
 4. **Update** `Language\en-US\VendorTechnology.psd1` — add your translation strings following the [language support](#language-support-implementation) standards
-5. **Initialise git** — run `git init` and commit your scaffolded files locally. You can develop and commit locally before the organisation repository is provisioned. Once the maintainers provide the remote URL, add it and push: `git remote add origin <url> && git push -u origin dev`
+5. **Initialise git** — run `git init`, commit your scaffolded files, then add your personal GitHub repository as the remote and push: `git remote add origin https://github.com/<your-username>/AsBuiltReport.Vendor.Technology.git && git push -u origin dev`
 
 #### 4. Testing your module locally
 
-Before pushing to the organisation repository, you can import and test your module entirely from a local path. This inner development loop does not require the GitHub repository to be set up yet.
+You can import and test your module entirely from a local path. This inner development loop does not require a GitHub repository.
 
 **1. Install AsBuiltReport.Core**
 
@@ -187,6 +193,22 @@ New-AsBuiltReport -Report 'Vendor.Technology' -Target '192.168.1.100' -Credentia
 ```
 
 Add `-Verbose` to see `Write-PScriboMessage` output during report generation, which helps confirm your data collection functions are running and catching errors correctly.
+
+#### 5. Transferring your repository to the AsBuiltReport organisation
+
+When your module is ready for review, request a transfer by contacting the [maintainers](../about/contributors.md) or posting in your original proposal discussion. Before requesting a transfer, make sure that:
+
+- The repository name matches the name approved in your proposal
+- The module follows the standard [repository structure](#repository-structure)
+- The PSScriptAnalyzer and Pester workflows pass
+- The `Samples/` folder contains reports generated against a real environment
+- The module has not been published to the PowerShell Gallery
+
+A maintainer will review the module and, once accepted, you will be asked to transfer the repository using GitHub's [Transfer ownership](https://docs.github.com/en/repositories/creating-and-managing-repositories/transferring-a-repository) feature. Transferring (rather than forking) keeps the commit history, issues, pull requests and stars, and GitHub automatically redirects the old repository URL. After the transfer, update your local remote:
+
+```powershell title="Update the git remote after transfer"
+git remote set-url origin https://github.com/AsBuiltReport/AsBuiltReport.Vendor.Technology.git
+```
 
 ## PowerShell Manifest (.psd1) Requirements
 
