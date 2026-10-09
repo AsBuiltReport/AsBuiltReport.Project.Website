@@ -24,12 +24,12 @@ Before beginning development of a new report module, you should first discuss yo
 - The PowerShell editions and platforms you intend to support (Windows PowerShell 5.1, PowerShell 7+, or both)
 - A rough outline of the report sections you have in mind
 
-Once your module proposal and module name have been approved, create a new GitHub repository under your own account using the approved name. Do not create the repository until the name has been approved, so it does not need to be renamed later. Review the naming standards and repository structure below, then use the AsBuiltReport Plaster template to scaffold the module before beginning development.
-
-When your module is ready for review, it will be transferred into the AsBuiltReport organisation. See [Transferring your repository](#5-transferring-your-repository-to-the-asbuiltreport-organisation) for details.
-
 !!! warning "Seek Approval Before Proceeding"
     Do not create a repository or begin development until both your module proposal and module name have been approved by the project maintainers. Modules developed without prior approval may not be accepted into the AsBuiltReport organisation, and repositories created under an unapproved name may need to be renamed or recreated.
+
+Once your module proposal and module name have been approved, create a new GitHub repository under your own account using the approved name. Review the naming standards and repository structure below, then use the AsBuiltReport Plaster template to scaffold the module before beginning development.
+
+When your module is ready for review, it will be transferred into the AsBuiltReport organisation. See [Transferring your repository](#5-transferring-your-repository-to-the-asbuiltreport-organisation) for details.
 
 The naming convention is not just cosmetic — it is how AsBuiltReport.Core locates your module at runtime. When you run `New-AsBuiltReport -Report 'Vendor.Technology'`, the framework constructs the module name `AsBuiltReport.Vendor.Technology` and the function name `Invoke-AsBuiltReport.Vendor.Technology` from that string, imports the module, and calls the function directly. No registration step is required beyond following the naming convention.
 
