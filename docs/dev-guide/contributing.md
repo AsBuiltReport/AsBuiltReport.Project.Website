@@ -46,12 +46,13 @@ flowchart TD
     P --> Q[Test Thoroughly]
 
     S --> T[Raise Module Proposal]
-    T --> U[Proposal Approved]
-    U --> W[Repository Scaffolded]
-    W --> X[Develop Module]
+    T --> U[Proposal & Module Name Approved]
+    U --> W[Create Repository Under Your Account]
+    W --> X[Scaffold & Develop Module]
     X --> V[Test & Validate]
+    V --> Y[Transfer Repository to AsBuiltReport]
 
-    Q & V --> R[Create Pull Request]
+    Q --> R[Create Pull Request]
 ```
 
 ### Ways to Contribute
@@ -401,7 +402,7 @@ For the complete function template, key principles, and annotated examples, see 
 
 Building a new report module from scratch involves additional steps beyond code structure: repository setup, scaffolding with the Plaster template, configuration files, and language support. The [Creating a Report Module](creating-a-report-module.md) guide covers all of these in detail.
 
-Before beginning development, [discuss your plans](creating-a-report-module.md#getting-started) with the project team to ensure there is no duplication of effort and to get your repository set up under the AsBuiltReport organisation.
+Before beginning development, [discuss your plans](creating-a-report-module.md#getting-started) with the project team to ensure there is no duplication of effort. Once your module proposal and module name have been approved, create the repository under your own GitHub account using the approved name. When the module is ready for review, it will be [transferred to the AsBuiltReport organisation](creating-a-report-module.md#5-transferring-your-repository-to-the-asbuiltreport-organisation).
 
 ## Pull Request Review Process
 
