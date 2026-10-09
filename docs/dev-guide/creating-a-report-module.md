@@ -80,7 +80,6 @@ AsBuiltReport.Vendor.Technology/                                # Repository roo
 │   ├── LocalizationData.Tests.ps1                              # Localization key validation tests (not scaffolded, add manually)
 │   └── Invoke-Tests.ps1                                        # Test runner
 ├── .gitignore                                                  # Git ignore rules
-├── AsBuiltReport.png                                           # Module icon (referenced by IconUri in the manifest)
 ├── README.md                                                   # Module documentation
 ├── CHANGELOG.md                                                # Version history
 ├── CODE_OF_CONDUCT.md                                          # Code of Conduct policy
@@ -245,7 +244,7 @@ Your module manifest must include these standardised properties:
             Tags = @('AsBuiltReport', 'Report', 'Documentation', 'PScribo', 'Windows', 'Linux', 'MacOS', 'PSEdition_Desktop', 'PSEdition_Core', '[Vendor]', '[Technology]')     # Include tags which are applicable
             LicenseUri = 'https://raw.githubusercontent.com/AsBuiltReport/AsBuiltReport.Vendor.Technology/master/LICENSE'
             ProjectUri = 'https://github.com/AsBuiltReport/AsBuiltReport.Vendor.Technology'
-            IconUri = 'AsBuiltReport.png'
+            # IconUri = ''
             ReleaseNotes = 'https://raw.githubusercontent.com/AsBuiltReport/AsBuiltReport.Vendor.Technology/master/CHANGELOG.md'
         }
     }
