@@ -58,7 +58,7 @@ Organise your module repository with the following standard structure:
 
 ```text title="Repository folder structure"
 AsBuiltReport.Vendor.Technology/                                # Repository root
-├── .github/                                                    # GitHub workflows and templates
+├── .github/                                                    # GitHub workflows, issue/PR templates and Dependabot configuration
 ├── .vscode/                                                    # VS Code configuration
 ├── AsBuiltReport.Vendor.Technology/                            # PowerShell module directory
 │   ├── AsBuiltReport.Vendor.Technology.json                    # Report configuration file
@@ -70,15 +70,17 @@ AsBuiltReport.Vendor.Technology/                                # Repository roo
 │   │   └── <language>-<REGION>/                                # Additional language support folders
 │   │       └── VendorTechnology.psd1
 │   └── Src/
-│       ├── Private/                                            # Private functions
-│       │   └── Get-Abr[VendorAbbr|Technology][Resource].ps1       # One file per resource type
+│       ├── Private/                                            # Private functions (no subfolders, see Module Script pattern)
+│       │   └── Get-Abr[VendorAbbr|Technology][Resource].ps1    # One file per resource type
 │       └── Public/                                             # Exported functions
 │           └── Invoke-AsBuiltReport.Vendor.Technology.ps1
 ├── Samples/                                                    # Sample report outputs in Word, HTML, and Text formats generated against a real target environment
 ├── Tests/                                                      # Pester test suite
 │   ├── AsBuiltReport.Vendor.Technology.Tests.ps1               # Module manifest and structure tests
-│   ├── LocalizationData.Tests.ps1                              # Localization key validation tests
+│   ├── LocalizationData.Tests.ps1                              # Localization key validation tests (not scaffolded, add manually)
 │   └── Invoke-Tests.ps1                                        # Test runner
+├── .gitignore                                                  # Git ignore rules
+├── AsBuiltReport.png                                           # Module icon (referenced by IconUri in the manifest)
 ├── README.md                                                   # Module documentation
 ├── CHANGELOG.md                                                # Version history
 ├── CODE_OF_CONDUCT.md                                          # Code of Conduct policy
@@ -94,9 +96,9 @@ The `.github/workflows/` folder scaffolded by Plaster contains four pre-configur
 | Workflow | Trigger | Purpose |
 |----------|---------|---------|
 | `PSScriptAnalyzer.yml` | Push, pull request | Lints all PowerShell code; fails the build on errors |
-| `Pester.yml` | Push/PR to `dev`, `master`, `main` | Runs the Pester test suite across Windows, Linux, and macOS on both Windows PowerShell 5.1 and PowerShell 7+ |
+| `Pester.yml` | Push/PR to `dev`, `master`, `main` | Runs the Pester test suite on PowerShell 7+ across Windows, Linux, and macOS, and on Windows PowerShell 5.1 on Windows |
 | `Release.yml` | GitHub release published | Publishes the module to the PowerShell Gallery and posts release announcements |
-| `Stale.yml` | Daily schedule | Marks issues and PRs stale after 90 days of inactivity and closes them after a further 7 days |
+| `Stale.yml` | Daily schedule | Marks issues and PRs stale after 60 days of inactivity and closes them after a further 7 days |
 
 The PSScriptAnalyzer and Stale workflows require no configuration and work immediately. The Pester workflow requires no configuration but will upload code coverage results to Codecov if a `CODECOV_TOKEN` secret is set. The Release workflow is managed by the project maintainers and requires PowerShell Gallery and social media secrets to be configured in the repository settings — you do not need to set these up yourself.
 
@@ -164,7 +166,7 @@ After `Invoke-Plaster` completes, the module directory is ready for development.
 
 #### 4. Testing your module locally
 
-You can import and test your module entirely from a local path. This inner development loop does not require a GitHub repository.
+You can test your module entirely from your local development folder. This inner development loop does not require a GitHub repository.
 
 **1. Install AsBuiltReport.Core**
 
@@ -172,18 +174,23 @@ You can import and test your module entirely from a local path. This inner devel
 Install-Module -Name AsBuiltReport.Core -Scope CurrentUser
 ```
 
-**2. Import your local module**
+**2. Make your local module discoverable**
 
-```powershell title="Import the local module"
-Import-Module 'C:\Development\AsBuiltReport.Vendor.Technology\AsBuiltReport.Vendor.Technology.psd1' -Force
+`New-AsBuiltReport` and `New-AsBuiltReportConfig` only find report modules located in a folder listed in `$env:PSModulePath`. Importing the module from an arbitrary path with `Import-Module` is not enough. Add your repository root (the folder that contains the module folder) to `$env:PSModulePath` for the current session, then import the module:
+
+```powershell title="Add the local module to PSModulePath"
+$env:PSModulePath = 'C:\Development\AsBuiltReport.Vendor.Technology' + [System.IO.Path]::PathSeparator + $env:PSModulePath
+Import-Module -Name AsBuiltReport.Vendor.Technology -Force
 ```
+
+Re-run `Import-Module -Force` after making code changes to reload the module.
 
 **3. Generate a report configuration file**
 
-Use `New-AsBuiltReportConfig` to generate a copy of your module's JSON configuration file at a writable path. This is the file you edit to set InfoLevel and HealthCheck values for each test run.
+Use `New-AsBuiltReportConfig` to generate a copy of your module's JSON configuration file at a writable path. This is the file you edit to set InfoLevel and HealthCheck values for each test run. The `-Filename` value is specified without an extension, as `.json` is appended automatically.
 
 ```powershell title="Generate a report configuration file"
-New-AsBuiltReportConfig -Report 'Vendor.Technology' -FolderPath 'C:\Reports' -Filename 'VendorTechnology.json'
+New-AsBuiltReportConfig -Report 'Vendor.Technology' -FolderPath 'C:\Reports' -Filename 'VendorTechnology'
 ```
 
 **4. Run a test report**
@@ -226,7 +233,7 @@ Your module manifest must include these standardised properties:
     RequiredModules = @(
         @{
             ModuleName = 'AsBuiltReport.Core'
-            ModuleVersion = '1.6.1'               # Minimum required version
+            ModuleVersion = '1.6.2'               # Minimum required version
         }
         # Add vendor-specific modules as needed
     )
@@ -236,7 +243,7 @@ Your module manifest must include these standardised properties:
     PrivateData = @{
         PSData = @{
             Tags = @('AsBuiltReport', 'Report', 'Documentation', 'PScribo', 'Windows', 'Linux', 'MacOS', 'PSEdition_Desktop', 'PSEdition_Core', '[Vendor]', '[Technology]')     # Include tags which are applicable
-            LicenseUri = 'https://github.com/AsBuiltReport/AsBuiltReport.Vendor.Technology/blob/master/LICENSE'
+            LicenseUri = 'https://raw.githubusercontent.com/AsBuiltReport/AsBuiltReport.Vendor.Technology/master/LICENSE'
             ProjectUri = 'https://github.com/AsBuiltReport/AsBuiltReport.Vendor.Technology'
             IconUri = 'AsBuiltReport.png'
             ReleaseNotes = 'https://raw.githubusercontent.com/AsBuiltReport/AsBuiltReport.Vendor.Technology/master/CHANGELOG.md'
@@ -250,26 +257,28 @@ Your module manifest must include these standardised properties:
 The `.psm1` file should dynamically discover and load all function files from `Src/Public` and `Src/Private` using dot-sourcing. This avoids maintaining a manual import list as the module grows.
 
 ```powershell title="Module script (.psm1) template"
-# Dot-source all Public and Private function files
-foreach ($Folder in @('Public', 'Private')) {
-    $FolderPath = Join-Path -Path $PSScriptRoot -ChildPath "Src\$Folder"
-    if (Test-Path -Path $FolderPath) {
-        Get-ChildItem -Path $FolderPath -Filter '*.ps1' -Recurse | ForEach-Object {
-            try {
-                . $_.FullName
-            } catch {
-                Write-Warning "Failed to import function $($_.FullName): $_"
-            }
-        }
+# Get public and private function definition files and dot source them
+$Public = @(Get-ChildItem -Path $PSScriptRoot\Src\Public\*.ps1 -ErrorAction SilentlyContinue)
+$Private = @(Get-ChildItem -Path $PSScriptRoot\Src\Private\*.ps1 -ErrorAction SilentlyContinue)
+
+foreach ($Module in @($Public + $Private)) {
+    try {
+        . $Module.FullName
+    } catch {
+        Write-Error -Message "Failed to import function $($Module.FullName): $_"
     }
 }
+
+Export-ModuleMember -Function $Public.BaseName
+Export-ModuleMember -Function $Private.BaseName
 ```
 
 **Key points:**
 
 - Uses `$PSScriptRoot` for portable path resolution — do not use relative paths
-- Errors on individual files are non-fatal (warns and continues loading)
-- No explicit `Export-ModuleMember` call is needed; the `FunctionsToExport` field in the `.psd1` manifest controls what is exported to callers
+- Only `.ps1` files directly inside `Src/Public` and `Src/Private` are loaded. Subfolders are not searched, so do not place function files in nested folders unless you also update the `.psm1` to search recursively (`-Recurse`)
+- A file that fails to load writes an error, and loading continues with the remaining files
+- The `FunctionsToExport` field in the `.psd1` manifest controls what is ultimately exported to callers, so only `Invoke-AsBuiltReport.Vendor.Technology` is visible outside the module
 
 ## Configuration File Standards
 
@@ -318,20 +327,21 @@ The `Language` property in the `Report` section specifies the default language f
 
 | Locale Code | Language | Locale Code | Language |
 |-------------|----------|-------------|----------|
-| **en-US (default)** | English (United States) | **hu-HU** | Hungarian (Hungary) |
-| **en-GB** | English (United Kingdom) | **it-IT** | Italian (Italy) |
-| **ar-SA** | Arabic (Saudi Arabia) | **ja-JP** | Japanese (Japan) |
-| **cs-CZ** | Czech (Czech Republic) | **ko-KR** | Korean (South Korea) |
-| **da-DK** | Danish (Denmark) | **nb-NO** | Norwegian Bokmål (Norway) |
-| **de-DE** | German (Germany) | **nl-NL** | Dutch (Netherlands) |
-| **el-GR** | Greek (Greece) | **pl-PL** | Polish (Poland) |
-| **es-ES** | Spanish (Spain) | **pt-PT** | Portuguese (Portugal) |
-| **fi-FI** | Finnish (Finland) | **ru-RU** | Russian (Russia) |
-| **fr-FR** | French (France) | **sv-SE** | Swedish (Sweden) |
-| **he-IL** | Hebrew (Israel) | **th-TH** | Thai (Thailand) |
-| **hi-IN** | Hindi (India) | **tr-TR** | Turkish (Turkey) |
-| **vi-VN** | Vietnamese (Vietnam) | **zh-CN** | Chinese (China, Simplified) |
-| **zh-Hans** | Chinese (Simplified) | **zh-Hant** | Chinese (Traditional) |
+| **en-US (default)** | English (United States) | **ko-KR** | Korean (South Korea) |
+| **en-GB** | English (United Kingdom) | **nb-NO** | Norwegian Bokmål (Norway) |
+| **ar-SA** | Arabic (Saudi Arabia) | **nl-NL** | Dutch (Netherlands) |
+| **cs-CZ** | Czech (Czech Republic) | **pl-PL** | Polish (Poland) |
+| **da-DK** | Danish (Denmark) | **pt-PT** | Portuguese (Portugal) |
+| **de-DE** | German (Germany) | **ru-RU** | Russian (Russia) |
+| **el-GR** | Greek (Greece) | **si-LK** | Sinhala (Sri Lanka) |
+| **es-ES** | Spanish (Spain) | **sv-SE** | Swedish (Sweden) |
+| **fi-FI** | Finnish (Finland) | **ta-IN** | Tamil (India) |
+| **fr-FR** | French (France) | **th-TH** | Thai (Thailand) |
+| **he-IL** | Hebrew (Israel) | **tr-TR** | Turkish (Turkey) |
+| **hi-IN** | Hindi (India) | **vi-VN** | Vietnamese (Vietnam) |
+| **hu-HU** | Hungarian (Hungary) | **zh-CN** | Chinese (China, Simplified) |
+| **it-IT** | Italian (Italy) | **zh-Hans** | Chinese (Simplified) |
+| **ja-JP** | Japanese (Japan) | **zh-Hant** | Chinese (Traditional) |
 
 For comprehensive language mapping and fallback chains, see the [Language Support Implementation](#language-support-implementation) section below.
 
@@ -406,16 +416,18 @@ Get-Command -Module PScribo
 
 #### Document Structure
 
-PScribo section styles control both visual hierarchy and Table of Contents (TOC) inclusion. To keep the TOC readable, headings at `Heading5` and above should use a `NOTOCHeading` style so they do not appear in the TOC.
+PScribo section styles control the visual hierarchy of the report. To keep the Table of Contents (TOC) readable, headings at level 5 and below should be excluded from the TOC.
 
-| Style | TOC | Typical use |
-|-------|-----|-------------|
-| `Heading1` | Yes | Top-level report section (e.g. tenant, site) |
-| `Heading2` | Yes | Major resource category |
-| `Heading3` | Yes | Resource type within a category |
-| `Heading4` | Yes | Individual resource instance |
-| `NOTOCHeading5` | No | Sub-detail within a resource instance |
-| `NOTOCHeading6` | No | Further nesting below Heading5 |
+A section is excluded from the TOC only by the `-ExcludeFromTOC` switch on `Section`; the style alone does not exclude it. Use the matching `NOTOCHeading` style together with `-ExcludeFromTOC` so the heading keeps the correct visual formatting.
+
+| Style | `-ExcludeFromTOC` | TOC | Typical use |
+|-------|-------------------|-----|-------------|
+| `Heading1` | No | Yes | Top-level report section (e.g. tenant, site) |
+| `Heading2` | No | Yes | Major resource category |
+| `Heading3` | No | Yes | Resource type within a category |
+| `Heading4` | No | Yes | Individual resource instance |
+| `NOTOCHeading5` | Yes | No | Sub-detail within a resource instance |
+| `NOTOCHeading6` | Yes | No | Further nesting below Heading5 |
 
 ```powershell title="Section heading styles"
 Section -Name 'Infrastructure' -Style Heading1 {
@@ -427,7 +439,7 @@ Section -Name 'Infrastructure' -Style Heading1 {
             foreach ($VM in $VMs) {
                 Section -Name $VM.Name -Style Heading4 {
 
-                    Section -Name 'Network Adapters' -Style NOTOCHeading5 {
+                    Section -Name 'Network Adapters' -Style NOTOCHeading5 -ExcludeFromTOC {
                         # Detail tables that should not clutter the TOC
                     }
                 }
@@ -543,7 +555,7 @@ AsBuiltReport.Core acts as the orchestrator: it reads your module's JSON configu
 | `$ReportConfig` | Your module's `.json` configuration file | Parsed JSON as a PowerShell object |
 | `$reportTranslate` | Your module's language `.psd1` file | Parsed translation hashtable |
 
-Both variables are set in the script scope by AsBuiltReport.Core immediately before your module's main function is called. This means they are readable anywhere in your module — including inside private functions — without needing to be passed as parameters.
+Both variables are set in the global scope by AsBuiltReport.Core before your module's main function is called. This means they are readable anywhere in your module — including inside private functions — without needing to be passed as parameters.
 
 ```powershell title="Access report configuration"
 # Access configuration sections in your module
@@ -695,14 +707,12 @@ function Invoke-AsBuiltReport.Vendor.Technology {
         PS C:\> Invoke-AsBuiltReport.Vendor.Technology -Target '192.168.1.100' -Credential $cred
     #>
 
+    # Do not remove or add to these parameters. AsBuiltReport.Core passes -Target and -Credential;
+    # do not mark them as mandatory, as Core can also invoke the function using API token or
+    # interactive authentication without a credential.
     [CmdletBinding()]
     param (
-        [Parameter(Mandatory = $true, ValueFromPipeline = $false)]
-        [ValidateNotNullOrEmpty()]
         [String[]] $Target,
-
-        [Parameter(Mandatory = $true, ValueFromPipeline = $false)]
-        [ValidateNotNullOrEmpty()]
         [PSCredential] $Credential
     )
 
@@ -726,7 +736,7 @@ function Invoke-AsBuiltReport.Vendor.Technology {
             # Establish a connection to the target system.
             # Replace this with the appropriate connection cmdlet for your technology.
             # Store the connection object so it can be used by private functions and
-            # closed in the end{} block.
+            # closed in the finally{} block.
             $script:Connection = Connect-VendorSystem -Server $System -Credential $Credential -ErrorAction Stop  # script: scope makes this readable by all Get-Abr* private functions without passing it as a parameter
 
             Section -Style Heading1 $System {
@@ -737,16 +747,15 @@ function Invoke-AsBuiltReport.Vendor.Technology {
 
         } catch {
             Write-PScriboMessage -IsWarning ($LocalizedData.ConnectionError -f $System, $_.Exception.Message)
+        } finally {
+            # Disconnect from the target system before moving on to the next one.
+            if ($script:Connection) {
+                Disconnect-VendorSystem -Connection $script:Connection -Confirm:$false -ErrorAction SilentlyContinue
+                $script:Connection = $null
+            }
         }
     }
     #endregion foreach loop
-
-    end {
-        # Disconnect from the target system and clean up any open sessions.
-        if ($script:Connection) {
-            Disconnect-VendorSystem -Connection $script:Connection -Confirm:$false -ErrorAction SilentlyContinue
-        }
-    }
 }
 ```
 
@@ -754,7 +763,7 @@ function Invoke-AsBuiltReport.Vendor.Technology {
 
 Private functions in `Src/Private/` serve two distinct purposes:
 
-- **Report section functions** (`Get-Abr[VendorAbbr|Technology][Resource]`) — each responsible for collecting data from the target system and rendering it as a PScribo section. Every report section function must have its own `.ps1` file named after the function (e.g. `Get-AbrVendorLocation.ps1`). Following PowerShell naming conventions, the resource noun must be **singular** (e.g. `Get-AbrVbrBackupJob`, not `Get-AbrvSphereVMHost`).
+- **Report section functions** (`Get-Abr[VendorAbbr|Technology][Resource]`) — each responsible for collecting data from the target system and rendering it as a PScribo section. Every report section function must have its own `.ps1` file named after the function (e.g. `Get-AbrVendorLocation.ps1`). Following PowerShell naming conventions, the resource noun must be **singular** (e.g. `Get-AbrVbrBackupJob`, not `Get-AbrVbrBackupJobs`).
 - **Utility helpers** (`ConvertTo-HashToYN`, `ConvertTo-TextYN`, connection helpers, etc.) — reusable functions that support report section functions. These may be grouped into a dedicated helper file (`Src/Private/Helpers.ps1`).
 
 #### Functions must be self-contained
@@ -886,6 +895,7 @@ Language files use PowerShell data files (.psd1) with a hashtable structure cont
     # Main module translations
     InvokeAsBuiltReportVendorTechnology = ConvertFrom-StringData @'
         Connecting = Connecting to {0}.
+        ConnectionError = Unable to connect to {0}: {1}
         DefaultOrder = No custom section order specified. Using default order.
         CustomOrder = Using custom section order from report JSON configuration.
         InfoLevelNotFound = InfoLevel for '{0}' not found.
@@ -911,6 +921,7 @@ Language files use PowerShell data files (.psd1) with a hashtable structure cont
         GuestOS = Guest OS
         IPAddress = IP Address
         None = None
+        ErrorMessage = Unable to collect Virtual Machine information:
 '@
 
     # Storage section translations (Get-AbrStorageInfo)
@@ -938,6 +949,7 @@ Language files use PowerShell data files (.psd1) with a hashtable structure cont
     # Traducciones principales del módulo
     InvokeAsBuiltReportVendorTechnology = ConvertFrom-StringData @'
         Connecting = Conectando a {0}.
+        ConnectionError = No se puede conectar a {0}: {1}
         DefaultOrder = No se especificó un orden de sección personalizado. Usando orden predeterminado.
         CustomOrder = Usando orden de sección personalizado de la configuración JSON del informe.
         InfoLevelNotFound = InfoLevel para '{0}' no encontrado.
@@ -963,6 +975,7 @@ Language files use PowerShell data files (.psd1) with a hashtable structure cont
         GuestOS = SO Invitado
         IPAddress = Dirección IP
         None = Ninguno
+        ErrorMessage = No se puede recopilar la información de las máquinas virtuales:
 '@
 
     # Traducciones de sección de almacenamiento
@@ -1086,9 +1099,9 @@ AsBuiltReport implements intelligent culture fallback through the `Resolve-Cultu
 
 This ensures that if a specific regional translation isn't available, the module will use the parent language before falling back to English.
 
-### Supported Language Codes
+### Culture Fallback Mappings
 
-The following language codes are supported with comprehensive fallback mappings:
+`Resolve-Culture` includes fallback mappings for more than 60 culture codes. The following table lists the most common. Cultures that are not explicitly mapped fall back to their parent language family (e.g. `de-XX` → `de-DE` → `en-US`).
 
 | Code | Language | Code | Language |
 | --- | --- | --- | --- |
@@ -1108,6 +1121,7 @@ The following language codes are supported with comprehensive fallback mappings:
 | zh-TW | Chinese (Traditional) | hi-IN | Hindi |
 | zh-Hans | Chinese (Simplified) | th-TH | Thai |
 | zh-Hant | Chinese (Traditional) | vi-VN | Vietnamese |
+| si-LK | Sinhala | ta-IN | Tamil |
 
 ### Best Practices
 
@@ -1136,8 +1150,9 @@ New-AsBuiltReport -Report Vendor.Technology -Target server01 -Credential $cred -
 # Test with French (uses configuration file setting)
 New-AsBuiltReport -Report Vendor.Technology -Target server01 -Credential $cred -ReportConfigFilePath 'C:\Config\report-fr.json'
 
-# Test fallback (if es-MX not available, falls back to es-ES)
-New-AsBuiltReport -Report Vendor.Technology -Target server01 -Credential $cred -ReportLanguage 'es-MX'
+# Test fallback: set "Language": "es-MX" in the JSON configuration file. If no es-MX folder exists, es-ES is used.
+# (-ReportLanguage only accepts languages that have a folder in the module's Language directory.)
+New-AsBuiltReport -Report Vendor.Technology -Target server01 -Credential $cred -ReportConfigFilePath 'C:\Config\report-es-MX.json'
 ```
 
 ### Example: Complete Language Implementation
@@ -1148,10 +1163,7 @@ Here's a complete example showing language support implementation:
 function Invoke-AsBuiltReport.Vendor.Technology {
     [CmdletBinding()]
     param (
-        [Parameter(Mandatory = $true)]
         [String[]] $Target,
-
-        [Parameter(Mandatory = $true)]
         [PSCredential] $Credential
     )
 
@@ -1164,24 +1176,24 @@ function Invoke-AsBuiltReport.Vendor.Technology {
 
     foreach ($System in $Target) {
         try {
-            Write-PScriboMessage ($LocalizedData.Connecting -f $Target)
+            Write-PScriboMessage ($LocalizedData.Connecting -f $System)
 
-            Section -Style Heading1 $LocalizedData.Heading {
-                Get-AbrVTVirtualMachine
+            Section -Style Heading1 $System {
+                Get-AbrVirtualMachine
             }
         } catch {
-            Write-PScriboMessage -IsWarning ($LocalizedData.ConnectionError -f $Target, $_.Exception.Message)
+            Write-PScriboMessage -IsWarning ($LocalizedData.ConnectionError -f $System, $_.Exception.Message)
         }
     }
 }
 
-function Get-AbrVTVirtualMachine {
+function Get-AbrVirtualMachine {
     [CmdletBinding()]
     param ()
 
     begin {
         # Scope translations for this function
-        $LocalizedData = $reportTranslate.GetAbrVTVirtualMachine
+        $LocalizedData = $reportTranslate.GetAbrVirtualMachine
         Write-PScriboMessage ($LocalizedData.InfoLevel -f $InfoLevel.VirtualMachine)
         Write-PScriboMessage $LocalizedData.Collecting
     }
@@ -1325,7 +1337,7 @@ function Get-AbrVirtualMachine {
 
 :octicons-x-circle-fill-16:{ .x-circle-fill } DO NOT
 ```powershell title="Avoid these practices"
-# Avoid functions within report scripts
+# Avoid defining functions inline within other functions; place each function in its own file under Src/
 # Avoid hardcoded credentials
 # Avoid excessive global variables
 # Avoid unclear variable names like $a, $temp, $data
@@ -1566,9 +1578,9 @@ All modules must include a `Tests/` directory with Pester v5 tests. The Plaster 
 
 | File | Purpose |
 |------|---------|
-| `AsBuiltReport.Vendor.Technology.Tests.ps1` | Module manifest validation, directory structure, exported functions, private function inventory, JSON config schema, PSScriptAnalyzer |
-| `LocalizationData.Tests.ps1` | Validates that all language files have identical keys and that no keys are missing from non-en-US files |
-| `Invoke-Tests.ps1` | Test runner — invokes Pester with project-standard settings |
+| `AsBuiltReport.Vendor.Technology.Tests.ps1` | Scaffolded by Plaster with basic manifest and exported function tests. Expand it to cover directory structure, private function inventory, JSON config schema and PSScriptAnalyzer |
+| `LocalizationData.Tests.ps1` | Not scaffolded by Plaster; create it yourself. Validates that all language files have identical keys and that no keys are missing from non-en-US files |
+| `Invoke-Tests.ps1` | Scaffolded by Plaster. Test runner that invokes Pester with project-standard settings |
 
 #### Running tests
 
@@ -1679,7 +1691,7 @@ Provide comprehensive comment-based help:
 - **Minimise API Calls**: Batch requests when possible
 - **Efficient Data Structures**: Use appropriate collection types
 - **Memory Management**: Dispose of large objects when done
-- **Parallel Processing**: Consider workflow parallelisation for large environments
+- **Parallel Processing**: For large environments, consider collecting data in parallel (e.g. `ForEach-Object -Parallel` on PowerShell 7+). PowerShell workflows are not supported in PowerShell 7
 
 ### Performance Testing
 Test your module with:
