@@ -77,7 +77,7 @@ Get-Help about_PScriboDocument
 
 ```powershell title="DocumentOption examples"
 # Default DocumentOption
-DocumentOption -EnableSectionNumbering -PageSize 'A4' -DefaultFont 'Arial' -MarginLeftAndRight 71 -MarginTopAndBottom 71 -Orientation $Orientation
+DocumentOption -EnableSectionNumbering -PageSize 'A4' -DefaultFont 'Segoe Ui' -MarginLeftAndRight 71 -MarginTopAndBottom 71 -Orientation $Orientation
 
 # Custom DocumentOption
 # Disable automatic section numbering. Set page size to Letter. Set default font to Tahoma. Set custom page margins.
@@ -94,7 +94,7 @@ Get-Help about_PScriboStyles
 
 
 ### Default Styles
-A style script uses a standard set of styles for a report. These styles are defined below and must be included in every style script.
+A style script uses a standard set of styles for a report. These styles are defined below and must be included in every style script, with the exception of `TableDefaultAltRow`, which is optional.
 
 ```text title="Default style names and descriptions"
 ## Title & Heading Styles
@@ -121,7 +121,7 @@ Footer              - Document footer style
 ## Table Heading & Row Styles
 TableDefaultHeading - Table heading row style
 TableDefaultRow     - Table row style
-TableDefaultAltRow  - Table alternating row style
+TableDefaultAltRow  - Table alternating row style (optional)
 
 # Table Caption Style
 Caption             - Table caption style
@@ -215,7 +215,7 @@ The `TOC` cmdlet creates a 'Table of Contents' from the document's section headi
 
 Each report will include a JSON configuration file which provides an option to enable/disable the Table of Contents.
 
-```json title="Show Table of Contents Option" hl_lines="7"
+```json title="Show Table of Contents Option" hl_lines="8"
 {
     "Report": {
         "Name": "VMware vSphere As Built Report",
