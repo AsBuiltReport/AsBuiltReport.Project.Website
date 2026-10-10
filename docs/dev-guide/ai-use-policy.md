@@ -98,7 +98,7 @@ conventions from the start, with less manual correction needed afterwards.
     Paste the relevant documentation pages into your AI tool's session before
     asking it to generate or review code. Paste an example function from an
     existing module to give the tool a concrete pattern to follow. Some tools
-    (such as GitHub Copilot Workspace or Claude Projects) support persistent
+    (such as GitHub Copilot Spaces or Claude Projects) support persistent
     context — upload the relevant pages there so the standards apply
     automatically across your entire session.
 
