@@ -18,12 +18,16 @@ Charts are generated in memory as base64-encoded images and embedded directly in
 !!! info "Prerequisite Reading"
     This guide assumes you are already familiar with creating AsBuiltReport report modules. If not, read the [Creating a Report Module](creating-a-report-module.md) guide first.
 
+!!! failure "Images are not supported when using Linux & macOS"
+
+    Unfortunately due to [breaking changes](https://learn.microsoft.com/en-gb/dotnet/core/compatibility/core-libraries/6.0/system-drawing-common-windows-only){:target="_blank"} in .NET 6, images are no longer supported for reports generated using Linux or macOS.
+
 ## Installation
 
 Install AsBuiltReport.Chart from the PowerShell Gallery:
 
 ```powershell title="Install AsBuiltReport.Chart"
-Install-Module -Name AsBuiltReport.Chart -Scope CurrentUser
+    Install-Module -Name AsBuiltReport.Chart -Scope CurrentUser
 ```
 
 ## Declaring the Dependency
@@ -38,7 +42,7 @@ RequiredModules = @(
     }
     @{
         ModuleName    = 'AsBuiltReport.Chart'
-        ModuleVersion = '0.3.2'
+        ModuleVersion = '0.3.4'
     }
 )
 ```
@@ -95,7 +99,7 @@ $chartLabels = [string[]]$sampleData.Keys
 $chartValues = [double[]]$sampleData.Values
 
 $chartFileItem = New-PieChart `
-    -Title ' ' `
+    -Title 'VM power state distribution' `
     -Values $chartValues `
     -Labels $chartLabels `
     -EnableCustomColorPalette `
@@ -108,7 +112,9 @@ $chartFileItem = New-PieChart `
     -TitleFontBold `
     -TitleFontSize 16
 ```
-##### Pie Chart example output:
+
+#### Pie Chart example output
+
 ![Pie Chart](../assets/images/charts/piechart.png)
 
 ### Donut Chart
@@ -125,6 +131,7 @@ $chartLabels = [string[]]$sampleData.Keys
 $chartValues = [double[]]$sampleData.Values
 
 $chartFileItem = New-DonutChart `
+    -Title 'VM power state distribution'
     -Values $chartValues `
     -Labels $chartLabels `
     -EnableCustomColorPalette `
@@ -135,11 +142,12 @@ $chartFileItem = New-DonutChart `
     -LegendOrientation Horizontal `
     -LegendAlignment LowerCenter `
     -TitleFontBold `
-    -TitleFontSize 16
+    -TitleFontSize 16 `
 ```
-##### Donut Chart example output:
-![Donut Chart](../assets/images/charts/donutchart.png)
 
+##### Donut Chart example output:
+
+![Donut Chart](../assets/images/charts/donutchart.png)
 
 ### Bar Chart
 
@@ -174,7 +182,8 @@ $chartFileItem = New-BarChart `
     -TitleFontSize 16
 ```
 
-##### Bar Chart example output:
+#### Bar Chart example output
+
 ![Bar Chart](../assets/images/charts/barchart.png)
 
 ### Stacked Bar Chart
@@ -217,7 +226,8 @@ $chartFileItem = New-StackedBarChart `
     -TitleFontSize 16
 ```
 
-##### Stacked Bar Chart example output:
+#### Stacked Bar Chart example output
+
 ![Stacked Bar Chart](../assets/images/charts/stackedbarchart.png)
 
 ### Single Stacked Bar Chart
@@ -245,7 +255,8 @@ $chartFileItem = New-SingleStackedBarChart `
     -TitleFontSize 16
 ```
 
-##### Single Stacked Bar Chart example output:
+#### Single Stacked Bar Chart example output
+
 ![Single Stacked Bar Chart](../assets/images/charts/singlestackedbarchart.png)
 
 ### Signal Chart
@@ -265,7 +276,8 @@ $chartFileItem = New-SignalChart `
     -TitleFontSize 16
 ```
 
-##### Signal Chart example output:
+#### Signal Chart example output
+
 ![Signal Chart](../assets/images/charts/signalchart.png)
 
 ```powershell title="Signal chart — multi-line throughput trend"
@@ -287,7 +299,8 @@ $chartFileItem = New-SignalChart `
     -TitleFontSize 16
 ```
 
-##### Multi-line Signal Chart example output:
+#### Multi-line Signal Chart example output
+
 ![Multi-line Signal Chart](../assets/images/charts/signaladvchart.png)
 
 ### Radar Chart
@@ -339,7 +352,8 @@ $chartFileItem = New-RadarChart `
     -TitleFontSize 16
 ```
 
-##### Radar Chart example output:
+#### Radar Chart example output
+
 ![Radar Chart](../assets/images/charts/radarchart.png)
 
 **Key parameters:**
@@ -347,11 +361,11 @@ $chartFileItem = New-RadarChart `
 - `-Values` — Array or array of arrays of numeric values (one value per spoke, one array per dataset)
 - `-LegendLabels` — Labels for each dataset (one label per array in `-Values`)
 - `-SpokeLabels` — Optional labels for each spoke/axis on the radar
-- `-SpokesLength` — Length of the spokes (axes); omit or set to 0 for auto-scaling
+- `-SpokesLength` — Length of the spokes (axes); 5 to 50
 
 ## Safety Guards
 
-Chart generation can return `$null` if data is empty or an error occurs. Always validate the return value before calling `Image`, and verify that the underlying data contains non-zero values before rendering the chart.
+Chart generation can return `ArgumentException` if data is empty or an error occurs. Always validate the return value before calling `Image`, and verify that the underlying data contains non-zero values before rendering the chart.
 
 ```powershell title="Chart safety guard pattern"
 if ($chartFileItem -and ($chartValues | Measure-Object -Sum).Sum -ne 0) {
@@ -400,14 +414,14 @@ All chart types support an optional watermark that overlays semi-transparent tex
 
 ### Watermark Parameters
 
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `-EnableWatermark` | Switch | (off) | Enables the watermark overlay |
-| `-WatermarkText` | String | `Confidential` | Text to display as the watermark |
-| `-WatermarkFontName` | String | `Arial` | Font family for the watermark text |
-| `-WatermarkFontSize` | Int | `24` | Font size (points) for the watermark text |
-| `-WatermarkColor` | BasicColors | `Gray` | Colour of the watermark text |
-| `-WatermarkOpacity` | Double | `0.3` | Opacity (0.0–1.0) of the watermark; lower values are more transparent |
+| Parameter            | Type        | Default        | Description                                                           |
+| -------------------- | ----------- | -------------- | --------------------------------------------------------------------- |
+| `-EnableWatermark`   | Switch      | (off)          | Enables the watermark overlay                                         |
+| `-WatermarkText`     | String      | `Confidential` | Text to display as the watermark                                      |
+| `-WatermarkFontName` | String      | `Arial`        | Font family for the watermark text                                    |
+| `-WatermarkFontSize` | Int         | `24`           | Font size (points) for the watermark text                             |
+| `-WatermarkColor`    | BasicColors | `Gray`         | Colour of the watermark text                                          |
+| `-WatermarkOpacity`  | Double      | `0.3`          | Opacity (0.0–1.0) of the watermark; lower values are more transparent |
 
 ### Watermark Examples
 
@@ -468,7 +482,8 @@ $chartFileItem = New-SignalChart `
     -Width 600 -Height 400
 ```
 
-##### Example output with watermarks:
+#### Example output with watermarks
+
 ![Watermarks](../assets/images/charts/watermark.png)
 
 ## Placing Charts in a Report
@@ -476,7 +491,7 @@ $chartFileItem = New-SignalChart `
 Charts should appear **before** their related data table within the same section, providing a visual summary that the table then backs with detail. Place the `Image` call, then a `BlankLine`, then the `Table` call.
 
 ```powershell title="Chart followed by table — recommended layout"
-Section -Style NOTOCHeading4 'Job Status Summary' {
+Section -Style NOTOCHeading4 -ExcludeFromTOC 'Job Status Summary' {
     if ($chartFileItem -and ($chartValues | Measure-Object -Sum).Sum -ne 0) {
         Image -Text 'Backup job result distribution' -Align 'Center' -Percent 100 -Base64 $chartFileItem
     }
@@ -548,7 +563,7 @@ function Get-AbrVbrBackupJobSummary {
                     Paragraph "The following section provides a summary of all backup jobs and their current status."
                     BlankLine
 
-                    Section -Style NOTOCHeading4 'Job Status Summary' {
+                    Section -Style NOTOCHeading4 -ExcludeFromTOC 'Job Status Summary' {
                         if ($chartFileItem -and ($chartValues | Measure-Object -Sum).Sum -ne 0) {
                             Image -Text 'Backup job result distribution' -Align 'Center' -Percent 100 -Base64 $chartFileItem
                         }
@@ -648,30 +663,33 @@ process {
 
 The following parameters are available on all chart cmdlets:
 
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `-Title` | String | — | Chart title text |
-| `-Format` | Formats | — | Output format: `png`, `jpg`, `jpeg`, `bmp`, `svg`, `base64` |
-| `-Width` | Int | 400 | Chart width in pixels |
-| `-Height` | Int | 300 | Chart height in pixels |
-| `-FontName` | String | Arial | Base font for all text elements |
-| `-TitleFontSize` | Int | 14 | Title text size in points |
-| `-TitleFontBold` | Switch | — | Render title in bold |
-| `-TitleFontColor` | BasicColors | — | Title text colour |
-| `-EnableLegend` | Switch | — | Show the chart legend |
-| `-LegendOrientation` | Orientation | — | `Horizontal` or `Vertical` |
-| `-LegendAlignment` | Alignments | — | 9-position alignment (e.g. `UpperRight`, `UpperCenter`) |
-| `-ColorPalette` | ColorPalettes | — | Built-in palette name |
-| `-EnableCustomColorPalette` | Switch | — | Use `-CustomColorPalette` hex values |
-| `-CustomColorPalette` | String[] | — | Array of hex colour codes |
-| `-EnableBorder` | Switch | — | Draw a border around the chart |
-| `-BorderColor` | BasicColors | — | Border colour |
-| `-BorderSize` | Int | — | Border thickness |
-| `-EnableWatermark` | Switch | — | Overlay a watermark on the chart |
-| `-WatermarkText` | String | Confidential | Watermark text |
-| `-WatermarkOpacity` | Double | 0.3 | Watermark opacity (0.0–1.0) |
-| `-OutputFolderPath` | DirectoryInfo | — | Write chart to this folder (not needed with `base64`) |
-| `-Filename` | String | — | Output filename (auto-generated if omitted) |
+| Parameter                   | Type          | Default      | Description                                                 |
+| --------------------------- | ------------- | ------------ | ----------------------------------------------------------- |
+| `-Title`                    | String        | —            | Chart title text                                            |
+| `-Format`                   | Formats       | —            | Output format: `png`, `jpg`, `jpeg`, `bmp`, `svg`, `base64` |
+| `-Width`                    | Int           | 400          | Chart width in pixels                                       |
+| `-Height`                   | Int           | 300          | Chart height in pixels                                      |
+| `-FontName`                 | String        | Arial        | Base font for all text elements                             |
+| `-TitleFontSize`            | Int           | 14           | Title text size in points                                   |
+| `-TitleFontBold`            | Switch        | —            | Render title in bold                                        |
+| `-TitleFontColor`           | BasicColors   | —            | Title text colour                                           |
+| `-EnableLegend`             | Switch        | —            | Show the chart legend                                       |
+| `-LegendOrientation`        | Orientation   | —            | `Horizontal` or `Vertical`                                  |
+| `-LegendAlignment`          | Alignments    | —            | 9-position alignment (e.g. `UpperRight`, `UpperCenter`)     |
+| `-ColorPalette`             | ColorPalettes | —            | Built-in palette name                                       |
+| `-EnableCustomColorPalette` | Switch        | —            | Use `-CustomColorPalette` hex values                        |
+| `-CustomColorPalette`       | String[]      | —            | Array of hex colour codes                                   |
+| `-EnableChartBorder`        | Switch        | —            | Draw a border around the chart                              |
+| `-ChartBorderColor`         | BasicColors   | —            | Border colour                                               |
+| `-ChartBorderSize`          | Int           | —            | Border thickness                                            |
+| `-ChartBorderStyle`         | BorderStyle   | —            | BorderStyles enum (Solid, Dashed etc..)                     |
+| `-EnableWatermark`          | Switch        | —            | Overlay a watermark on the chart                            |
+| `-WatermarkText`            | String        | Confidential | Watermark text                                              |
+| `-WatermarkOpacity`         | Double        | 0.3          | Watermark opacity (0.0–1.0)                                 |
+| `-WatermarkAlignment`       | Alignments    | MiddleCenter | Watermark alignment                                         |
+| `-WatermarkRotation`        | String        | 0            | Watermark rotation                                          |
+| `-OutputFolderPath`         | String        | —            | Write chart to this folder (not needed with `base64`)       |
+| `-Filename`                 | String        | —            | Output filename (auto-generated if omitted)                 |
 
 ## Summary of Best Practices
 
@@ -680,5 +698,5 @@ The following parameters are available on all chart cmdlets:
 - **Cast arrays explicitly** — `[string[]]` for labels, `[double[]]` for values. Passing untyped arrays causes parameter binding errors.
 - **Use the standard status palette** — `@('#DFF0D0', '#FFF3C4', '#FECDD1', '#ADACAF')` (green, yellow, pink, grey) for consistent status visualisations across modules.
 - **Place charts before tables** — charts provide visual context; the table provides the underlying detail.
-- **Keep chart sections out of the TOC** — use `NOTOCHeading4` or `NOTOCHeading5` for the section containing the chart and table so individual chart sections do not clutter the Table of Contents.
+- **Keep chart sections out of the TOC** — use `NOTOCHeading4` or `NOTOCHeading5` with the `ExcludeFromTOC` switch for the section containing the chart and table so individual chart sections do not clutter the Table of Contents.
 - **Localise chart text** — store chart titles, axis labels, and `Image` alt-text in your language file alongside other translatable strings.
