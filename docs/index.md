@@ -14,6 +14,8 @@ tags:
   - vmware
   - microsoft
   - veeam
+  - azure
+  - cloud
   - open-source
 ---
 
