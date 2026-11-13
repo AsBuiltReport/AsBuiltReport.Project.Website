@@ -13,8 +13,10 @@ copyright: Copyright &copy; 2016 - 2026 Tim Carman
 theme:
     name: material
     language: en
-    logo: assets/images/logos/AsBuiltReport.png
-    favicon: assets/images/logos/AsBuiltReport.png
+    custom_dir: overrides
+    logo: assets/images/logos/asbuiltreport-mark-reversed.svg
+    favicon: assets/images/logos/favicon.png
+    font: false
     features:
       - content.action.edit
       - content.action.view
@@ -29,8 +31,20 @@ theme:
       - content.code.copy
       - search.highlight
     palette:
-      primary: amber
-      accent: blue
+      - media: "(prefers-color-scheme: light)"
+        scheme: default
+        primary: custom
+        accent: custom
+        toggle:
+          icon: material/weather-night
+          name: Switch to dark mode
+      - media: "(prefers-color-scheme: dark)"
+        scheme: slate
+        primary: custom
+        accent: custom
+        toggle:
+          icon: material/weather-sunny
+          name: Switch to light mode
     locale: en
 
 # Customization
@@ -45,9 +59,6 @@ extra:
     - icon: fontawesome/brands/bluesky
       link: https://bsky.app/profile/asbuiltreport.com
       name: AsBuiltReport on Bluesky
-    - icon: fontawesome/brands/x-twitter
-      link: https://x.com/AsBuiltReport
-      name: AsBuiltReport on X (Twitter)
   generator: false
 
 extra_css:
@@ -80,8 +91,9 @@ plugins:
         - tags
   - social:
       cards_layout_options:
-        font_family: Montserrat Alternates
-        color: "#063561"
+        font_family: Archivo
+        background_color: "#012456"
+        color: "#FFFFFF"
   - redirects:
       redirect_maps:
         'about/contributing.md': 'dev-guide/contributing.md'

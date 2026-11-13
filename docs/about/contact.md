@@ -17,8 +17,6 @@ A [discussions page](https://github.com/orgs/AsBuiltReport/discussions){:target=
 
 ## Follow Us
 
-:fontawesome-brands-square-x-twitter:{ .X } X - [@AsBuiltReport](https://x.com/asbuiltreport){:target="_blank"}
-
 :fontawesome-brands-bluesky: Bluesky - [@AsBuiltReport](https://bsky.app/profile/asbuiltreport.com){:target="_blank"}
 
 :fontawesome-brands-github: GitHub - [@AsBuiltReport](https://github.com/AsBuiltReport){:target="_blank"}

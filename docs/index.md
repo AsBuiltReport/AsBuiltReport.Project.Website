@@ -1,6 +1,10 @@
 ---
 title: AsBuiltReport - Document Your Datacenter With PowerShell
 description: Open source PowerShell framework for automated infrastructure documentation in Word, HTML, and Text formats
+template: home.html
+hide:
+  - navigation
+  - toc
 tags:
   - asbuiltreport
   - powershell
@@ -13,166 +17,243 @@ tags:
   - open-source
 ---
 
-<h1 align="center" style="background-image: url('../../assets/images/background.jpg');color:white;">
-    <br>
-    <img src='../../assets/images/logos/AsBuiltReport.png' alt='AsBuiltReport Logo' width="15%" height="15%" />
-    <br>AsBuiltReport
-    <br><br>Document Your Datacenter
-    <br>With PowerShell
-    <br><br>
-</h1>
+<section class="abr-section" markdown>
 
-AsBuiltReport is an open source configuration document framework which utilises Microsoft PowerShell to produce as-built documentation in multiple document formats for multiple vendors and technologies. The framework allows users to easily generate clear and consistent documentation, for any environment which supports Microsoft PowerShell and/or a RESTful API.
+## Three commands to a finished report
 
-## **Features**
-<div class="grid cards" markdown>
+Everything installs from the PowerShell Gallery. Configuration lives in JSON files you can keep in source control and reuse on a schedule. The [Quickstart Guide](user-guide/quickstart.md) covers each step in detail.
+{ .abr-lede }
 
--   :octicons-log-16: **Multiple Document Formats**
+<div class="abr-steps" markdown>
 
-    ---
+<div class="abr-step" markdown>
+
+### Install the framework
+
+The core module, plus a report module for each product you want to document.
+
+```powershell
+Install-Module AsBuiltReport.Core
+Install-Module AsBuiltReport.Microsoft.Azure
+```
+
+</div>
+
+<div class="abr-step" markdown>
+
+### Set it up once
+
+Record your company details, then choose how much detail and which health checks each report includes.
+
+```powershell
+New-AsBuiltConfig
+New-AsBuiltReportConfig -Report Microsoft.Azure
+```
+
+</div>
+
+<div class="abr-step" markdown>
+
+### Generate the report
+
+Run it by hand or from a scheduled task. The document is rebuilt from the live system each time.
+
+```powershell
+New-AsBuiltReport -Report Microsoft.Azure `
+  -Target $TenantId -UseInteractiveAuth -Format Word
+```
+
+</div>
+
+</div>
+
+</section>
+
+<section class="abr-section abr-split" markdown>
+
+## Features
+
+<div class="abr-spec" markdown>
+
+-   :octicons-log-16:{ .abr-icon } **Multiple Document Formats**
 
     Generate reports in one or more document formats, including DOCX, HTML, and Text.
 
--   :octicons-sliders-16: **Granular Information Level**
-
-    ---
+-   :octicons-sliders-16:{ .abr-icon } **Granular Information Level**
 
     Configure the information level for each report section. You can create a summary report, a fully comprehensive report, or something in between.
 
--   :octicons-paintbrush-16: **Customised Styling**
+-   :octicons-pulse-16:{ .abr-icon } **Health Checks**
 
-    ---
+    Enable health checks to ==highlight configuration issues== within a report. Toggle individual health checks on or off as required.
+
+-   :octicons-paintbrush-16:{ .abr-icon } **Customised Styling**
 
     Use the default style or [create your own](dev-guide/creating-a-report-style.md) to match your corporate identity. Set page orientation, text and table formatting with fonts, colours, borders and highlighted cells and rows.
 
--   :fontawesome-solid-language: **Multilingual Support**
-
-    ---
+-   :fontawesome-solid-language:{ .abr-icon } **Multilingual Support**
 
     Comprehensive [multilingual support](dev-guide/creating-a-report-module.md#language-support-implementation) allows reports to be generated in [multiple languages](dev-guide/creating-a-report-module.md#language-configuration), where available.
 
-
--   :octicons-apps-16: **Modular Architecture**
-
-    ---
+-   :octicons-apps-16:{ .abr-icon } **Modular Architecture**
 
     The modular architecture and core framework enables users to use the same in-built commands to generate as-built configuration reports from a library of technology vendors.
 
--   :octicons-pulse-16: **Health Checks**
-
-    ---
-
-    Enable health checks to highlight configuration issues within a report. Toggle individual health checks on or off as required.
-
--   :octicons-mail-16: **Email Reports**
-
-    ---
+-   :octicons-mail-16:{ .abr-icon } **Email Reports**
 
     Attach and send reports via email to one or more recipients.
 
 </div>
 
-## **Use Cases**
-<div class="grid cards" markdown>
+</section>
 
--   :octicons-checklist-16: **Compliance Audits**
+<section class="abr-section" markdown>
 
-    ---
+## Use Cases
+
+<div class="abr-grid" markdown>
+
+-   **Compliance Audits**
 
     Generate point-in-time infrastructure documentation for ISO 27001, SOC 2, PCI-DSS, and other compliance frameworks.
 
--   :octicons-git-pull-request-16: **Change Management**
-
-    ---
+-   **Change Management**
 
     Produce before-and-after documentation for change advisory board (CAB) submissions and post-change verification.
 
--   :octicons-people-16: **Environment Handover**
-
-    ---
+-   **Environment Handover**
 
     Accelerate onboarding and handover with comprehensive, consistent infrastructure documentation generated on demand.
 
--   :octicons-shield-check-16: **Disaster Recovery**
-
-    ---
+-   **Disaster Recovery**
 
     Maintain accurate as-built records of your infrastructure to support disaster recovery planning and runbook validation.
 
 </div>
 
-## **Components**
-<div class="grid cards" markdown>
+</section>
 
--   :simple-hackthebox: **Core Module**
+<section class="abr-section abr-modules abr-bleed" markdown>
 
-    ---
+## Report Modules
 
-    The core module provides the framework for each individual report module. It provides the [base commands](user-guide/new-asbuiltreport.md) and default style script used to generate each individual report.
+Each module documents one product and is maintained by people who run it. See the [report module overview](user-guide/report-modules/overview.md) for compatibility and documentation.
+{ .abr-lede }
 
--   :simple-hackthebox: **Reports Module**
+<div class="abr-spec" markdown>
 
-    ---
+-   **Aruba**
 
-    The report module is specific to each vendor and/or technology and is used to extract information from the specific environment.<br><br>The report module will be written to utilise PowerShell modules or RESTful APIs which the vendor/technology provides.
+    [Aruba.ClearPass](https://github.com/AsBuiltReport/AsBuiltReport.Aruba.ClearPass#readme){ .abr-chip }
 
--   :material-code-json: **Core Module Configuration**
+-   **Dell EMC**
 
-    ---
+    [DellEMC.VxRail](https://github.com/AsBuiltReport/AsBuiltReport.DellEMC.VxRail#readme){ .abr-chip }
 
-    The core module configuration is a JSON file which stores information relating to the author’s name, company information & SMTP mail server configuration.<br><br>Individual core module configuration files can be saved and specified when generating reports.
+-   **Fortinet**
 
--   :material-code-json: **Reports Module Configuration**
+    [Fortinet.FortiGate](https://github.com/AsBuiltReport/AsBuiltReport.Fortinet.FortiGate#readme){ .abr-chip }
 
-    ---
+-   **Microsoft**
 
-    The reports module configuration is a JSON file which stores information specific to the related report. It holds information such as the report name, version, and release status.<br><br>The report configuration can also provide functionality such as configurable report options, health checks and granular information levels.<br><br>Individual report module configuration files can be saved and specified when generating reports.
+    [Microsoft.AD](https://github.com/AsBuiltReport/AsBuiltReport.Microsoft.AD#readme){ .abr-chip }
+    [Microsoft.Azure](https://github.com/AsBuiltReport/AsBuiltReport.Microsoft.Azure#readme){ .abr-chip }
+    [Microsoft.DHCP](https://github.com/AsBuiltReport/AsBuiltReport.Microsoft.DHCP#readme){ .abr-chip }
+    [Microsoft.SCVMM](https://github.com/AsBuiltReport/AsBuiltReport.Microsoft.SCVMM#readme){ .abr-chip }
+    [Microsoft.Windows](https://github.com/AsBuiltReport/AsBuiltReport.Microsoft.Windows#readme){ .abr-chip }
 
--   :material-powershell: **Styles Script**
+-   **NetApp**
 
-    ---
+    [NetApp.ONTAP](https://github.com/AsBuiltReport/AsBuiltReport.NetApp.ONTAP#readme){ .abr-chip }
 
-    The styles script sets the default layout, fonts, colours and sizes used within the report.<br><br>Style scripts can be used to layout cover pages, table of contents and other unique tables or sections.<br><br>Custom style scripts can be [created](dev-guide/creating-a-report-style.md) to format reports to match your corporate identity.
+-   **Nutanix**
+
+    [Nutanix.PrismElement](https://github.com/AsBuiltReport/AsBuiltReport.Nutanix.PrismElement#readme){ .abr-chip }
+
+-   **Pure Storage**
+
+    [PureStorage.FlashArray](https://github.com/AsBuiltReport/AsBuiltReport.PureStorage.FlashArray#readme){ .abr-chip }
+
+-   **Rubrik**
+
+    [Rubrik.CDM](https://github.com/AsBuiltReport/AsBuiltReport.Rubrik.CDM#readme){ .abr-chip }
+
+-   **Veeam**
+
+    [Veeam.VB365](https://github.com/AsBuiltReport/AsBuiltReport.Veeam.VB365#readme){ .abr-chip }
+    [Veeam.VBR](https://github.com/AsBuiltReport/AsBuiltReport.Veeam.VBR#readme){ .abr-chip }
+
+-   **VMware**
+
+    [VMware.AppVolumes](https://github.com/AsBuiltReport/AsBuiltReport.VMware.AppVolumes#readme){ .abr-chip }
+    [VMware.ESXi](https://github.com/AsBuiltReport/AsBuiltReport.VMware.ESXi#readme){ .abr-chip }
+    [VMware.Horizon](https://github.com/AsBuiltReport/AsBuiltReport.VMware.Horizon#readme){ .abr-chip }
+    [VMware.SRM](https://github.com/AsBuiltReport/AsBuiltReport.VMware.SRM#readme){ .abr-chip }
+    [VMware.vSphere](https://github.com/AsBuiltReport/AsBuiltReport.VMware.vSphere#readme){ .abr-chip }
 
 </div>
 
-## **Report Modules**
+</section>
 
-Click each vendor logo to view [available report modules](user-guide/report-modules/overview.md) and associated documentation.
+<section class="abr-section abr-split" markdown>
 
-<table width="100%">
-    <tr>
-        <td align="center" valign="middle" width="50%"><a href="https://github.com/orgs/AsBuiltReport/repositories?q=VMware&type=all&language=&sort=" target="_blank"><img src="../assets/images/logos/VMware.png" alt="VMware Report Modules" width="75%" height="75%" /></a></td>
-        <td align="center" valign="middle" width="50%"><a href="https://github.com/orgs/AsBuiltReport/repositories?q=Microsoft&type=all&language=&sort=" target="_blank"><img src="../assets/images/logos/Microsoft.png" alt="Microsoft Report Modules" width="75%" height="75%" /></a></td>
-    </tr>
-    <tr>
-        <td align="center" valign="middle" width="50%"><a href="https://github.com/orgs/AsBuiltReport/repositories?q=DellEMC&type=all&language=&sort=" target="_blank"><img src="../assets/images/logos/Dell_EMC.png" alt="Dell EMC Report Modules" width="75%" height="75%" /></a></td>
-        <td align="center" valign="middle" width="50%"><a href="https://github.com/orgs/AsBuiltReport/repositories?q=NetApp&type=all&language=&sort=" target="_blank"><img src="../assets/images/logos/NetApp.png" alt="NetApp Report Modules" /></a></td>
-    </tr>
-    <tr>
-        <td align="center" valign="middle" width="50%"><a href="https://github.com/orgs/AsBuiltReport/repositories?q=Nutanix&type=all&language=&sort=" target="_blank"><img src="../assets/images/logos/Nutanix.png" alt="Nutanix Report Modules" width="85%" height="85%" /></a></td>
-        <td align="center" valign="middle" width="50%"><a href="https://github.com/orgs/AsBuiltReport/repositories?q=PureStorage&type=all&language=&sort=" target="_blank"><img src="../assets/images/logos/PureStorage.jpg" alt="Pure Storage Report Modules" width="85%" height="85%" /></a></td>
-    </tr>
-    <tr>
-        <td align="center" valign="middle" width="50%"><a href="https://github.com/orgs/AsBuiltReport/repositories?q=Veeam&type=all&language=&sort=" target="_blank"><img src="../assets/images/logos/Veeam.png" alt="Veeam Report Modules" width="75%" height="75%" /></a></td>
-        <td align="center" valign="middle" width="50%"><a href="https://github.com/orgs/AsBuiltReport/repositories?q=Rubrik&type=all&language=&sort=" target="_blank"><img src="../assets/images/logos/Rubrik.png" alt="Rubrik Report Modules" width="75%" height="75%" /></a></td>
-    </tr>
-</table>
+## Components
 
-## **Get Started**
+<div class="abr-spec" markdown>
 
-<div class="grid cards" markdown>
+-   :octicons-package-16:{ .abr-icon } **Core Module**
 
--   :octicons-rocket-16: **New to AsBuiltReport?**
+    The core module provides the framework for each individual report module. It provides the [base commands](user-guide/new-asbuiltreport.md) and default style script used to generate each individual report.
 
-    ---
+-   :octicons-plug-16:{ .abr-icon } **Reports Module**
 
-    Follow the [Quickstart Guide](user-guide/quickstart.md) to generate your first report in minutes.
+    The report module is specific to each vendor and/or technology and is used to extract information from the specific environment. It is written to utilise PowerShell modules or RESTful APIs which the vendor/technology provides.
 
--   :octicons-plug-16: **Looking for a specific module?**
+-   :material-code-json:{ .abr-icon } **Core Module Configuration**
 
-    ---
+    A JSON file which stores information relating to the author's name, company information and SMTP mail server configuration. Individual core module configuration files can be saved and specified when generating reports.
 
-    Browse all available [Report Modules](user-guide/report-modules/overview.md) by vendor and technology.
+-   :material-code-json:{ .abr-icon } **Reports Module Configuration**
 
+    A JSON file which stores information specific to the related report, such as the report name, version, and release status. It also provides configurable report options, health checks and granular information levels. Individual report module configuration files can be saved and specified when generating reports.
+
+-   :material-powershell:{ .abr-icon } **Styles Script**
+
+    The styles script sets the default layout, fonts, colours and sizes used within the report, and can lay out cover pages, table of contents and other unique tables or sections. Custom style scripts can be [created](dev-guide/creating-a-report-style.md) to format reports to match your corporate identity.
+
+</div>
+
+</section>
+
+<div class="abr-band abr-bleed" markdown>
+
+<div class="abr-band__copy" markdown>
+
+## Document the kit you run
+
+AsBuiltReport is written by the people who use it. If your platform is missing, the developer guide shows how to build a report module for it.
+
+</div>
+
+<div class="abr-actions" markdown>
+
+[Read the developer guide](dev-guide/contributing.md){ .abr-btn .abr-btn--dark }
+[Join the discussion](https://github.com/orgs/AsBuiltReport/discussions){ .abr-btn .abr-btn--outline }
+
+</div>
+
+</div>
+
+<div class="abr-titleblock">
+  <div class="abr-titleblock__brand">
+    <img src="assets/images/logos/asbuiltreport-mark.svg#only-light" alt="">
+    <img src="assets/images/logos/asbuiltreport-mark-reversed.svg#only-dark" alt="">
+    AsBuiltReport
+  </div>
+  <div><dl><dt>Licence</dt><dd>MIT</dd></dl></div>
+  <div><dl><dt>Built with</dt><dd>PowerShell and PScribo</dd></dl></div>
+  <div><dl><dt>Maintained by</dt><dd>Tim Carman, Jonathan Colon</dd></dl></div>
+  <div><dl><dt>Downloads</dt><dd>250,000+ on the PowerShell Gallery</dd></dl></div>
+  <div><dl><dt>Formats</dt><dd>Word, HTML, Text</dd></dl></div>
+  <div><dl><dt>Site</dt><dd>Made with ProperDocs</dd></dl></div>
 </div>

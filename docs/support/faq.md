@@ -274,7 +274,7 @@ If you find AsBuiltReport useful and would like to support its development, plea
 Yes! Join the conversation:
 
 - **GitHub Discussions** - [https://github.com/orgs/AsBuiltReport/discussions](https://github.com/orgs/AsBuiltReport/discussions)
-- **Social Media** - Follow us on [X/Twitter](https://x.com/AsBuiltReport) and [Bluesky](https://bsky.app/profile/asbuiltreport.com)
+- **Social Media** - Follow us on [Bluesky](https://bsky.app/profile/asbuiltreport.com)
 
 ### Can I request a new report module or feature?
 

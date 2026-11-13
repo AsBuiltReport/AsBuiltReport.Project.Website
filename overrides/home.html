@@ -1,0 +1,58 @@
+{#-
+  Home page template. Used by docs/index.md via "template: home.html".
+  The hero lives here; every other section is Markdown in docs/index.md.
+-#}
+{% extends "main.html" %}
+
+{% block tabs %}
+  {{ super() }}
+  <section class="abr-hero">
+    <div class="md-grid abr-hero__inner">
+      <div class="abr-hero__copy">
+        <h1 class="abr-hero__title">Document your datacenter with PowerShell.</h1>
+        <p class="abr-hero__lede">AsBuiltReport is an open source framework that connects to your infrastructure and writes the as-built document for you, in Word, HTML or plain text, the same way every time.</p>
+        <div class="abr-actions">
+          <a class="abr-btn abr-btn--primary" href="{{ 'user-guide/quickstart/' | url }}">Generate your first report</a>
+          <a class="abr-btn abr-btn--ghost" href="{{ 'user-guide/report-modules/overview/' | url }}">Browse report modules</a>
+        </div>
+        <p class="abr-hero__note">Runs on Windows PowerShell 5.1 and PowerShell 7. MIT licensed.</p>
+      </div>
+      <div class="abr-hero__visual" aria-hidden="true">
+        <div class="abr-console">
+          <div class="abr-console__bar">
+            <span class="abr-console__dot"></span><span class="abr-console__dot"></span><span class="abr-console__dot"></span>
+            <span class="abr-console__title">PowerShell 7</span>
+          </div>
+<pre class="abr-console__body"><span class="p">PS&gt;</span> <span class="c">New-AsBuiltReport</span> <span class="p">-Report</span> Microsoft.Azure `
+      <span class="p">-Target</span> <span class="v">$TenantId</span> `
+      <span class="p">-UseInteractiveAuth</span> `
+      <span class="p">-Format</span> Word,HTML `
+      <span class="p">-OutputFolderPath</span> ~/Reports `
+      <span class="p">-EnableHealthCheck</span>
+
+<span class="o">Microsoft Azure As Built Report has been saved to '~/Reports'.</span>
+<span class="p">PS&gt;</span> <span class="abr-console__cursor">_</span></pre>
+        </div>
+        <div class="abr-paper">
+          <div class="abr-paper__head"><span>Microsoft Azure As Built Report</span><span>Page 27</span></div>
+          <div class="abr-paper__h">5.2 Storage Accounts</div>
+          <p class="abr-paper__p">The following table details the configuration of storage account stprodaue01.</p>
+          <table>
+            <tr><th>Location</th><td>Australia East</td></tr>
+            <tr><th>Replication</th><td>GRS</td></tr>
+            <tr><th>Secure Transfer</th><td>Enabled</td></tr>
+            <tr><th>Minimum TLS Version</th><td>TLS 1.2</td></tr>
+            <tr><th>Public Network Access</th><td class="abr-paper__warn">Enabled</td></tr>
+          </table>
+          <p class="abr-paper__foot">Highlighted by a health check: public network access is enabled.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}
+
+{% block content %}
+  <div class="abr-home">
+    {{ page.content }}
+  </div>
+{% endblock %}
