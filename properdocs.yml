@@ -62,7 +62,7 @@ extra:
   generator: false
 
 extra_css:
-  - assets/stylesheets/extra.css
+  - assets/stylesheets/extra.css?v=2026.11.13
 
 # Plugins
 plugins:
