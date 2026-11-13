@@ -1,6 +1,7 @@
 ---
 title: Adding Charts to a Report Module
 description: How to integrate AsBuiltReport.Chart into report modules to add pie, donut, bar, stacked bar, radar, and signal chart visualisations
+description: How to integrate AsBuiltReport.Chart into report modules to add pie, donut, bar, stacked bar, radar, heatmap, and signal chart visualisations
 tags:
   - development
   - report-modules
@@ -12,6 +13,7 @@ tags:
 # Adding Charts to a Report Module
 
 AsBuiltReport.Chart is an optional PowerShell module that adds chart generation capabilities to AsBuiltReport report modules. It provides seven chart types — pie, donut, bar, stacked bar, single stacked bar, radar, and signal — and integrates directly with the PScribo document framework used by AsBuiltReport.
+AsBuiltReport.Chart is an optional PowerShell module that adds chart generation capabilities to AsBuiltReport report modules. It provides eight chart types — pie, donut, bar, stacked bar, single stacked bar, radar, heatmap, and signal — and integrates directly with the PScribo document framework used by AsBuiltReport.
 
 Charts are generated in memory as base64-encoded images and embedded directly into the report output using PScribo's `Image` cmdlet. No intermediate files are written to disk.
 
@@ -89,6 +91,15 @@ $chartValues = [double[]]$sampleData.Values
 Use `New-PieChart` to show proportional distribution across categories — for example, VM power states, job results, or license usage by type.
 
 ```powershell title="Pie chart — VM power state distribution"
+$VMs = @(
+    [pscustomobject]@{ Name = 'VM-01'; PowerState = 'PoweredOn' }
+    [pscustomobject]@{ Name = 'VM-02'; PowerState = 'PoweredOn' }
+    [pscustomobject]@{ Name = 'VM-03'; PowerState = 'PoweredOn' }
+    [pscustomobject]@{ Name = 'VM-04'; PowerState = 'PoweredOff' }
+    [pscustomobject]@{ Name = 'VM-05'; PowerState = 'PoweredOff' }
+    [pscustomobject]@{ Name = 'VM-06'; PowerState = 'Suspended' }
+)
+
 $sampleData = [ordered]@{
     'Powered On'  = ($VMs | Where-Object { $_.PowerState -eq 'PoweredOn' } | Measure-Object).Count
     'Powered Off' = ($VMs | Where-Object { $_.PowerState -eq 'PoweredOff' } | Measure-Object).Count
@@ -103,7 +114,7 @@ $chartFileItem = New-PieChart `
     -Values $chartValues `
     -Labels $chartLabels `
     -EnableCustomColorPalette `
-    -CustomColorPalette @('#DFF0D0', '#FFF3C4', '#FECDD1') `
+    -CustomColorPalette @('#d9eedd', '#ffe9a3', '#f9d4d1') `
     -Width 600 -Height 400 `
     -Format base64 `
     -EnableLegend `
@@ -122,6 +133,10 @@ $chartFileItem = New-PieChart `
 Use `New-DonutChart` for the same use cases as a pie chart when you want to emphasise completion. Donut charts can also be used to show progress towards a goal — for example, patch compliance percentage or licence consumption.
 
 ```powershell title="Donut chart — VM power state distribution"
+# Sample computer data
+$ComputersPatched = @('VM-001', 'VM-002', 'VM-003')
+$ComputersNotPatched = @('VM-004', 'VM-005')
+
 $sampleData = [ordered]@{
     'Compliant'  = ($ComputersPatched | Measure-Object).Count
     'Non-Compliant'   = ($ComputersNotPatched | Measure-Object).Count
@@ -131,18 +146,20 @@ $chartLabels = [string[]]$sampleData.Keys
 $chartValues = [double[]]$sampleData.Values
 
 $chartFileItem = New-DonutChart `
-    -Title 'VM power state distribution'
+    -Title 'Patch Compliance' `
     -Values $chartValues `
     -Labels $chartLabels `
     -EnableCustomColorPalette `
-    -CustomColorPalette @('#DFF0D0', '#FECDD1') `
+    -CustomColorPalette @('#d9eedd', '#f9d4d1') `
     -Width 600 -Height 400 `
     -Format base64 `
     -EnableLegend `
     -LegendOrientation Horizontal `
     -LegendAlignment LowerCenter `
     -TitleFontBold `
-    -TitleFontSize 16 `
+    -TitleFontSize 16
+
+$chartFileItem
 ```
 
 ##### Donut Chart example output:
@@ -154,6 +171,16 @@ $chartFileItem = New-DonutChart `
 Use `New-BarChart` to compare values across discrete categories — for example, backup job results by status, or compliance check outcomes.
 
 ```powershell title="Bar chart — backup job results by status"
+$Jobs = @(
+    [pscustomobject]@{ LatestStatus = 'Success' }
+    [pscustomobject]@{ LatestStatus = 'Success' }
+    [pscustomobject]@{ LatestStatus = 'Warning' }
+    [pscustomobject]@{ LatestStatus = 'Failed' }
+    [pscustomobject]@{ LatestStatus = 'None' }
+    [pscustomobject]@{ LatestStatus = 'None' }
+    [pscustomobject]@{ LatestStatus = 'None' }
+)
+
 $sampleData = [ordered]@{
     'Success' = ($Jobs | Where-Object { $_.LatestStatus -eq 'Success' } | Measure-Object).Count
     'Warning' = ($Jobs | Where-Object { $_.LatestStatus -eq 'Warning' } | Measure-Object).Count
@@ -171,7 +198,7 @@ $chartFileItem = New-BarChart `
     -LabelXAxis 'Status' `
     -LabelYAxis 'Job Count' `
     -EnableCustomColorPalette `
-    -CustomColorPalette @('#DFF0D0', '#FFF3C4', '#FECDD1', '#ADACAF') `
+    -CustomColorPalette @('#d9eedd', '#ffe9a3', '#f9d4d1', '#dce7f9') `
     -Width 600 -Height 400 `
     -Format base64 `
     -EnableLegend `
@@ -193,6 +220,14 @@ Use `New-StackedBarChart` when each bar is composed of multiple segments — for
 The `-Values` parameter expects an array of arrays: one inner array per bar, with each element representing a segment value.
 
 ```powershell title="Stacked bar chart — repository space utilisation"
+# Sample data for demonstration/testing
+$Repositories = @(
+    [pscustomobject]@{ Name = 'Repo A'; UsedSpacePercent = 65; FreeSpacePercent = 35 },
+    [pscustomobject]@{ Name = 'Repo B'; UsedSpacePercent = 48; FreeSpacePercent = 52 },
+    [pscustomobject]@{ Name = 'Repo C'; UsedSpacePercent = 72; FreeSpacePercent = 28 },
+    [pscustomobject]@{ Name = 'Repo D'; UsedSpacePercent = 54; FreeSpacePercent = 46 }
+)
+
 $sampleData = $Repositories | Select-Object Name, UsedSpacePercent, FreeSpacePercent
 
 $chartLabels    = [string[]]$sampleData.Name
@@ -212,12 +247,12 @@ $chartFileItem = New-StackedBarChart `
     -Labels $chartLabels `
     -LegendCategories $chartCategories `
     -EnableCustomColorPalette `
-    -CustomColorPalette @('#FECDD1', '#DFF0D0') `
+    -CustomColorPalette @('#f9d4d1', '#d9eedd') `
     -Width 600 -Height 600 `
     -Format base64 `
     -AreaOrientation Horizontal `
-    -LabelXAxis 'Space (%)' `
-    -LabelYAxis 'Repository' `
+    -LabelXAxis 'Repository' `
+    -LabelYAxis 'Space (%)' `
     -EnableLegend `
     -LegendOrientation Horizontal `
     -LegendAlignment UpperCenter `
@@ -235,17 +270,22 @@ $chartFileItem = New-StackedBarChart `
 Use `New-SingleStackedBarChart` to show a single bar divided into labelled segments — useful for illustrating licence consumption or a single capacity resource.
 
 ```powershell title="Single stacked bar chart — licence consumption by workload type"
+$LicenseUsage = [pscustomobject]@{
+    WorkloadType = @('Exchange', 'SharePoint', 'Teams', 'OneDrive', 'Skype', 'Project')
+    UsedInstances = @(120.0, 95.0, 80.0, 60.0, 45.0, 30.0)
+}
+
 $chartLabels = [string[]]$LicenseUsage.WorkloadType
 $chartValues = [double[]]$LicenseUsage.UsedInstances
 
 $chartFileItem = New-SingleStackedBarChart `
-    -Title ' ' `
+    -Title 'Veeam License Usage' `
     -Values $chartValues `
     -Label 'Workload Type' `
     -LegendCategories $chartLabels `
     -EnableCustomColorPalette `
-    -CustomColorPalette @('#DFF0D0', '#FFF3C4', '#FECDD1', '#ADACAF', '#B3E5FC', '#F8BBD0') `
-    -Width 600 -Height 200 `
+    -CustomColorPalette @('#d9eedd', '#ffe9a3', '#f9d4d1', '#adacaf', '#dce7f9', '#F8BBD0') `
+    -Width 1200 -Height 250 `
     -Format base64 `
     -AreaOrientation Horizontal `
     -EnableLegend `
@@ -265,7 +305,7 @@ Use `New-SignalChart` for time-series or trend data — for example, CPU utilisa
 
 ```powershell title="Signal chart — CPU utilisation trend (single line)"
 # Wrap a single line's values in a jagged array
-$chartValues = @(,[double[]]@(42, 55, 61, 49, 78, 65, 53))
+$chartValues = @(,[double[]]@( 58, 67, 72, 75, 70, 78, 81, 42, 48, 45, 56, 61, 64, 69, 73, 77, 80, 76, 71, 68, 74, 79, 82, 85))
 
 $chartFileItem = New-SignalChart `
     -Title 'CPU Utilisation (%)' `
@@ -273,16 +313,18 @@ $chartFileItem = New-SignalChart `
     -Format base64 `
     -Width 600 -Height 400 `
     -TitleFontBold `
-    -TitleFontSize 16
+    -TitleFontSize 16 `
+    -LabelYAxis "%" `
+    -LabelXAxis "Time"
 ```
 
 #### Signal Chart example output
 
 ![Signal Chart](../assets/images/charts/signalchart.png)
 
-```powershell title="Signal chart — multi-line throughput trend"
-$readThroughput  = [double[]]@(120, 145, 132, 160, 155)
-$writeThroughput = [double[]]@(85,  92,  78,  101, 96)
+```powershell title="Multi-line Signal chart — Storage throughput trend"
+$readThroughput  = [double[]]@(120, 145, 132, 160, 155, 170, 182, 175, 190, 185, 202, 195)
+$writeThroughput = [double[]]@(85,  92,  78,  101, 96, 108, 115, 110, 122, 118, 130, 126)
 
 $chartValues = @(,$readThroughput) + @(,$writeThroughput)
 
@@ -296,7 +338,9 @@ $chartFileItem = New-SignalChart `
     -LegendOrientation Horizontal `
     -LegendAlignment UpperCenter `
     -TitleFontBold `
-    -TitleFontSize 16
+    -TitleFontSize 16`
+    -LabelYAxis "Throughput (MB/s)" `
+    -LabelXAxis "Time"
 ```
 
 #### Multi-line Signal Chart example output
@@ -326,6 +370,11 @@ $chartFileItem = New-RadarChart `
     -TitleFontSize 16
 ```
 
+#### Radar Chart example output
+
+![Radar Chart](../assets/images/charts/basicradarchart.png)
+
+
 **Advanced example** — multiple datasets with spoke labels:
 
 ```powershell title="Radar chart — multi-site security posture comparison"
@@ -352,7 +401,7 @@ $chartFileItem = New-RadarChart `
     -TitleFontSize 16
 ```
 
-#### Radar Chart example output
+#### Advanced Radar Chart example output
 
 ![Radar Chart](../assets/images/charts/radarchart.png)
 
@@ -362,6 +411,41 @@ $chartFileItem = New-RadarChart `
 - `-LegendLabels` — Labels for each dataset (one label per array in `-Values`)
 - `-SpokeLabels` — Optional labels for each spoke/axis on the radar
 - `-SpokesLength` — Length of the spokes (axes); 5 to 50
+
+
+### HeatMap Chart
+
+Use `New-HeatMapChart` to visualise values across two dimensions — for example, resource utilisation by host and time period, or assessment scores by category and site. Supply `-Values` as a two-dimensional array of numeric values, with each inner array representing a row in the heatmap.
+
+```powershell title="HeatMap chart — resource utilisation by cluster"
+$chartValues = @(
+    @(78, 81, 74),
+    @(66, 72, 80),
+    @(88, 91, 85)
+)
+$RowLabels = @('Cluster A', 'Cluster B', 'Cluster C')
+$ColumnLabels = @('CPU', 'Memory', 'Storage')
+
+
+New-HeatMapChart `
+    -Title 'Cluster Utilization' `
+    -Values $chartValues `
+    -RowLabels $RowLabels `
+    -ColumnLabels $ColumnLabels `
+    -LabelXAxis 'Resources' `
+    -LabelYAxis 'Clusters' `
+    -EnableLegend `
+    -Format png `
+    -Width 700 `
+    -Height 500 `
+
+```
+
+The rows and columns form the two dimensions of the heatmap. Use consistent row and column ordering when preparing the values so the chart is easy to interpret.
+
+#### HeatMap Chart example output
+
+![HeatMap Chart](../assets/images/charts/heatMapchart.png)
 
 ## Safety Guards
 
@@ -456,15 +540,26 @@ $chartFileItem = New-BarChart `
 
 ```powershell title="Stacked bar chart with draft watermark"
 $chartFileItem = New-StackedBarChart `
-    -Title 'Budget' `
-    -Values @(@(1, 2), @(3, 4)) `
-    -Labels @('A', 'B') `
-    -LegendCategories @('X', 'Y') `
-    -Format base64 `
+    -Title 'Quarterly Revenue by Product (USD thousands)' `
+    -Values @(@(42, 28, 16),@(48, 32, 19),@(45, 37, 22),@(56, 41, 25)) `
+    -Labels @('Q1', 'Q2', 'Q3', 'Q4') `
+    -LegendCategories @('Software', 'Services', 'Support') `
+    -EnableCustomColorPalette `
+    -CustomColorPalette @('#d9eedd', '#ffe9a3', '#f9d4d1') `
+    -Format png `
+    -Width 900 `
+    -Height 600 `
     -EnableWatermark `
-    -WatermarkFontSize 36 `
-    -WatermarkText 'DRAFT' `
-    -Width 600 -Height 400
+    -WatermarkFontName 'Arial' `
+    -WatermarkFontSize 28 `
+    -WatermarkText 'SENSITIVE' `
+    -WatermarkAlignment MiddleCenter `
+    -WatermarkOpacity 1 `
+    -EnableLegend `
+    -LegendAlignment UpperCenter `
+    -LegendOrientation Horizontal `
+    -LabelYAxis 'USD' `
+    -LabelXAxis 'Quarterly Revenue'
 ```
 
 **Custom font and higher opacity** — better visibility for sensitive data:
@@ -482,7 +577,7 @@ $chartFileItem = New-SignalChart `
     -Width 600 -Height 400
 ```
 
-#### Example output with watermarks
+#### Example output with watermark
 
 ![Watermarks](../assets/images/charts/watermark.png)
 
