@@ -1,8 +1,7 @@
 <p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="docs/assets/images/brand/header-dark.png">
-    <img src="docs/assets/images/brand/header-light.png" alt="AsBuiltReport - Document your datacenter with PowerShell" width="480">
-  </picture>
+    <a href="https://www.asbuiltreport.com/">
+        <img src="docs/assets/images/brand/repo-banner.png" alt="AsBuiltReport Project.Website" width="880">
+    </a>
 </p>
 
 # AsBuiltReport Project Website
@@ -42,14 +41,13 @@ Guidelines:
 - The wordmark is "AsBuiltReport" set in Archivo at weight 800 and width 112%, in one colour.
 - Do not recolour, stretch or rotate the mark.
 
-### GitHub header
+### Repository banner
 
-The header at the top of this README. Every repository README uses the same header with its own name under the wordmark, for example `Microsoft.AD`. It comes as a light and a dark version, and GitHub shows the one that matches the reader's theme.
+Every repository README opens with the same banner as the organisation profile: the reversed mark, the wordmark, the repository name in Cascadia Code with a yellow prompt, and a yellow edge. Module repositories show their install command on the last line, for example `PS> Install-Module AsBuiltReport.VMware.vSphere`. This repository has no PowerShell install, so it shows the website address instead.
 
 | File | Use |
 |---|---|
-| [`header-light.png`](docs/assets/images/brand/header-light.png) | Light theme, 1280 x 300 |
-| [`header-dark.png`](docs/assets/images/brand/header-dark.png) | Dark theme, 1280 x 300 |
+| [`repo-banner.png`](docs/assets/images/brand/repo-banner.png) | This repository, 1760 x 480 shown at 880 px wide |
 
 ### Colours
 
