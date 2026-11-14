@@ -1,6 +1,6 @@
 <p align="center">
     <a href="https://www.asbuiltreport.com/">
-        <img src="docs/assets/images/brand/repo-banner.png" alt="AsBuiltReport Project.Website" width="880">
+        <img src="https://raw.githubusercontent.com/AsBuiltReport/.github/main/assets/repo-banners/AsBuiltReport.Project.Website.png" alt="AsBuiltReport Project.Website" width="880">
     </a>
 </p>
 
@@ -42,11 +42,9 @@ Guidelines:
 
 ### Repository banner
 
-Every repository README opens with the same banner as the organisation profile: the reversed mark, the wordmark, the repository name in Cascadia Code with a yellow prompt, and a yellow edge. Module repositories show their install command on the last line, for example `PS> Install-Module AsBuiltReport.VMware.vSphere`. This repository has no PowerShell install, so it shows the website address instead.
+Every repository README opens with the same banner as the organisation profile: the reversed mark, the wordmark, the repository name in Cascadia Code with a yellow prompt, and a yellow edge. Module repositories show their install command on the last line, for example `PS> Install-Module AsBuiltReport.VMware.vSphere`, or their GitHub address until the module is on the PowerShell Gallery. This repository has no PowerShell install, so it shows the website address instead.
 
-| File | Use |
-|---|---|
-| [`repo-banner.png`](docs/assets/images/brand/repo-banner.png) | This repository, 1760 x 480 shown at 880 px wide |
+The banners for every repository, and the module tiles on the organisation profile, are rendered from one template by the [banner generator](https://github.com/AsBuiltReport/.github/tree/main/generator) in the `.github` repository, into [`assets/repo-banners`](https://github.com/AsBuiltReport/.github/tree/main/assets/repo-banners). Change the design there, not in each repository.
 
 ### Colours
 
