@@ -72,7 +72,17 @@ Badges use the brand palette by what they show. Licence, last commit and social 
 
 Set the colour with the `color` parameter on the shields.io URL, for example `https://img.shields.io/powershellgallery/v/AsBuiltReport.Core.svg?color=1F5FD0`. Shields uses dark text on the highlighter automatically.
 
-New modules get the banner, section icons and badge colours from the [Plaster template](https://github.com/AsBuiltReport/AsBuiltReport.Plaster.Template).
+### Health check highlight swatches
+
+HealthCheck tables in module READMEs show the colour a report gives a highlighted cell with a small swatch, such as <img src="https://raw.githubusercontent.com/AsBuiltReport/.github/main/assets/highlight-swatches/FFF4C7.svg" alt="#FFF4C7" width="16" height="16"> Warning and <img src="https://raw.githubusercontent.com/AsBuiltReport/.github/main/assets/highlight-swatches/FEDDD7.svg" alt="#FEDDD7" width="16" height="16"> Critical. Link to the swatches in the [central catalogue](https://github.com/AsBuiltReport/.github/tree/main/assets/highlight-swatches), never to a placeholder image service, and use the colour the module's report style uses: the AsBuiltReport.Core colours unless the module defines its own style.
+
+```markdown
+![Warning](https://raw.githubusercontent.com/AsBuiltReport/.github/main/assets/highlight-swatches/FFF4C7.svg) VM snapshot age >= 7 days
+```
+
+These colours belong to the reports, not the brand, so they do not follow the palette above. When a module adds its own style, add its colours to `highlight-swatches.json` in the brand asset generator.
+
+New modules get the banner, section icons, badge colours and highlight swatches from the [Plaster template](https://github.com/AsBuiltReport/AsBuiltReport.Plaster.Template).
 
 ### Colours
 
