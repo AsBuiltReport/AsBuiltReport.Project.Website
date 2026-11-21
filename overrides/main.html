@@ -1,0 +1,18 @@
+{#-
+  Adds a running header above every documentation page, in the style of the
+  page header in a generated report: section on the left, last updated on
+  the right. The home page template replaces the content block, so it has none.
+-#}
+{% extends "base.html" %}
+
+{% block content %}
+  {% set updated = page.meta.git_revision_date_localized if page.meta else none %}
+  {% set trail = page.ancestors | reverse | map(attribute="title") | select | list %}
+  {% if trail or updated %}
+    <div class="abr-runhead">
+      <span>{{ trail | join(" / ") if trail else config.site_name }}</span>
+      {% if updated %}<span>Updated {{ updated }}</span>{% endif %}
+    </div>
+  {% endif %}
+  {{ super() }}
+{% endblock %}

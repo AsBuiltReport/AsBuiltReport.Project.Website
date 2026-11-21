@@ -62,7 +62,8 @@ Run it by hand or from a scheduled task. The document is rebuilt from the live s
 
 ```powershell
 New-AsBuiltReport -Report Microsoft.Azure `
-  -Target $TenantId -UseInteractiveAuth -Format Word
+  -Target $TenantId -UseInteractiveAuth `
+  -Format Word
 ```
 
 </div>
@@ -197,31 +198,54 @@ Each module documents one product and is maintained by people who run it. See th
 
 </section>
 
-<section class="abr-section abr-split" markdown>
+<section class="abr-section" markdown>
 
-## Components
+## How the pieces fit
 
-<div class="abr-spec" markdown>
+Each report starts on the live system and ends as a finished document. Your settings travel with it as JSON files and a style script, so the same command gives the same report every time.
+{ .abr-lede }
 
--   :octicons-package-16:{ .abr-icon } **Core Module**
+<div class="abr-flow" markdown>
 
-    The core module provides the framework for each individual report module. It provides the [base commands](user-guide/new-asbuiltreport.md) and default style script used to generate each individual report.
+<div class="abr-flow__stage" markdown>
 
--   :octicons-plug-16:{ .abr-icon } **Reports Module**
+### Your platform
 
-    The report module is specific to each vendor and/or technology and is used to extract information from the specific environment. It is written to utilise PowerShell modules or RESTful APIs which the vendor/technology provides.
+The system you want to document, such as a vCenter Server, an Azure tenant or a Veeam backup server.
 
--   :material-code-json:{ .abr-icon } **Core Module Configuration**
+</div>
 
-    A JSON file which stores information relating to the author's name, company information and SMTP mail server configuration. Individual core module configuration files can be saved and specified when generating reports.
+<div class="abr-flow__stage" markdown>
 
--   :material-code-json:{ .abr-icon } **Reports Module Configuration**
+### Report module
 
-    A JSON file which stores information specific to the related report, such as the report name, version, and release status. It also provides configurable report options, health checks and granular information levels. Individual report module configuration files can be saved and specified when generating reports.
+Collects the configuration through the vendor's PowerShell module or REST API. There is one module for each product.
 
--   :material-powershell:{ .abr-icon } **Styles Script**
+-   <code>AsBuiltReport.<wbr>Microsoft.<wbr>Azure.json</code><br>
+    Information levels, health checks and report options. Create it with [New-AsBuiltReportConfig](user-guide/new-asbuiltreportconfig.md).
 
-    The styles script sets the default layout, fonts, colours and sizes used within the report, and can lay out cover pages, table of contents and other unique tables or sections. Custom style scripts can be [created](dev-guide/creating-a-report-style.md) to format reports to match your corporate identity.
+</div>
+
+<div class="abr-flow__stage" markdown>
+
+### Core module
+
+Provides the [base commands](user-guide/new-asbuiltreport.md) and builds the document with PScribo.
+
+-   `AsBuiltReport.json`<br>
+    Author, company and email settings. Create it with [New-AsBuiltConfig](user-guide/new-asbuiltconfig.md).
+-   Style script<br>
+    Fonts, colours, cover page and table styles. Use the default or [create your own](dev-guide/creating-a-report-style.md).
+
+</div>
+
+<div class="abr-flow__stage abr-flow__stage--out" markdown>
+
+### Your report
+
+Saved as Word, HTML or text, and sent by email if you choose.
+
+</div>
 
 </div>
 
@@ -244,18 +268,4 @@ AsBuiltReport is written by the people who use it. If your platform is missing, 
 
 </div>
 
-</div>
-
-<div class="abr-titleblock">
-  <div class="abr-titleblock__brand">
-    <img src="assets/images/logos/asbuiltreport-mark.svg#only-light" alt="">
-    <img src="assets/images/logos/asbuiltreport-mark-reversed.svg#only-dark" alt="">
-    AsBuiltReport
-  </div>
-  <div><dl><dt>Licence</dt><dd>MIT</dd></dl></div>
-  <div><dl><dt>Built with</dt><dd>PowerShell and PScribo</dd></dl></div>
-  <div><dl><dt>Maintained by</dt><dd>Tim Carman, Jonathan Colon</dd></dl></div>
-  <div><dl><dt>Downloads</dt><dd>250,000+ on the PowerShell Gallery</dd></dl></div>
-  <div><dl><dt>Formats</dt><dd>Word, HTML, Text</dd></dl></div>
-  <div><dl><dt>Site</dt><dd>Made with ProperDocs</dd></dl></div>
 </div>
