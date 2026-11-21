@@ -173,14 +173,6 @@ Each module documents one product and is maintained by people who run it. See th
 
     [Nutanix.PrismElement](https://github.com/AsBuiltReport/AsBuiltReport.Nutanix.PrismElement#readme){ .abr-chip }
 
--   **Pure Storage**
-
-    [PureStorage.FlashArray](https://github.com/AsBuiltReport/AsBuiltReport.PureStorage.FlashArray#readme){ .abr-chip }
-
--   **Rubrik**
-
-    [Rubrik.CDM](https://github.com/AsBuiltReport/AsBuiltReport.Rubrik.CDM#readme){ .abr-chip }
-
 -   **Veeam**
 
     [Veeam.VB365](https://github.com/AsBuiltReport/AsBuiltReport.Veeam.VB365#readme){ .abr-chip }
@@ -188,9 +180,7 @@ Each module documents one product and is maintained by people who run it. See th
 
 -   **VMware**
 
-    [VMware.AppVolumes](https://github.com/AsBuiltReport/AsBuiltReport.VMware.AppVolumes#readme){ .abr-chip }
     [VMware.ESXi](https://github.com/AsBuiltReport/AsBuiltReport.VMware.ESXi#readme){ .abr-chip }
-    [VMware.Horizon](https://github.com/AsBuiltReport/AsBuiltReport.VMware.Horizon#readme){ .abr-chip }
     [VMware.SRM](https://github.com/AsBuiltReport/AsBuiltReport.VMware.SRM#readme){ .abr-chip }
     [VMware.vSphere](https://github.com/AsBuiltReport/AsBuiltReport.VMware.vSphere#readme){ .abr-chip }
 
