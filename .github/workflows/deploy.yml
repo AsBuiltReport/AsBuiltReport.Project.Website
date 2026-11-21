@@ -49,6 +49,8 @@ jobs:
       - name: Build ProperDocs site
         env:
           GOOGLE_ANALYTICS_KEY: ${{ secrets.GOOGLE_ANALYTICS_KEY }}
+          # Lets hooks/core_version.py look up the latest Core release without hitting the anonymous rate limit
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: properdocs build
 
       - name: Deploy to GitHub Pages
