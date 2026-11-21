@@ -1,0 +1,78 @@
+{#-
+  Footer. Previous/next links are Material's own; the meta row is replaced
+  by the AsBuiltReport title block, styled like the title block of an
+  as-built drawing. Revision comes from hooks/core_version.py.
+-#}
+<footer class="md-footer">
+  {% if "navigation.footer" in features %}
+    {% if page.previous_page or page.next_page %}
+      {% if page.meta and page.meta.hide %}
+        {% set hidden = "hidden" if "footer" in page.meta.hide %}
+      {% endif %}
+      <nav class="md-footer__inner md-grid" aria-label="{{ lang.t('footer') }}" {{ hidden }}>
+        {% if page.previous_page %}
+          {% set direction = lang.t("footer.previous") %}
+          <a href="{{ page.previous_page.url | url }}" class="md-footer__link md-footer__link--prev" aria-label="{{ direction }}: {{ page.previous_page.title | e }}">
+            <div class="md-footer__button md-icon">
+              {% set icon = config.theme.icon.previous or "material/arrow-left" %}
+              {% include ".icons/" ~ icon ~ ".svg" %}
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                {{ direction }}
+              </span>
+              <div class="md-ellipsis">
+                {{ page.previous_page.title }}
+              </div>
+            </div>
+          </a>
+        {% endif %}
+        {% if page.next_page %}
+          {% set direction = lang.t("footer.next") %}
+          <a href="{{ page.next_page.url | url }}" class="md-footer__link md-footer__link--next" aria-label="{{ direction }}: {{ page.next_page.title | e }}">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                {{ direction }}
+              </span>
+              <div class="md-ellipsis">
+                {{ page.next_page.title }}
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              {% set icon = config.theme.icon.next or "material/arrow-right" %}
+              {% include ".icons/" ~ icon ~ ".svg" %}
+            </div>
+          </a>
+        {% endif %}
+      </nav>
+    {% endif %}
+  {% endif %}
+  <div class="md-footer-meta abr-footer">
+    <div class="md-grid abr-footer__inner">
+      <div class="abr-titleblock">
+        <div class="abr-titleblock__brand">
+          <img src="{{ 'assets/images/logos/asbuiltreport-mark-reversed.svg' | url }}" alt="">
+          {{ config.site_name }}
+        </div>
+        <div><dl><dt>Licence</dt><dd><a href="{{ 'about/license/' | url }}">MIT</a></dd></dl></div>
+        <div><dl><dt>Built with</dt><dd>PowerShell and PScribo</dd></dl></div>
+        <div><dl><dt>Maintained by</dt><dd>Tim Carman, Jonathan Colon</dd></dl></div>
+        <div><dl><dt>Downloads</dt><dd>250,000+ on the PowerShell Gallery</dd></dl></div>
+        <div><dl><dt>Formats</dt><dd>Word, HTML, Text</dd></dl></div>
+        <div>
+          <dl>
+            <dt>Revision</dt>
+            <dd><a href="https://github.com/AsBuiltReport/AsBuiltReport.Core/blob/master/CHANGELOG.md">AsBuiltReport.Core{% if config.extra.core_version %} v{{ config.extra.core_version }}{% endif %}</a></dd>
+          </dl>
+        </div>
+        <div><dl><dt>Date</dt><dd>{{ build_date_utc.day }} {{ build_date_utc.strftime("%B %Y") }}</dd></dl></div>
+        {% if config.copyright %}
+          <div class="abr-titleblock__wide"><dl><dt>Copyright</dt><dd>{{ config.copyright | replace("Copyright ", "") }}</dd></dl></div>
+        {% endif %}
+        {% if config.extra.social %}
+          <div><dl><dt>Follow</dt><dd>{% include "partials/social.html" %}</dd></dl></div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</footer>
