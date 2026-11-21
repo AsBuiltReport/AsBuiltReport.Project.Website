@@ -96,8 +96,6 @@ There are multiple ways to discover and access report modules:
 
     - **VMware vSphere** - Document vCenter, clusters, hosts, VMs, networking, storage
     - **VMware ESXi** - Standalone ESXi host documentation
-    - **VMware Horizon** - VDI environment documentation
-    - **VMware App Volumes** - Application delivery documentation
     - **VMware Site Recovery Manager** - Disaster recovery configuration
 
 === "Microsoft"
@@ -154,9 +152,6 @@ There are multiple ways to discover and access report modules:
     # NetApp ONTAP
     Install-Module -Name AsBuiltReport.NetApp.ONTAP -Scope CurrentUser
 
-    # Pure Storage FlashArray
-    Install-Module -Name AsBuiltReport.PureStorage.FlashArray -Scope CurrentUser
-
     # Dell EMC VxRail
     Install-Module -Name AsBuiltReport.DellEMC.VxRail -Scope CurrentUser
     ```
@@ -164,7 +159,6 @@ There are multiple ways to discover and access report modules:
     **Available Storage Modules:**
 
     - **NetApp ONTAP** - Storage system configuration
-    - **Pure Storage FlashArray** - FlashArray configuration
     - **Dell EMC VxRail** - Hyperconverged infrastructure
 
 === "Networking"
@@ -192,9 +186,6 @@ There are multiple ways to discover and access report modules:
     # Nutanix Prism Element
     Install-Module -Name AsBuiltReport.Nutanix.PrismElement -Scope CurrentUser
 
-    # Rubrik CDM
-    Install-Module -Name AsBuiltReport.Rubrik.CDM -Scope CurrentUser
-
     # System Resources
     Install-Module -Name AsBuiltReport.System.Resources -Scope CurrentUser
     ```
@@ -202,7 +193,6 @@ There are multiple ways to discover and access report modules:
     **Available Modules:**
 
     - **Nutanix Prism Element** - Hyperconverged infrastructure
-    - **Rubrik CDM** - Cloud Data Management
     - **System Resources** - General system resource documentation
 
 ## Activity Status
@@ -253,18 +243,6 @@ To check the status of a report module, click on the module's last updated or co
 | :----- | :----: | :---- | :---- | :---- |
 | [Nutanix Prism Element](https://github.com/AsBuiltReport/AsBuiltReport.Nutanix.PrismElement/tree/master){:target="_blank"} | <a href="https://github.com/AsBuiltReport/AsBuiltReport.Nutanix.PrismElement/commits/master" alt="Commits" target="_blank"><img src="https://img.shields.io/github/last-commit/AsBuiltReport/AsBuiltReport.Nutanix.PrismElement/master?label=Last%20Updated" /></a> | <a href="https://www.powershellgallery.com/packages?q=AsBuiltReport.Nutanix.PrismElement" alt="Version" target="_blank"><img src="https://img.shields.io/powershellgallery/v/AsBuiltReport.Nutanix.PrismElement?include_prereleases&label=Version" /></a> | <a href="https://github.com/AsBuiltReport/AsBuiltReport.Nutanix.PrismElement/releases" alt="GitHub Release Date" target="_blank"><img src="https://img.shields.io/github/release-date/AsBuiltReport/AsBuiltReport.Nutanix.PrismElement?label=Release%20Date" /></a> | <a href="https://github.com/AsBuiltReport/AsBuiltReport.Nutanix.PrismElement/graphs/contributors" alt="GitHub Contributors" target="_blank"><img src="https://img.shields.io/github/contributors/AsBuiltReport/AsBuiltReport.Nutanix.PrismElement?label=Contributors"> |
 
-### Pure Storage
-
-| Report | Last Updated |Version | Release Date | Contributors |
-| :----- | :----: | :---- | :---- | :---- |
-| [Pure Storage FlashArray](https://github.com/AsBuiltReport/AsBuiltReport.PureStorage.FlashArray/tree/master){:target="_blank"} | <a href="https://github.com/AsBuiltReport/AsBuiltReport.PureStorage.FlashArray/commits/master" alt="Commits" target="_blank"><img src="https://img.shields.io/github/last-commit/AsBuiltReport/AsBuiltReport.PureStorage.FlashArray/master?label=Last%20Updated" /></a> | <a href="https://www.powershellgallery.com/packages?q=AsBuiltReport.PureStorage.FlashArray" alt="Version" target="_blank"><img src="https://img.shields.io/powershellgallery/v/AsBuiltReport.PureStorage.FlashArray?include_prereleases&label=Version" /></a> | <a href="https://github.com/AsBuiltReport/AsBuiltReport.PureStorage.FlashArray/releases" alt="GitHub Release Date" target="_blank"><img src="https://img.shields.io/github/release-date/AsBuiltReport/AsBuiltReport.PureStorage.FlashArray?label=Release%20Date" /></a> | <a href="https://github.com/AsBuiltReport/AsBuiltReport.PureStorage.FlashArray/graphs/contributors" alt="GitHub Contributors" target="_blank"><img src="https://img.shields.io/github/contributors/AsBuiltReport/AsBuiltReport.PureStorage.FlashArray?label=Contributors"> |
-
-### Rubrik
-
-| Report | Last Updated |Version | Release Date | Contributors |
-| :----- | :----: | :---- | :---- | :---- |
-| [Rubrik CDM](https://github.com/AsBuiltReport/AsBuiltReport.Rubrik.CDM/tree/master){:target="_blank"} | <a href="https://github.com/AsBuiltReport/AsBuiltReport.Rubrik.CDM/commits/master" alt="Commits" target="_blank"><img src="https://img.shields.io/github/last-commit/AsBuiltReport/AsBuiltReport.Rubrik.CDM/master?label=Last%20Updated" /></a> | <a href="https://www.powershellgallery.com/packages?q=AsBuiltReport.Rubrik.CDM" alt="Version" target="_blank"><img src="https://img.shields.io/powershellgallery/v/AsBuiltReport.Rubrik.CDM?include_prereleases&label=Version" /></a> | <a href="https://github.com/AsBuiltReport/AsBuiltReport.Rubrik.CDM/releases" alt="GitHub Release Date" target="_blank"><img src="https://img.shields.io/github/release-date/AsBuiltReport/AsBuiltReport.Rubrik.CDM?label=Release%20Date" /></a> | <a href="https://github.com/AsBuiltReport/AsBuiltReport.Rubrik.CDM/graphs/contributors" alt="GitHub Contributors" target="_blank"><img src="https://img.shields.io/github/contributors/AsBuiltReport/AsBuiltReport.Rubrik.CDM?label=Contributors"> |
-
 ### System
 
 | Report | Last Updated |Version | Release Date | Contributors |
@@ -282,9 +260,7 @@ To check the status of a report module, click on the module's last updated or co
 
 | Report | Last Updated |Version | Release Date | Contributors |
 | :----- | :----: | :---- | :---- | :---- |
-| [VMware App Volumes](https://github.com/AsBuiltReport/AsBuiltReport.VMware.AppVolumes/tree/master){:target="_blank"} | <a href="https://github.com/AsBuiltReport/AsBuiltReport.VMware.AppVolumes/commits/master" alt="Commits" target="_blank"><img src="https://img.shields.io/github/last-commit/AsBuiltReport/AsBuiltReport.VMware.AppVolumes/master?label=Last%20Updated" /></a> | <a href="https://www.powershellgallery.com/packages?q=AsBuiltReport.VMware.AppVolumes" alt="Version" target="_blank"><img src="https://img.shields.io/powershellgallery/v/AsBuiltReport.VMware.AppVolumes?include_prereleases&label=Version" /></a> | <a href="https://github.com/AsBuiltReport/AsBuiltReport.VMware.AppVolumes/releases" alt="GitHub Release Date" target="_blank"><img src="https://img.shields.io/github/release-date/AsBuiltReport/AsBuiltReport.VMware.AppVolumes?label=Release%20Date" /></a> | <a href="https://github.com/AsBuiltReport/AsBuiltReport.VMware.AppVolumes/graphs/contributors" alt="GitHub Contributors" target="_blank"><img src="https://img.shields.io/github/contributors/AsBuiltReport/AsBuiltReport.VMware.AppVolumes?label=Contributors"> |
 | [VMware ESXi](https://github.com/AsBuiltReport/AsBuiltReport.VMware.ESXi/tree/master){:target="_blank"} | <a href="https://github.com/AsBuiltReport/AsBuiltReport.VMware.ESXi/commits/master" alt="Commits" target="_blank"><img src="https://img.shields.io/github/last-commit/AsBuiltReport/AsBuiltReport.VMware.ESXi/master?label=Last%20Updated" /></a> | <a href="https://www.powershellgallery.com/packages?q=AsBuiltReport.VMware.ESXi" alt="Version" target="_blank"><img src="https://img.shields.io/powershellgallery/v/AsBuiltReport.VMware.ESXi?include_prereleases&label=Version" /></a> | <a href="https://github.com/AsBuiltReport/AsBuiltReport.VMware.ESXi/releases" alt="GitHub Release Date" target="_blank"><img src="https://img.shields.io/github/release-date/AsBuiltReport/AsBuiltReport.VMware.ESXi?label=Release%20Date" /></a> | <a href="https://github.com/AsBuiltReport/AsBuiltReport.VMware.ESXi/graphs/contributors" alt="GitHub Contributors" target="_blank"><img src="https://img.shields.io/github/contributors/AsBuiltReport/AsBuiltReport.VMware.ESXi?label=Contributors"> |
-| [VMware Horizon](https://github.com/AsBuiltReport/AsBuiltReport.VMware.Horizon/tree/master){:target="_blank"} | <a href="https://github.com/AsBuiltReport/AsBuiltReport.VMware.Horizon/commits/master" alt="Commits" target="_blank"><img src="https://img.shields.io/github/last-commit/AsBuiltReport/AsBuiltReport.VMware.Horizon/master?label=Last%20Updated" /></a> | <a href="https://www.powershellgallery.com/packages?q=AsBuiltReport.VMware.Horizon" alt="Version" target="_blank"><img src="https://img.shields.io/powershellgallery/v/AsBuiltReport.VMware.Horizon?include_prereleases&label=Version" /></a> | <a href="https://github.com/AsBuiltReport/AsBuiltReport.VMware.Horizon/releases" alt="GitHub Release Date" target="_blank"><img src="https://img.shields.io/github/release-date/AsBuiltReport/AsBuiltReport.VMware.Horizon?label=Release%20Date" /></a> | <a href="https://github.com/AsBuiltReport/AsBuiltReport.VMware.Horizon/graphs/contributors" alt="GitHub Contributors" target="_blank"><img src="https://img.shields.io/github/contributors/AsBuiltReport/AsBuiltReport.VMware.Horizon?label=Contributors"> |
 | [VMware Site Recovery Manager](https://github.com/AsBuiltReport/AsBuiltReport.VMware.SRM/tree/master){:target="_blank"} | <a href="https://github.com/AsBuiltReport/AsBuiltReport.VMware.SRM/commits/master" alt="Commits" target="_blank"><img src="https://img.shields.io/github/last-commit/AsBuiltReport/AsBuiltReport.VMware.SRM/master?label=Last%20Updated" /></a> | <a href="https://www.powershellgallery.com/packages?q=AsBuiltReport.VMware.SRM" alt="Version" target="_blank"><img src="https://img.shields.io/powershellgallery/v/AsBuiltReport.VMware.SRM?include_prereleases&label=Version" /></a> | <a href="https://github.com/AsBuiltReport/AsBuiltReport.VMware.SRM/releases" alt="GitHub Release Date" target="_blank"><img src="https://img.shields.io/github/release-date/AsBuiltReport/AsBuiltReport.VMware.SRM?label=Release%20Date" /></a> | <a href="https://github.com/AsBuiltReport/AsBuiltReport.VMware.SRM/graphs/contributors" alt="GitHub Contributors" target="_blank"><img src="https://img.shields.io/github/contributors/AsBuiltReport/AsBuiltReport.VMware.SRM?label=Contributors"> |
 | [VMware vSphere](https://github.com/AsBuiltReport/AsBuiltReport.VMware.vSphere/tree/master){:target="_blank"} | <a href="https://github.com/AsBuiltReport/AsBuiltReport.VMware.vSphere/commits/master" alt="Commits" target="_blank"><img src="https://img.shields.io/github/last-commit/AsBuiltReport/AsBuiltReport.VMware.vSphere/master?label=Last%20Updated" /></a> | <a href="https://www.powershellgallery.com/packages?q=AsBuiltReport.VMware.vSphere" alt="Version" target="_blank"><img src="https://img.shields.io/powershellgallery/v/AsBuiltReport.VMware.vSphere?include_prereleases&label=Version" /></a> | <a href="https://github.com/AsBuiltReport/AsBuiltReport.VMware.vSphere/releases" alt="GitHub Release Date" target="_blank"><img src="https://img.shields.io/github/release-date/AsBuiltReport/AsBuiltReport.VMware.vSphere?label=Release%20Date" /></a> | <a href="https://github.com/AsBuiltReport/AsBuiltReport.VMware.vSphere/graphs/contributors" alt="GitHub Contributors" target="_blank"><img src="https://img.shields.io/github/contributors/AsBuiltReport/AsBuiltReport.VMware.vSphere?label=Contributors"> |
 

@@ -240,10 +240,10 @@ This is an optional parameter.
     -Format 'Word','Text' -OutputFolderPath 'C:\Reports' -EnableHealthCheck
     ```
 
-2. Creates an as-built report for two Pure Storage FlashArrays. The report is generated in HTML format, saved to the `C:\Reports` folder and sent via email.
+2. Creates an as-built report for two NetApp ONTAP clusters. The report is generated in HTML format, saved to the `C:\Reports` folder and sent via email.
 
     ```powershell title="Example 2"
-    New-AsBuiltReport -Report 'PureStorage.FlashArray' -Target '192.168.10.100','192.168.10.110' `
+    New-AsBuiltReport -Report 'NetApp.ONTAP' -Target '192.168.10.100','192.168.10.110' `
     -Credential (Get-Credential) -Format 'HTML' -OutputFolderPath 'C:\Reports' -SendEmail
     ```
 
