@@ -62,7 +62,7 @@ extra:
   generator: false
 
 extra_css:
-  - assets/stylesheets/extra.css?v=2026.11.21b
+  - assets/stylesheets/extra.css?v=2026.11.21c
 
 # Hooks
 hooks:
